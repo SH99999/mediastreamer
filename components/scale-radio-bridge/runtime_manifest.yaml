@@ -1,0 +1,9 @@
+component: scale_radio_bridge
+runtime_contract: rollback_v1_candidate
+install_hook: components/scale-radio-bridge/install.sh
+configure_hook: components/scale-radio-bridge/configure.sh
+healthcheck_hook: components/scale-radio-bridge/healthcheck.sh
+uninstall_hook: components/scale-radio-bridge/uninstall.sh
+notes:
+  - Bridge is the next higher-need component after rollback baseline setup.
+  - Real bridge payload import is still required before a green bridge fast-loop can be expected.

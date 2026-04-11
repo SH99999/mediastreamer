@@ -1,0 +1,52 @@
+name: component-dev-fast-loop-v1
+
+on:
+  push:
+    branches:
+      - dev/tuner
+      - dev/bridge
+  workflow_dispatch:
+    inputs:
+      component:
+        description: "tuner or bridge"
+        required: true
+        default: "tuner"
+      ref:
+        description: "Git ref to deploy; use latest for current main"
+        required: true
+        default: "latest"
+
+jobs:
+  deploy_component:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install deploy tools on runner host
+        shell: bash
+        run: |
+          bash deploy/pi/install.sh
+
+      - name: Resolve component and ref
+        id: resolve
+        shell: bash
+        run: |
+          COMPONENT="${{ inputs.component }}"
+          REF_INPUT="${{ inputs.ref }}"
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            case "${{ github.ref_name }}" in
+              dev/tuner) COMPONENT="tuner" ;;
+              dev/bridge) COMPONENT="bridge" ;;
+            esac
+            REF_INPUT="${{ github.ref_name }}"
+          fi
+          echo "component=$COMPONENT" >> "$GITHUB_OUTPUT"
+          echo "ref=$REF_INPUT" >> "$GITHUB_OUTPUT"
+
+      - name: Run component fast loop deploy
+        shell: bash
+        run: |
+          bash deploy/v2/sr-component-deploy-v2.sh "${{ steps.resolve.outputs.component }}" "${{ steps.resolve.outputs.ref }}"
