@@ -1,0 +1,47 @@
+name: deploy-to-pi-v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "bundle|starter|tuner|autoswitch|bridge|fun-line"
+        required: true
+        default: "bundle"
+      ref:
+        description: "Git ref to deploy; use latest for main"
+        required: true
+        default: "latest"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure SSH key
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' '${{ secrets.PI_SSH_KEY }}' > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.PI_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Run deploy on Pi
+        shell: bash
+        run: |
+          PORT_PART=""
+          if [ -n "${{ secrets.PI_PORT }}" ]; then
+            PORT_PART="-p ${{ secrets.PI_PORT }}"
+          fi
+          ssh $PORT_PART "${{ secrets.PI_USER }}@${{ secrets.PI_HOST }}" '
+            set -e
+            mkdir -p ~/src
+            if [ ! -d ~/src/mediastreamer/.git ]; then
+              git clone git@github.com:SH99999/mediastreamer.git ~/src/mediastreamer
+            fi
+            cd ~/src/mediastreamer
+            git fetch --all --tags --prune
+            if [ "${{ github.ref_name }}" != "" ]; then
+              git checkout "${{ github.ref_name }}" || true
+            fi
+            bash deploy/pi/install.sh
+            bash deploy/v1/sr-deploy.sh "${{ inputs.scope }}" "${{ inputs.ref }}"
+          '

@@ -1,0 +1,25 @@
+deploy_flow_v1:
+  canonical_commands:
+    - sr-deploy bundle latest
+    - sr-deploy starter latest
+    - sr-deploy tuner latest
+    - sr-deploy autoswitch latest
+    - sr-deploy bridge latest
+    - sr-deploy fun-line latest
+    - sr-rollback latest-good
+  canonical_repo_ref_for_latest: main
+  repo_clone_target: /opt/scale-radio/repo
+  install_root: /opt/scale-radio/components
+  state_root: /opt/scale-radio/state
+  install_order:
+    - starter
+    - tuner
+    - fun-line
+    - autoswitch
+    - bridge
+  source_paths:
+    starter: components/scale-radio-starter/
+    tuner: components/scale-radio-tuner/
+    autoswitch: components/scale-radio-autoswitch/
+    bridge: components/scale-radio-bridge/
+    fun-line: components/scale-radio-fun-line/
