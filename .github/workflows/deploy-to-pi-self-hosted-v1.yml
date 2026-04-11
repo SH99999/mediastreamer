@@ -1,0 +1,32 @@
+name: deploy-to-pi-self-hosted-v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "bundle|starter|tuner|autoswitch|bridge|fun-line"
+        required: true
+        default: "bundle"
+      ref:
+        description: "Git ref to deploy; use latest for main"
+        required: true
+        default: "latest"
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install deploy tools on runner host
+        shell: bash
+        run: |
+          bash deploy/pi/install.sh
+
+      - name: Run productive deploy flow v1 locally on runner host
+        shell: bash
+        run: |
+          bash deploy/v1/sr-deploy.sh "${{ inputs.scope }}" "${{ inputs.ref }}"
