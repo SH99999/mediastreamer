@@ -1,0 +1,13 @@
+hardware_config_v1:
+  normalized_inputs:
+    encoder_0:
+      pin_a_gpio: 5
+      pin_b_gpio: 6
+      push_gpio: 13
+    encoder_1:
+      pin_a_gpio: 17
+      pin_b_gpio: 27
+      push_gpio: 22
+  rules:
+    - no_component_may_redefine_gpio_ownership_without_integration_decision
+    - no_component_may_silently_conflict_with_hifiberry_or_normalized_encoder_mappings
