@@ -1,0 +1,9 @@
+name: ci-build-component
+on:
+  pull_request:
+jobs:
+  build_component:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder
+        run: echo build component

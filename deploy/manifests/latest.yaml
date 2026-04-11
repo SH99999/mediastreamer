@@ -1,0 +1,9 @@
+bundle_version: 1.0.0
+channel: bootstrap
+release_tag: pending
+install_order:
+  - starter
+  - tuner
+  - fun-line
+  - autoswitch
+  - bridge

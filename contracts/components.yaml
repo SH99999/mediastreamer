@@ -1,0 +1,39 @@
+components:
+  starter:
+    technical_id: scale_radio_starter
+    display_name: Scale Radio Starter
+    owned_paths:
+      - components/scale-radio-starter/
+    package_type: service_bundle
+    runtime_services:
+      - mediastreamer-hybrid.service
+  tuner:
+    technical_id: scale_radio_tuner
+    display_name: Scale Radio Tuner
+    owned_paths:
+      - components/scale-radio-tuner/
+    package_type: plugin_bundle
+    runtime_services:
+      - scale_fm_renderer.service
+  autoswitch:
+    technical_id: scale_radio_autoswitch
+    display_name: Scale Radio AutoSwitch
+    owned_paths:
+      - components/scale-radio-autoswitch/
+    package_type: service_bundle
+    runtime_services:
+      - revox-autoswitch.service
+  bridge:
+    technical_id: scale_radio_bridge
+    display_name: Scale Radio Bridge
+    owned_paths:
+      - components/scale-radio-bridge/
+    package_type: plugin_bundle
+    runtime_services: []
+  fun-line:
+    technical_id: scale_radio_fun_line
+    display_name: Scale Radio Fun Line
+    owned_paths:
+      - components/scale-radio-fun-line/
+    package_type: plugin_bundle
+    runtime_services: []

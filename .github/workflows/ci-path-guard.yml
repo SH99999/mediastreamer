@@ -1,0 +1,9 @@
+name: ci-path-guard
+on:
+  pull_request:
+jobs:
+  path_guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder
+        run: echo path guard

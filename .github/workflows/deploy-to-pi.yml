@@ -1,0 +1,9 @@
+name: deploy-to-pi
+on:
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder
+        run: echo deploy

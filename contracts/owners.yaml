@@ -1,0 +1,34 @@
+owners:
+  integration:
+    github_handles:
+      - SH99999
+    owns_paths:
+      - contracts/
+      - packaging/
+      - deploy/
+      - .github/
+  starter:
+    github_handles:
+      - SH99999
+    owns_paths:
+      - components/scale-radio-starter/
+  tuner:
+    github_handles:
+      - SH99999
+    owns_paths:
+      - components/scale-radio-tuner/
+  autoswitch:
+    github_handles:
+      - SH99999
+    owns_paths:
+      - components/scale-radio-autoswitch/
+  bridge:
+    github_handles:
+      - SH99999
+    owns_paths:
+      - components/scale-radio-bridge/
+  fun-line:
+    github_handles:
+      - SH99999
+    owns_paths:
+      - components/scale-radio-fun-line/

@@ -1,0 +1,21 @@
+release_baseline_v1:
+  starter:
+    authoritative:
+      - mediastreamer_bootdelay_fix_v0.1.0
+      - mediastreamer_hybrid_startup_standby_v0.2.2_stable
+  tuner:
+    authoritative:
+      - Scale FM Overlay 1.10.2
+      - Scale FM Source 1.10.2
+  autoswitch:
+    authoritative:
+      - revox_autoswitch_v2_asymmetric_delay_logic
+  bridge:
+    authoritative:
+      - radioscale_overlay_bridge_0.2.3_db_cache_r1.zip
+    rollback_anchor:
+      - rsob_022sf22l.zip
+  fun-line:
+    authoritative:
+      - fun_linea_overlay_0.4.2.zip
+      - fun_linea_source_0.4.2.zip

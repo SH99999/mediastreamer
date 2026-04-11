@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -lt 2 ]]; then
+  echo "Usage: sr-deploy <bundle|starter|tuner|autoswitch|bridge|fun-line> <version|latest>"
+  exit 1
+fi
+
+SCOPE="$1"
+VERSION="$2"
+STATE_DIR="/opt/scale-radio/state"
+mkdir -p "$STATE_DIR"
+
+echo "Deploy request: scope=$SCOPE version=$VERSION"
+echo "This bootstrap version expects release assets and manifests to be added in GitHub Releases."
+date -u +%FT%TZ > "$STATE_DIR/last_deploy_request.txt"

@@ -1,0 +1,23 @@
+path_guard:
+  starter:
+    allowed:
+      - components/scale-radio-starter/
+  tuner:
+    allowed:
+      - components/scale-radio-tuner/
+  autoswitch:
+    allowed:
+      - components/scale-radio-autoswitch/
+  bridge:
+    allowed:
+      - components/scale-radio-bridge/
+  fun-line:
+    allowed:
+      - components/scale-radio-fun-line/
+  integration-only:
+    allowed:
+      - contracts/
+      - packaging/
+      - deploy/
+      - .github/
+      - shared/
