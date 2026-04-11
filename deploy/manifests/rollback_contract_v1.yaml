@@ -1,0 +1,18 @@
+rollback_contract_v1:
+  mode: clean_absent
+  initial_managed_components:
+    - tuner
+    - bridge
+  required_component_artifacts:
+    - runtime_manifest.yaml
+    - install.sh
+    - configure.sh
+    - healthcheck.sh
+    - uninstall.sh
+  state_files:
+    rollback_mode: /opt/scale-radio/state/<component>.rollback_mode
+    rollback_at: /opt/scale-radio/state/<component>.rollback_at
+    last_phase: /opt/scale-radio/state/<component>.last_phase
+    last_successful_ref: /opt/scale-radio/state/<component>.last_successful_ref
+  rule:
+    on_failure: remove_component_until_next_version
