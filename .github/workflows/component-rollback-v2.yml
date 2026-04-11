@@ -1,0 +1,28 @@
+name: component-rollback-v2
+
+on:
+  workflow_dispatch:
+    inputs:
+      component:
+        description: "tuner or bridge"
+        required: true
+        default: "bridge"
+
+jobs:
+  rollback_component:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install deploy tools on runner host
+        shell: bash
+        run: |
+          bash deploy/pi/install.sh
+
+      - name: Execute clean-absent rollback
+        shell: bash
+        run: |
+          bash deploy/v2/sr-component-rollback.sh "${{ inputs.component }}" clean-absent
