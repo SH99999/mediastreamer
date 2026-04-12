@@ -15,8 +15,15 @@
     "boot_priority": 11,
     "details": "Baseline 0.2.2 with SQLite sidecar cache for lyrics, Spotify matches, negative results and playlist dedupe.",
     "changelog": "0.2.3-db-cache-r1: SQLite sidecar cache for lyrics, Spotify matches, negative results and playlist dedupe. Baseline-safe release.",
-    "os": ["bookworm"],
-    "architectures": ["amd64", "armhf", "arm64", "i386"]
+    "os": [
+      "bookworm"
+    ],
+    "architectures": [
+      "amd64",
+      "armhf",
+      "arm64",
+      "i386"
+    ]
   },
   "engines": {
     "node": ">=14",

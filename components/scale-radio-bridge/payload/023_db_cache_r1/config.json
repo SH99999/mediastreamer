@@ -127,28 +127,28 @@
     "type": "string",
     "value": ""
   },
-  "cacheDbEnabled": {
-    "type": "boolean",
-    "value": true
-  },
-  "lyricsCacheTtlDays": {
-    "type": "number",
-    "value": 14
-  },
-  "spotifyMatchCacheTtlDays": {
-    "type": "number",
-    "value": 45
-  },
-  "negativeCacheTtlHours": {
-    "type": "number",
-    "value": 6
-  },
-  "playlistDedupeTtlDays": {
-    "type": "number",
-    "value": 120
-  },
   "debugLogging": {
     "type": "boolean",
     "value": false
+  },
+  "persistentCacheEnabled": {
+    "type": "boolean",
+    "value": true
+  },
+  "lyricsPersistentCacheDays": {
+    "type": "number",
+    "value": 14
+  },
+  "spotifyMatchCacheDays": {
+    "type": "number",
+    "value": 45
+  },
+  "negativeCacheHours": {
+    "type": "number",
+    "value": 6
+  },
+  "playlistPresenceCacheDays": {
+    "type": "number",
+    "value": 120
   }
 }
