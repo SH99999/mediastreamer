@@ -24,6 +24,16 @@ required=(
   "$LIVE_DIR/i18n/strings_en.json"
 )
 
+if [[ ! -d "/data/configuration/user_interface/radioscale_overlay_bridge" ]]; then
+  echo "SR_BRIDGE: missing Bridge config directory"
+  exit 2
+fi
+
+if [[ ! -d "$LIVE_DIR/node_modules/kew" ]]; then
+  echo "SR_BRIDGE: missing required dependency node_modules/kew"
+  exit 2
+fi
+
 for path in "${required[@]}"; do
   if [[ ! -f "$path" ]]; then
     echo "SR_BRIDGE: missing required live file $path"
