@@ -1,0 +1,55 @@
+name: component-test-deploy-v4
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: "Git ref containing the component payload and deploy scripts"
+        required: true
+        default: "dev/bridge"
+      component:
+        description: "Component to deploy"
+        required: true
+        default: "bridge"
+      payload:
+        description: "Payload directory name"
+        required: true
+        default: "022c2_stable"
+
+jobs:
+  deploy_component:
+    runs-on: [self-hosted, scale-radio, pi]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.git_ref }}
+
+      - name: Preflight writable paths on runner host
+        shell: bash
+        run: |
+          mkdir -p /opt/scale-radio/state
+          mkdir -p /opt/scale-radio/removed/bridge
+          mkdir -p /data/plugins/user_interface
+          mkdir -p /data/configuration/user_interface
+          test -w /opt/scale-radio/state
+          test -w /data/plugins/user_interface
+          test -w /data/configuration/user_interface
+
+      - name: Install repo-shipped sr-deploy wrapper
+        shell: bash
+        run: |
+          sudo cp tools/deploy/sr-deploy-wrapper.sh /usr/local/bin/sr-deploy
+          sudo chmod 755 /usr/local/bin/sr-deploy
+
+      - name: Apply selected payload via repo wrapper
+        shell: bash
+        run: |
+          sr-deploy deploy "${{ inputs.component }}" "${{ inputs.payload }}" "$GITHUB_WORKSPACE"
+
+      - name: Roll back selected payload on failure
+        if: failure()
+        shell: bash
+        run: |
+          sr-deploy rollback "${{ inputs.component }}" "${{ inputs.payload }}" "$GITHUB_WORKSPACE"

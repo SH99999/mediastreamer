@@ -1,0 +1,46 @@
+name: component-test-rollback-v4
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: "Git ref containing the component remove script"
+        required: true
+        default: "dev/bridge"
+      component:
+        description: "Component to roll back"
+        required: true
+        default: "bridge"
+      payload:
+        description: "Payload directory name"
+        required: true
+        default: "022c2_stable"
+
+jobs:
+  rollback_component:
+    runs-on: [self-hosted, scale-radio, pi]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.git_ref }}
+
+      - name: Preflight writable paths on runner host
+        shell: bash
+        run: |
+          mkdir -p /opt/scale-radio/state
+          mkdir -p /opt/scale-radio/removed/bridge
+          test -w /opt/scale-radio/state
+          test -w /opt/scale-radio/removed/bridge
+
+      - name: Install repo-shipped sr-deploy wrapper
+        shell: bash
+        run: |
+          sudo cp tools/deploy/sr-deploy-wrapper.sh /usr/local/bin/sr-deploy
+          sudo chmod 755 /usr/local/bin/sr-deploy
+
+      - name: Roll back selected payload via repo wrapper
+        shell: bash
+        run: |
+          sr-deploy rollback "${{ inputs.component }}" "${{ inputs.payload }}" "$GITHUB_WORKSPACE"
