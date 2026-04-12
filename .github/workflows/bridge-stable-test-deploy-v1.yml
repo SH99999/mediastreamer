@@ -1,0 +1,47 @@
+name: bridge-stable-test-deploy-v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      bridge_ref:
+        description: "Git ref containing the Bridge payload and deploy candidate scripts"
+        required: true
+        default: "dev/bridge"
+
+jobs:
+  deploy_bridge_stable:
+    runs-on: [self-hosted, scale-radio, pi]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.bridge_ref }}
+
+      - name: Preflight writable paths on runner host
+        shell: bash
+        run: |
+          mkdir -p /opt/scale-radio/state
+          mkdir -p /opt/scale-radio/removed/bridge
+          mkdir -p /data/plugins/user_interface
+          mkdir -p /data/configuration/user_interface
+          test -w /opt/scale-radio/state
+          test -w /opt/scale-radio/removed/bridge
+          test -w /data/plugins/user_interface
+          test -w /data/configuration/user_interface
+
+      - name: Apply stable Bridge payload
+        shell: bash
+        run: |
+          bash components/scale-radio-bridge/deploy_candidates/022c2_stable_apply.sh
+
+      - name: Healthcheck stable Bridge payload
+        shell: bash
+        run: |
+          bash components/scale-radio-bridge/deploy_candidates/022c2_stable_healthcheck.sh
+
+      - name: Roll back stable Bridge payload on failure
+        if: failure()
+        shell: bash
+        run: |
+          bash components/scale-radio-bridge/deploy_candidates/022c2_stable_remove.sh
