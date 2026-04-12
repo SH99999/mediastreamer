@@ -1,0 +1,36 @@
+{
+  "page": {
+    "label": "Scale FM Overlay"
+  },
+  "sections": [
+    {
+      "id": "info",
+      "element": "section",
+      "label": "Information",
+      "icon": "fa-info-circle",
+      "content": [
+        {
+          "id": "status",
+          "element": "input",
+          "type": "text",
+          "label": "Launch mode",
+          "value": "Browse source \"Scale FM\" or GPIO 13 can open the overlay. Encoder 1 long press exits back to Volumio Browse."
+        },
+        {
+          "id": "browseuri",
+          "element": "input",
+          "type": "text",
+          "label": "Browse source URI",
+          "value": "scalefm"
+        },
+        {
+          "id": "encoder1",
+          "element": "input",
+          "type": "text",
+          "label": "Encoder 1 long press callMethod",
+          "value": "{\"endpoint\":\"user_interface/radio_scale_peppy\",\"method\":\"encoder1LongPress\",\"data\":\"\"}"
+        }
+      ]
+    }
+  ]
+}

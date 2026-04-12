@@ -1,0 +1,18 @@
+[Unit]
+Description=Scale FM Resident Renderer
+After=multi-user.target sound.target
+Wants=multi-user.target
+
+[Service]
+Type=simple
+User=volumio
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/volumio/.Xauthority
+Environment=SDL_VIDEODRIVER=x11
+Environment=SDL_AUDIODRIVER=dummy
+ExecStart=/bin/bash /data/plugins/user_interface/radio_scale_peppy/run_renderer_daemon.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

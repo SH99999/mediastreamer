@@ -1,0 +1,197 @@
+{
+  "_dev_info": {
+    "theme_name": "braun_hd",
+    "what_this_file_controls": [
+      "fonts for scale, UI and mono technical text",
+      "layout positions for header, scale, info panel, dimmed logo and VU meter scaffold",
+      "colors for ticks, labels, panel and pointer fallback",
+      "draw flags to enable or disable generated labels, ticks, logo or VU overlay",
+      "layer stack order and pointer sprite behaviour"
+    ],
+    "asset_files": {
+      "background.png": "dark appliance background",
+      "backlight.png": "warm backlight behind the scale",
+      "scale_bed.png": "recessed scale print bed",
+      "glass.png": "glass reflection overlay",
+      "vignette.png": "edge darkening",
+      "noise.png": "subtle grain",
+      "marker.png": "tuning pointer sprite",
+      "marker_shadow.png": "pointer shadow sprite"
+    },
+    "station_notes": [
+      "Stations still come from runtime/settings.json as before.",
+      "Optional per-station overrides now supported: label_dx, label_dy, marker_dx, marker_dy and label_lines.",
+      "Use draw_flags.scale_numbers=false if the numeric print is already baked into scale_bed.png."
+    ],
+    "logo_notes": [
+      "Renderer reads state.albumart and can dim the logo behind the info panel text.",
+      "Relative /albumart URLs from Volumio are resolved against http://127.0.0.1:3000."
+    ],
+    "vu_meter_notes": [
+      "This release adds fully configurable VU meter placement and drawing scaffolding.",
+      "Audio-driven stereo metering is intentionally split into the next release so renderer stability stays intact."
+    ]
+  },
+  "fonts": {
+    "ui_family": "DejaVu Sans",
+    "scale_family": "DejaVu Sans",
+    "mono_family": "DejaVu Sans Mono",
+    "ui_file": "",
+    "scale_file": "",
+    "mono_file": "",
+    "size_adjust": {
+      "tiny": -2,
+      "small": 0,
+      "medium": 8,
+      "large": 20,
+      "huge": 44,
+      "mono": 0
+    }
+  },
+  "layers": {
+    "background_stack": [
+      "background",
+      "backlight",
+      "scale_bed"
+    ],
+    "overlay_stack": [
+      "glass",
+      "vignette",
+      "noise"
+    ],
+    "fullscreen_alpha": {
+      "noise": 110
+    },
+    "pointer": {
+      "marker_name": "marker",
+      "shadow_name": "marker_shadow",
+      "shadow_dx": 2,
+      "shadow_dy": 22,
+      "marker_dx": 0,
+      "marker_dy": 18
+    }
+  },
+  "draw_flags": {
+    "scale_ticks": true,
+    "scale_numbers": true,
+    "station_labels": true,
+    "station_markers": true,
+    "noise_band": true,
+    "dimmed_logo": true,
+    "vu_meter": false
+  },
+  "layout": {
+    "header": {
+      "title_x": 26,
+      "title_y": 10,
+      "meta_x": 280,
+      "meta_y": 15,
+      "service_x": 470,
+      "service_y": 15,
+      "clock_right_margin": 24,
+      "clock_y": 10
+    },
+    "scale": {
+      "left": 40,
+      "top": 78,
+      "right_margin": 60,
+      "bottom_margin": 60,
+      "baseline_ratio": 0.64,
+      "baseline_min_y": 180,
+      "baseline_max_bottom_margin": 72,
+      "label_y_offset": 46,
+      "major_tick_top_delta": 42,
+      "mid_tick_top_delta": 26,
+      "minor_tick_top_delta": 18,
+      "pointer_line_extension": 14,
+      "noise_band_y_offset": 30
+    },
+    "station_labels": {
+      "levels": 3,
+      "lane_gap": 56,
+      "lane_top_offset": 6,
+      "marker_size": 12,
+      "text_gap": 14,
+      "left_margin": 8,
+      "right_margin": 14
+    },
+    "info_panel": {
+      "width": 430,
+      "left_inset": 18,
+      "top": 62,
+      "bottom_margin": 22,
+      "x_padding": 34,
+      "radius": 16,
+      "border_width": 2,
+      "headline_y": 88,
+      "subline_y": 126,
+      "body_y": 170,
+      "body_gap_title": 88,
+      "body_gap_artist": 64,
+      "bottom_offset": 150,
+      "bottom_line_2_gap": 34,
+      "bottom_line_3_gap": 72
+    },
+    "logo": {
+      "enabled": true,
+      "coordinate_space": "panel",
+      "x": 0,
+      "y": 114,
+      "x_padding": 28,
+      "y_padding": 0,
+      "anchor": "right",
+      "max_width": 140,
+      "max_height": 140,
+      "alpha": 76
+    },
+    "vu_meter": {
+      "enabled": false,
+      "coordinate_space": "panel",
+      "x": 18,
+      "y": 18,
+      "width": 90,
+      "height": 140,
+      "channel_gap": 12,
+      "orientation": "vertical",
+      "style": "bar",
+      "alpha": 255,
+      "label_enabled": true,
+      "label_y_gap": 10
+    }
+  },
+  "colors": {
+    "header_title": "#ceb176",
+    "header_meta": "#e6dcbe",
+    "header_service": "#a8a8b0",
+    "baseline": "#ceb174",
+    "tick_major": "#e4c37e",
+    "tick_mid": "#c4a76a",
+    "tick_minor": "#847653",
+    "scale_label": "#d8ceb2",
+    "station_label": "#d6ccb6",
+    "station_marker_locked": "#ffe9a5",
+    "station_marker_unlocked": "#e6782e",
+    "station_marker_border": "#1c313a",
+    "pointer_glow_locked": "#ffdc82",
+    "pointer_glow_unlocked": "#e6b46e",
+    "pointer_beam_locked": "#fff5d2",
+    "pointer_beam_unlocked": "#f2dcaa",
+    "pointer_jitter": "#6e5a3a",
+    "noise_bg": "#222226",
+    "noise_fill": "#aa8c5a",
+    "noise_text": "#c4b896",
+    "panel_bg": "#101012",
+    "panel_border": "#766138",
+    "panel_headline": "#e7cb96",
+    "panel_subline": "#b4aea4",
+    "panel_primary": "#f4f0e8",
+    "panel_secondary": "#bcbcc2",
+    "panel_tertiary": "#9a9aa4",
+    "panel_accent": "#c6b896",
+    "vu_bg": "#1b1b20",
+    "vu_border": "#5c4a26",
+    "vu_fill_left": "#d0b172",
+    "vu_fill_right": "#ead09a",
+    "vu_label": "#d6ccb6"
+  }
+}

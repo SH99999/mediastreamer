@@ -1,0 +1,18 @@
+Scale FM 1.10.2 Feature Notes
+=============================
+
+Renderer state model
+--------------------
+- `active`    -> owner=scale_fm and ui_mode=scale; full visible rendering allowed
+- `idle`      -> hidden standby with coarse runtime polling and zero redraw work
+- `deep_idle` -> forced hidden standby when another overlay owner (currently fun_linea) owns the appliance surface
+
+Important implementation choices
+--------------------------------
+- The resident renderer process stays alive, but hidden states no longer keep a drawing loop alive.
+- Hidden states only reload runtime files on coarse timers.
+- Visible rendering is hard-capped by `visible_fps_cap` so the renderer cannot run uncapped on the Pi.
+- Shared overlay coordination uses `/tmp/mediastreamer_active_overlay.json`.
+- Existing Volumio call methods were intentionally preserved for compatibility with Rotary Encoder II and existing websocket emits.
+- `scale_fm_renderer.service` remains the canonical service path.
+- If the service is not running, the existing classic spawn path still works.

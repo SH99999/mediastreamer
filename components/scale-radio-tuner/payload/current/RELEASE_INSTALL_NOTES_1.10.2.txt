@@ -1,0 +1,130 @@
+Scale FM 1.10.2 - Deep Idle Resident Standby
+============================================
+
+Scope of this release
+---------------------
+- Hidden standby is now a true deep-idle / idle split inside the resident renderer.
+- No draw loop runs while the overlay is hidden.
+- No full redraw runs while the overlay is hidden.
+- Runtime JSON reload cadence is coarse while hidden to keep CPU load minimal.
+- Visible rendering is hard-capped to a Pi-friendly frame rate.
+- Scale FM now also honours the shared overlay owner marker:
+  `/tmp/mediastreamer_active_overlay.json`
+- Existing public call methods stay unchanged:
+  `gpio13OpenScale`, `encoder1ShortPress`, `encoder1LongPress`,
+  `setScaleMode`, `setNormalMode`, `getControlStatus`
+- Existing resident service path stays unchanged:
+  `scale_fm_renderer.service`
+- Classic spawn fallback stays unchanged when the service is not running.
+
+Install order
+-------------
+1. Install **Scale FM Overlay 1.10.2**
+2. Install **Scale FM Source 1.10.2**
+3. Reboot Volumio
+
+Rotary Encoder II mapping
+-------------------------
+Preferred plugin-method mapping:
+
+GPIO 13 short press
+- Plugin category: `user_interface`
+- Plugin: `radio_scale_peppy`
+- Method: `gpio13OpenScale`
+- Data / parameter: leave empty
+
+Encoder 1 short press (optional open alternative)
+- Plugin category: `user_interface`
+- Plugin: `radio_scale_peppy`
+- Method: `encoder1ShortPress`
+- Data / parameter: leave empty
+
+Encoder 1 long press (stable overlay exit)
+- Plugin category: `user_interface`
+- Plugin: `radio_scale_peppy`
+- Method: `encoder1LongPress`
+- Data / parameter: leave empty
+
+Optional explicit mode methods
+- `setScaleMode`
+- `setNormalMode`
+- `getControlStatus`
+
+Exact websocket CALLMETHOD config
+---------------------------------
+If your encoder plugin expects raw websocket call-method tuples, use exactly:
+
+- category = `user_interface`
+- plugin = `radio_scale_peppy`
+- method = `gpio13OpenScale`
+- data = `""`
+
+- category = `user_interface`
+- plugin = `radio_scale_peppy`
+- method = `encoder1ShortPress`
+- data = `""`
+
+- category = `user_interface`
+- plugin = `radio_scale_peppy`
+- method = `encoder1LongPress`
+- data = `""`
+
+Equivalent raw websocket emit examples:
+
+```js
+socket.emit('callMethod', {
+  endpoint: 'user_interface/radio_scale_peppy',
+  method: 'gpio13OpenScale',
+  data: ''
+});
+
+socket.emit('callMethod', {
+  endpoint: 'user_interface/radio_scale_peppy',
+  method: 'encoder1ShortPress',
+  data: ''
+});
+
+socket.emit('callMethod', {
+  endpoint: 'user_interface/radio_scale_peppy',
+  method: 'encoder1LongPress',
+  data: ''
+});
+```
+
+GPIO reference used by the current project
+------------------------------------------
+- Encoder 1 A: GPIO 5
+- Encoder 1 B: GPIO 6
+- Encoder 1 push: GPIO 13
+- Encoder 2 A: GPIO 17
+- Encoder 2 B: GPIO 27
+- Encoder 2 push: GPIO 22
+
+Shared overlay owner marker
+---------------------------
+Marker file:
+- `/tmp/mediastreamer_active_overlay.json`
+
+Owner semantics:
+- `owner = scale_fm`  -> Scale FM may render actively
+- `owner = fun_linea` -> Scale FM goes to deep idle
+- `owner = none`      -> Scale FM remains in normal hidden standby / idle
+
+Resident renderer service
+-------------------------
+Installed service file:
+- `/etc/systemd/system/scale_fm_renderer.service`
+
+Useful commands
+---------------
+- `sudo systemctl status scale_fm_renderer.service`
+- `sudo systemctl restart scale_fm_renderer.service`
+- `sudo journalctl -u scale_fm_renderer.service -n 200 --no-pager`
+
+Validation status
+-----------------
+Built and syntax-checked locally:
+- `node --check index.js`
+- `python3 -m py_compile renderer/radio_scale_renderer.py`
+
+Live behaviour on the target Pi still requires on-device validation.

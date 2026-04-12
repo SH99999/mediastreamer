@@ -1,0 +1,63 @@
+Scale FM 1.10.0 - Resident Renderer Service
+===========================================
+
+What this release changes
+-------------------------
+- Adds a resident renderer service path for the Scale FM overlay.
+- The renderer can be started by systemd during boot and remain hidden in standby until the overlay is opened.
+- Keeps a plugin-managed fallback spawn path in case the resident service is not running yet.
+
+Install order
+-------------
+1. Install **Scale FM Overlay 1.10.0**
+2. Install **Scale FM Source 1.10.0**
+3. Reboot Volumio, or run:
+   - `sudo systemctl daemon-reload`
+   - `sudo systemctl enable scale_fm_renderer.service`
+   - `sudo systemctl restart scale_fm_renderer.service`
+
+Service file
+------------
+- `/etc/systemd/system/scale_fm_renderer.service`
+
+Relevant GPIO / rotary mappings
+-------------------------------
+Recommended current mapping from earlier field tests:
+- GPIO 13 short press
+  - Plugin category: `user_interface`
+  - Plugin: `radio_scale_peppy`
+  - Method: `gpio13OpenScale`
+- Encoder 1 long press
+  - Plugin category: `user_interface`
+  - Plugin: `radio_scale_peppy`
+  - Method: `encoder1LongPress`
+
+Relevant overlay methods
+------------------------
+- `gpio13OpenScale` - open the overlay from a dedicated button / GPIO event
+- `encoder1ShortPress` - compatibility alias that opens the overlay
+- `encoder1LongPress` - exit overlay and return to Volumio GUI flow
+- `setScaleMode` - force scale mode
+- `setNormalMode` - request return to normal GUI mode
+- `getControlStatus` - diagnostic status endpoint used by the source plugin
+
+Relevant websocket emits performed by the overlay
+-------------------------------------------------
+The overlay currently emits these socket events back to Volumio's UI socket:
+- `browseLibrary` with `{ uri: '/' }` (or fallback `{ uri: '' }`) when returning to the main browse UI
+- `addToFavourites` with the currently tuned station payload when the favourite helper is used
+
+Operational notes
+-----------------
+- The resident renderer uses `runtime/state.json` and `runtime/settings.json` as its control plane.
+- `runtime/renderer_ready.json` is written after the first visible frame.
+- `runtime/renderer.pid` is written by the renderer so the overlay can detect service-backed processes and avoid duplicate spawns.
+- If the service is not running, the overlay still falls back to the classic direct spawn path.
+
+Validation status
+-----------------
+This package was built and syntax-checked locally:
+- `node --check index.js`
+- `python3 -m py_compile renderer/radio_scale_renderer.py`
+
+It was **not** live-tested on the user's Pi from inside this environment, so final behaviour still needs on-device verification.

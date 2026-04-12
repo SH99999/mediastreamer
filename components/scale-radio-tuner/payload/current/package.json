@@ -1,0 +1,42 @@
+{
+  "name": "radio_scale_peppy",
+  "version": "1.10.2",
+  "description": "Scale FM Overlay 1.10.2 with deep-idle resident standby, visible FPS cap and shared overlay owner support.",
+  "main": "index.js",
+  "author": "OpenAI for Stefan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foonerd/peppy_screensaver.git"
+  },
+  "volumio_info": {
+    "prettyName": "Scale FM Overlay",
+    "icon": "fa-sliders",
+    "plugin_type": "user_interface",
+    "boot_priority": 10,
+    "has_alsa_contribution": false,
+    "os": [
+      "bookworm"
+    ],
+    "architectures": [
+      "armhf",
+      "amd64"
+    ],
+    "details": "1.10.2 adds true deep-idle hidden standby, a hard visible FPS cap, and shared overlay owner handling via /tmp/mediastreamer_active_overlay.json while preserving all existing call methods and the classic fallback spawn path.",
+    "changelog": "1.10.2 - deep idle hidden standby, visible FPS cap, shared overlay owner marker, coarse hidden runtime reload cadence, unchanged public call methods and renderer service path.",
+    "pluginName": "Scale FM Overlay"
+  },
+  "engines": {
+    "node": ">=20",
+    "volumio": ">=4"
+  },
+  "dependencies": {
+    "v-conf": "^1.4.3",
+    "socket.io-client": "1.7.4",
+    "kew": "^0.7.0"
+  },
+  "pluginInfo": {
+    "details": "1.10.2 adds true deep-idle hidden standby, a hard visible FPS cap, and shared overlay owner handling via /tmp/mediastreamer_active_overlay.json while preserving all existing call methods and the classic fallback spawn path.",
+    "changelog": "1.10.2 - deep idle hidden standby, visible FPS cap, shared overlay owner marker, coarse hidden runtime reload cadence, unchanged public call methods and renderer service path."
+  }
+}

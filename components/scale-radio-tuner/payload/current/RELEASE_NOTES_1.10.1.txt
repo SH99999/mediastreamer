@@ -1,0 +1,14 @@
+Scale FM Overlay 1.10.1
+=======================
+
+Highlights
+----------
+- first-show pointer hydration from last locked station / frequency
+- delayed overlay hide on exit to reduce white flashes
+- pointer anti-flicker deadbands in MHz and pixels
+- resident renderer state reload on visible transition
+- visible mode uses double-buffer flag
+
+Notes
+-----
+This release focuses on visible stability and exit polish. It does not yet change the broader tuning model or the station list management.

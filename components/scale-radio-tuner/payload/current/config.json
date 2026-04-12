@@ -1,0 +1,258 @@
+{
+  "enabled": {
+    "value": true,
+    "type": "boolean"
+  },
+  "fullscreen": {
+    "value": true,
+    "type": "boolean"
+  },
+  "screenWidth": {
+    "value": 1920,
+    "type": "number"
+  },
+  "screenHeight": {
+    "value": 550,
+    "type": "number"
+  },
+  "fps": {
+    "value": 24,
+    "type": "number"
+  },
+  "pollIntervalMs": {
+    "value": 300,
+    "type": "number"
+  },
+  "infoPanelWidth": {
+    "value": 430,
+    "type": "number"
+  },
+  "fallbackFrequency": {
+    "value": 98.3,
+    "type": "number"
+  },
+  "scaleStart": {
+    "value": 87.5,
+    "type": "number"
+  },
+  "scaleEnd": {
+    "value": 108.0,
+    "type": "number"
+  },
+  "showClock": {
+    "value": true,
+    "type": "boolean"
+  },
+  "showTechnical": {
+    "value": true,
+    "type": "boolean"
+  },
+  "stationsJson": {
+    "value": "[{\"name\": \"Hitradio OE3\", \"freq\": 99.9, \"match\": [\"oe3\", \"oe 3\", \"hitradio oe3\"]}, {\"name\": \"FM4\", \"freq\": 103.8, \"match\": [\"fm4\", \"orf fm4\"]}, {\"name\": \"RADIO WIEN\", \"freq\": 89.9, \"match\": [\"radio wien\", \"wien\", \"orf radio wien\"]}, {\"name\": \"Deep House Radio\", \"freq\": 97.1, \"match\": [\"deep house radio\", \"deep house\", \"dhr\"]}, {\"name\": \"CHILLOUT ANTENNE\", \"freq\": 95.6, \"match\": [\"chillout antenne\", \"antenne bayern chillout\", \"chillout\"]}, {\"name\": \"OLDIE ANTENNE\", \"freq\": 101.7, \"match\": [\"oldie antenne\", \"antenne bayern oldies but goldies\", \"oldies but goldies\"]}, {\"name\": \"Antenne Kärnten\", \"freq\": 104.4, \"match\": [\"antenne kärnten\", \"antenne karnten\"]}, {\"name\": \"Kronehit\", \"freq\": 105.8, \"match\": [\"kronehit\", \"krone hit\"]}]",
+    "type": "string"
+  },
+  "tuningStepMHz": {
+    "value": 0.02,
+    "type": "number"
+  },
+  "snapWindowMHz": {
+    "value": 0.045,
+    "type": "number"
+  },
+  "releaseWindowMHz": {
+    "value": 0.09,
+    "type": "number"
+  },
+  "noiseWindowMHz": {
+    "value": 0.32,
+    "type": "number"
+  },
+  "autoPlayOnLock": {
+    "value": true,
+    "type": "boolean"
+  },
+  "defaultControlMode": {
+    "value": "normal",
+    "type": "string"
+  },
+  "autoResolveFromLibrary": {
+    "value": true,
+    "type": "boolean"
+  },
+  "searchFallback": {
+    "value": true,
+    "type": "boolean"
+  },
+  "stopOnUnlock": {
+    "value": false,
+    "type": "boolean"
+  },
+  "audioHissEnabled": {
+    "value": true,
+    "type": "boolean"
+  },
+  "audioHissDevice": {
+    "value": "default",
+    "type": "string"
+  },
+  "warmNextStations": {
+    "value": true,
+    "type": "boolean"
+  },
+  "warmStationRadius": {
+    "value": 1,
+    "type": "number"
+  },
+  "warmAheadExtra": {
+    "value": 2,
+    "type": "number"
+  },
+  "reentryBoostMs": {
+    "value": 450,
+    "type": "number"
+  },
+  "reentrySnapMultiplier": {
+    "value": 1.015,
+    "type": "number"
+  },
+  "preparedPayloadTtlMs": {
+    "value": 45000,
+    "type": "number"
+  },
+  "playlistName": {
+    "value": "radioscale_base",
+    "type": "string"
+  },
+  "playlistAsStationSource": {
+    "value": true,
+    "type": "boolean"
+  },
+  "magneticLockEnabled": {
+    "value": true,
+    "type": "boolean"
+  },
+  "magneticRadiusMHz": {
+    "value": 0.04,
+    "type": "number"
+  },
+  "magneticStrength": {
+    "value": 0.02,
+    "type": "number"
+  },
+  "scaleVerticalOffset": {
+    "value": 78,
+    "type": "number"
+  },
+  "stationLabelLevels": {
+    "value": 3,
+    "type": "number"
+  },
+  "stationMinSpacingMHz": {
+    "value": 1.0,
+    "type": "number"
+  },
+  "maxDisplayedStations": {
+    "value": 12,
+    "type": "number"
+  },
+  "autoStartRendererOnPluginStart": {
+    "value": false,
+    "type": "boolean"
+  },
+  "stationActivationDebounceMs": {
+    "value": 50,
+    "type": "number"
+  },
+  "stationActivationCooldownMs": {
+    "value": 220,
+    "type": "number"
+  },
+  "controlModeSwitchGuardMs": {
+    "value": 450,
+    "type": "number"
+  },
+  "stationActivationHissReleaseMs": {
+    "value": 220,
+    "type": "number"
+  },
+  "useLayerTheme": {
+    "value": true,
+    "type": "boolean"
+  },
+  "themeName": {
+    "value": "braun_hd",
+    "type": "string"
+  },
+  "pointerVisualFollowGain": {
+    "value": 0.42,
+    "type": "number"
+  },
+  "pointerVisualLockedGain": {
+    "value": 0.52,
+    "type": "number"
+  },
+  "pointerJitterEnabled": {
+    "value": false,
+    "type": "boolean"
+  },
+  "lockVisualSnapEnabled": {
+    "value": false,
+    "type": "boolean"
+  },
+  "hissStartDelayMs": {
+    "value": 1750,
+    "type": "number"
+  },
+  "pointerIdleLockMs": {
+    "value": 220,
+    "type": "number"
+  },
+  "pointerStartupSettleMs": {
+    "value": 900,
+    "type": "number"
+  },
+  "pointerSettleEpsilonMHz": {
+    "value": 0.003,
+    "type": "number"
+  },
+  "rendererReadyWaitMs": {
+    "value": 2200,
+    "type": "number"
+  },
+  "residentRendererEnabled": {
+    "value": true,
+    "type": "boolean"
+  },
+  "residentRendererServiceEnabled": {
+    "value": true,
+    "type": "boolean"
+  },
+  "preloadRendererOnPluginStart": {
+    "value": false,
+    "type": "boolean"
+  },
+  "residentRendererRetryMs": {
+    "value": 4000,
+    "type": "number"
+  },
+  "visibleFpsCap": {
+    "value": 24,
+    "type": "number"
+  },
+  "hiddenStateReloadMs": {
+    "value": 2000,
+    "type": "number"
+  },
+  "deepIdleReloadMs": {
+    "value": 5000,
+    "type": "number"
+  },
+  "hiddenStandbySleepMs": {
+    "value": 250,
+    "type": "number"
+  },
+  "deepIdleSleepMs": {
+    "value": 1000,
+    "type": "number"
+  }
+}

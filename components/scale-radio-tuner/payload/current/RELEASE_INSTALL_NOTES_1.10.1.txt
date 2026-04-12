@@ -1,0 +1,87 @@
+Scale FM 1.10.1 - First-show hydration, quieter exit hand-off, pointer anti-flicker
+====================================================================================
+
+What changed in 1.10.1
+----------------------
+- Resident renderer now forces a fresh state reload right before the overlay becomes visible.
+- First visible frame re-seeds the pointer from the last locked station / last locked frequency.
+- Exit now prepares the regular Volumio UI first and hides the overlay slightly later to reduce white flashes.
+- Pointer drawing adds MHz and pixel deadbands to reduce shimmer / micro-flicker.
+- Visible renderer mode now uses double-buffered display flags.
+
+Install order
+-------------
+1. Install **Scale FM Overlay 1.10.1**
+2. Install **Scale FM Source 1.10.1**
+3. Reboot Volumio
+
+Recommended verification after install
+-------------------------------------
+1. Boot the Pi and wait until Volumio is fully up.
+2. Open Scale FM once from the source tile or GPIO 13.
+3. Check that the pointer no longer sweeps to the far left on the first post-boot open.
+4. Exit with encoder 1 long press and watch whether the white flash on exit is reduced.
+5. Tune slowly left/right and check for less pointer shimmer.
+
+Rotary Encoder II method mapping (preferred)
+--------------------------------------------
+Use the plugin-method mapping in Rotary Encoder II.
+
+GPIO 13 short press
+- Plugin category: `user_interface`
+- Plugin: `radio_scale_peppy`
+- Method: `gpio13OpenScale`
+- Data / parameter: leave empty
+
+Encoder 1 long press
+- Plugin category: `user_interface`
+- Plugin: `radio_scale_peppy`
+- Method: `encoder1LongPress`
+- Data / parameter: leave empty
+
+Optional encoder 2 actions when Scale mode is active
+- left: `encoder2Left`
+- right: `encoder2Right`
+- short press: `encoder2ShortPress`
+- double press: `encoder2DoublePress`
+
+Exact CALLMETHOD tuple used by Volumio
+--------------------------------------
+Volumio logs these calls in the form:
+- `CALLMETHOD: user_interface radio_scale_peppy gpio13OpenScale`
+- `CALLMETHOD: user_interface radio_scale_peppy encoder1LongPress`
+- `CALLMETHOD: user_interface radio_scale_peppy encoder2Left`
+- `CALLMETHOD: user_interface radio_scale_peppy encoder2Right`
+
+If your encoder plugin exposes raw CALLMETHOD fields instead of friendly dropdowns,
+use exactly:
+- category = `user_interface`
+- plugin = `radio_scale_peppy`
+- method = one of the method names above
+- data = empty string
+
+Relevant websocket emits performed by the overlay
+-------------------------------------------------
+The overlay itself emits these UI socket events back to Volumio:
+- `browseLibrary` with `{ uri: '/' }`
+- fallback `browseLibrary` with `{ uri: '' }`
+- `addToFavourites` with the tuned station payload when the favourites helper is used
+
+Resident renderer service
+-------------------------
+Installed service file:
+- `/etc/systemd/system/scale_fm_renderer.service`
+
+Useful commands
+---------------
+- `sudo systemctl status scale_fm_renderer.service`
+- `sudo systemctl restart scale_fm_renderer.service`
+- `sudo journalctl -u scale_fm_renderer.service -n 200 --no-pager`
+
+Validation status
+-----------------
+Built and syntax-checked locally:
+- `node --check index.js`
+- `python3 -m py_compile renderer/radio_scale_renderer.py`
+
+Live behaviour on the target Pi still requires on-device validation.

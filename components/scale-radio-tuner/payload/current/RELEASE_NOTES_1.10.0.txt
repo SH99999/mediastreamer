@@ -1,0 +1,11 @@
+Scale FM Overlay 1.10.0
+
+Resident renderer service release.
+
+Highlights:
+- hidden standby renderer service (`scale_fm_renderer.service`)
+- PID and ready markers in runtime/
+- service-aware duplicate-spawn protection
+- fallback direct spawn remains available if the service is not running
+
+See RELEASE_INSTALL_NOTES_1.10.0.txt for GPIO mappings and websocket emits.

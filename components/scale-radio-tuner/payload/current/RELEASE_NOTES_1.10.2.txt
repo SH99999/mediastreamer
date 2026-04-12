@@ -1,0 +1,14 @@
+Scale FM Overlay 1.10.2
+=======================
+
+Highlights
+----------
+- hidden standby split into `idle` and `deep_idle`
+- no draw loop while hidden
+- no full redraw while hidden
+- coarse hidden runtime reload cadence to minimise CPU load
+- hard visible FPS cap for Pi-friendly rendering
+- shared overlay owner marker support via `/tmp/mediastreamer_active_overlay.json`
+- public call methods unchanged
+- resident service path unchanged
+- classic spawn fallback kept intact
