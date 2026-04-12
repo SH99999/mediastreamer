@@ -1,0 +1,589 @@
+{
+  "page": {
+    "label": "RadioScale Overlay Bridge 0.2.3 DB Cache R1"
+  },
+  "sections": [
+    {
+      "id": "s_service",
+      "element": "section",
+      "label": "Service \u00b7 RadioScale Overlay Bridge 0.2.3 DB Cache R1",
+      "icon": "fa-window-maximize",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSaveService"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "publicHost",
+          "port",
+          "httpsPort",
+          "overlayWidthPercent",
+          "debugLogging"
+        ]
+      },
+      "content": [
+        {
+          "id": "publicHost",
+          "type": "text",
+          "element": "input",
+          "label": "Public host / IP",
+          "doc": "Address used to open Volumio, for example 192.168.8.44 or volumio.local.",
+          "value": ""
+        },
+        {
+          "id": "port",
+          "type": "number",
+          "element": "input",
+          "label": "Overlay HTTP port",
+          "doc": "Default 5511.",
+          "value": 5511
+        },
+        {
+          "id": "httpsPort",
+          "type": "number",
+          "element": "input",
+          "label": "Spotify HTTPS port",
+          "doc": "Default 5443.",
+          "value": 5443
+        },
+        {
+          "id": "overlayWidthPercent",
+          "type": "number",
+          "element": "input",
+          "label": "Overlay width (%)",
+          "doc": "Recommended start value for a 1920x550 bar display is 36.",
+          "value": 36
+        },
+        {
+          "id": "debugLogging",
+          "element": "switch",
+          "label": "Debug logging",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "s_service_status",
+      "element": "section",
+      "label": "Service status",
+      "icon": "fa-info-circle",
+      "content": [
+        {
+          "id": "overlayUrl",
+          "type": "text",
+          "element": "input",
+          "label": "Overlay URL",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "secureUrl",
+          "type": "text",
+          "element": "input",
+          "label": "Secure auth base URL",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "redirectUri",
+          "type": "text",
+          "element": "input",
+          "label": "Redirect URI",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "listenerStatus",
+          "type": "text",
+          "element": "input",
+          "label": "Listeners",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "previewButton",
+          "element": "button",
+          "label": "Open overlay preview",
+          "onClick": {
+            "type": "openUrl",
+            "url": "http://127.0.0.1:5511/"
+          }
+        }
+      ]
+    },
+    {
+      "id": "s_targets",
+      "element": "section",
+      "label": "Target screens",
+      "icon": "fa-crosshairs",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSaveTargets"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "scaleRadioEnabled",
+          "funModeEnabled",
+          "playNowEnabled"
+        ]
+      },
+      "content": [
+        {
+          "id": "scaleRadioEnabled",
+          "element": "switch",
+          "label": "Enable for Scale Radio",
+          "value": true
+        },
+        {
+          "id": "funModeEnabled",
+          "element": "switch",
+          "label": "Enable for Fun Mode",
+          "value": true
+        },
+        {
+          "id": "playNowEnabled",
+          "element": "switch",
+          "label": "Enable for Play Now (optional)",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "s_lyrics",
+      "element": "section",
+      "label": "Lyrics",
+      "icon": "fa-file-text-o",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSaveLyrics"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "lyricsEnabled",
+          "preferSyncedLyrics",
+          "lyricsCacheTtlSeconds",
+          "lyricsSyncOffsetMs"
+        ]
+      },
+      "content": [
+        {
+          "id": "lyricsEnabled",
+          "element": "switch",
+          "label": "Enable lyrics",
+          "value": true
+        },
+        {
+          "id": "preferSyncedLyrics",
+          "element": "switch",
+          "label": "Prefer synced lyrics",
+          "value": true
+        },
+        {
+          "id": "lyricsCacheTtlSeconds",
+          "type": "number",
+          "element": "input",
+          "label": "Lyrics cache TTL (seconds)",
+          "value": 21600
+        },
+        {
+          "id": "lyricsSyncOffsetMs",
+          "type": "number",
+          "element": "input",
+          "label": "Lyrics sync offset (ms)",
+          "doc": "Use negative values if lyrics are early, positive values if lyrics are late. Example: 800 shifts lyrics 0.8s later.",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "s_cache",
+      "element": "section",
+      "label": "Persistent cache (SQLite sidecar)",
+      "icon": "fa-database",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSaveCache"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "persistentCacheEnabled",
+          "lyricsPersistentCacheDays",
+          "spotifyMatchCacheDays",
+          "negativeCacheHours",
+          "playlistPresenceCacheDays"
+        ]
+      },
+      "content": [
+        {
+          "id": "persistentCacheEnabled",
+          "element": "switch",
+          "label": "Enable persistent cache",
+          "doc": "Keeps SQLite sidecar cache active. Baseline logic stays intact; the bridge only checks the DB before and after normal online lookups.",
+          "value": true
+        },
+        {
+          "id": "lyricsPersistentCacheDays",
+          "type": "number",
+          "element": "input",
+          "label": "Lyrics cache TTL (days)",
+          "doc": "How long plain/synced lyrics stay in SQLite before they are refreshed from LRCLIB.",
+          "value": 14
+        },
+        {
+          "id": "spotifyMatchCacheDays",
+          "type": "number",
+          "element": "input",
+          "label": "Spotify match cache TTL (days)",
+          "doc": "How long successful Spotify track matches stay in SQLite.",
+          "value": 45
+        },
+        {
+          "id": "negativeCacheHours",
+          "type": "number",
+          "element": "input",
+          "label": "Negative cache TTL (hours)",
+          "doc": "How long not-found results for lyrics or Spotify stay blocked before the bridge tries again.",
+          "value": 6
+        },
+        {
+          "id": "playlistPresenceCacheDays",
+          "type": "number",
+          "element": "input",
+          "label": "Playlist dedupe TTL (days)",
+          "doc": "How long confirmed playlist track-presence entries stay in SQLite so duplicate adds can be prevented without a full Spotify scan.",
+          "value": 120
+        },
+        {
+          "id": "dbPath",
+          "type": "text",
+          "element": "input",
+          "label": "SQLite file",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "dbStatus",
+          "type": "text",
+          "element": "input",
+          "label": "DB status",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "dbCounts",
+          "type": "text",
+          "element": "input",
+          "label": "DB counters",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "clearDbCache",
+          "element": "button",
+          "label": "Clear persistent caches",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "user_interface/radioscale_overlay_bridge",
+              "method": "clearPersistentCaches"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "s_spotify",
+      "element": "section",
+      "label": "Spotify",
+      "icon": "fa-spotify",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSaveSpotify"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "spotifyClientId"
+        ]
+      },
+      "content": [
+        {
+          "id": "spotifyClientId",
+          "type": "text",
+          "element": "input",
+          "label": "Spotify Client ID",
+          "doc": "Create a Spotify app, copy the Client ID here, then save before connecting.",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "s_spotify_status",
+      "element": "section",
+      "label": "Spotify auth",
+      "icon": "fa-link",
+      "content": [
+        {
+          "id": "redirectUri2",
+          "type": "text",
+          "element": "input",
+          "label": "Redirect URI",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "authStartUrl",
+          "type": "text",
+          "element": "input",
+          "label": "Auth start URL",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "authStatus",
+          "type": "text",
+          "element": "input",
+          "label": "Authorization status",
+          "attributes": [
+            {
+              "readonly": "readonly"
+            }
+          ],
+          "value": ""
+        },
+        {
+          "id": "connectSpotify",
+          "element": "button",
+          "label": "Connect Spotify",
+          "onClick": {
+            "type": "openUrl",
+            "url": "https://127.0.0.1:5443/auth/start"
+          }
+        },
+        {
+          "id": "disconnectSpotify",
+          "element": "button",
+          "label": "Disconnect Spotify",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "user_interface/radioscale_overlay_bridge",
+              "method": "spotifyDisconnectAction"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "s_pl_1",
+      "element": "section",
+      "label": "Playlist 1",
+      "icon": "fa-list",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSavePlaylists"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "playlistSlot1Enabled",
+          "playlistSlot1Name",
+          "playlistSlot1Id"
+        ]
+      },
+      "content": [
+        {
+          "id": "playlistSlot1Enabled",
+          "element": "switch",
+          "label": "Enabled",
+          "value": true
+        },
+        {
+          "id": "playlistSlot1Name",
+          "type": "text",
+          "element": "input",
+          "label": "Display name",
+          "value": "Scale Radio 1"
+        },
+        {
+          "id": "playlistSlot1Id",
+          "type": "text",
+          "element": "input",
+          "label": "Playlist ID / URI / URL",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "s_pl_2",
+      "element": "section",
+      "label": "Playlist 2",
+      "icon": "fa-list",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSavePlaylists"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "playlistSlot2Enabled",
+          "playlistSlot2Name",
+          "playlistSlot2Id"
+        ]
+      },
+      "content": [
+        {
+          "id": "playlistSlot2Enabled",
+          "element": "switch",
+          "label": "Enabled",
+          "value": true
+        },
+        {
+          "id": "playlistSlot2Name",
+          "type": "text",
+          "element": "input",
+          "label": "Display name",
+          "value": "Scale Radio 2"
+        },
+        {
+          "id": "playlistSlot2Id",
+          "type": "text",
+          "element": "input",
+          "label": "Playlist ID / URI / URL",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "s_pl_3",
+      "element": "section",
+      "label": "Playlist 3",
+      "icon": "fa-list",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSavePlaylists"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "playlistSlot3Enabled",
+          "playlistSlot3Name",
+          "playlistSlot3Id"
+        ]
+      },
+      "content": [
+        {
+          "id": "playlistSlot3Enabled",
+          "element": "switch",
+          "label": "Enabled",
+          "value": false
+        },
+        {
+          "id": "playlistSlot3Name",
+          "type": "text",
+          "element": "input",
+          "label": "Display name",
+          "value": "Fun Mode 1"
+        },
+        {
+          "id": "playlistSlot3Id",
+          "type": "text",
+          "element": "input",
+          "label": "Playlist ID / URI / URL",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "s_pl_4",
+      "element": "section",
+      "label": "Playlist 4",
+      "icon": "fa-list",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/radioscale_overlay_bridge",
+        "method": "configSavePlaylists"
+      },
+      "saveButton": {
+        "label": "Save",
+        "data": [
+          "playlistSlot4Enabled",
+          "playlistSlot4Name",
+          "playlistSlot4Id"
+        ]
+      },
+      "content": [
+        {
+          "id": "playlistSlot4Enabled",
+          "element": "switch",
+          "label": "Enabled",
+          "value": false
+        },
+        {
+          "id": "playlistSlot4Name",
+          "type": "text",
+          "element": "input",
+          "label": "Display name",
+          "value": "Fun Mode 2"
+        },
+        {
+          "id": "playlistSlot4Id",
+          "type": "text",
+          "element": "input",
+          "label": "Playlist ID / URI / URL",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}
