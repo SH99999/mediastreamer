@@ -1,0 +1,33 @@
+{
+  "name": "as5600-angle-tester",
+  "version": "0.1.0",
+  "description": "Standalone AS5600 angle sensor tester and configurator for Volumio 4 (Bookworm)",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --check index.js"
+  },
+  "author": "OpenAI",
+  "license": "MIT",
+  "volumio_info": {
+    "prettyName": "AS5600 Angle Tester",
+    "icon": "fa-microchip",
+    "plugin_type": "system_hardware",
+    "boot_priority": 10,
+    "os": ["bookworm"],
+    "details": "Standalone AS5600 tester for Volumio 4. Reads the sensor over I2C, supports calibration, toast-based live testing, volume mapping and custom plugin emit for integration testing without RadioScale.",
+    "changelog": "0.1.0: Initial standalone AS5600 tester for Volumio 4 Bookworm.",
+    "architectures": ["armhf", "arm64"]
+  },
+  "dependencies": {
+    "fs-extra": "^0.28.0",
+    "i2c-bus": "^5.2.3",
+    "kew": "^0.7.0",
+    "socket.io-client": "1.7.4",
+    "v-conf": "^1.4.0"
+  },
+  "engines": {
+    "volumio": ">=4",
+    "node": ">=20"
+  },
+  "repository": "https://github.com/volumio/volumio-plugins-sources-bookworm"
+}

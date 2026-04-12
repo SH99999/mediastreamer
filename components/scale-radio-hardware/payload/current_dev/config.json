@@ -1,0 +1,20 @@
+{
+  "enabled": false,
+  "i2cBus": 1,
+  "i2cAddress": "0x36",
+  "pollIntervalMs": 50,
+  "invertDirection": false,
+  "rawMin": 0,
+  "rawMax": 4095,
+  "actionType": "toast_percent",
+  "resolutionSteps": 20,
+  "toastCooldownMs": 350,
+  "volumeStepPercent": 2,
+  "emitEndpoint": "",
+  "emitMethod": "",
+  "emitData": "{}",
+  "startupToast": true,
+  "lastProbeRaw": 0,
+  "lastProbePercent": 0,
+  "lastProbeMagnet": false
+}

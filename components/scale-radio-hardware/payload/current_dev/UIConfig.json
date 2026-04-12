@@ -1,0 +1,313 @@
+{
+  "page": {
+    "label": "AS5600 Angle Tester"
+  },
+  "sections": [
+    {
+      "id": "sensor_section",
+      "element": "section",
+      "label": "Sensor & Wiring",
+      "icon": "fa-microchip",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "system_hardware/as5600-angle-tester",
+        "method": "saveSensorConfig"
+      },
+      "saveButton": {
+        "label": "Save sensor settings",
+        "data": [
+          "enabled",
+          "i2cBus",
+          "i2cAddress",
+          "pollIntervalMs",
+          "startupToast"
+        ]
+      },
+      "content": [
+        {
+          "id": "enabled",
+          "element": "switch",
+          "label": "Enable live polling",
+          "doc": "Turns on continuous AS5600 polling when the plugin is enabled. Disable this if you only want manual probe and calibration actions.",
+          "value": false
+        },
+        {
+          "id": "i2cBus",
+          "element": "select",
+          "label": "I²C bus",
+          "doc": "AS5600 is an I²C device. On Raspberry Pi the normal wiring is SDA=GPIO2 and SCL=GPIO3 on bus 1. This plugin configures the bus number, not arbitrary GPIO pins.",
+          "value": {"value": 1, "label": "1 (GPIO2/GPIO3)"},
+          "options": [
+            {"value": 0, "label": "0"},
+            {"value": 1, "label": "1 (GPIO2/GPIO3)"},
+            {"value": 3, "label": "3"},
+            {"value": 4, "label": "4"},
+            {"value": 5, "label": "5"},
+            {"value": 6, "label": "6"}
+          ]
+        },
+        {
+          "id": "i2cAddress",
+          "element": "input",
+          "type": "text",
+          "label": "I²C address",
+          "doc": "Default AS5600 address is 0x36. Keep this unless your board or bridge setup requires a different address format.",
+          "value": "0x36"
+        },
+        {
+          "id": "pollIntervalMs",
+          "element": "input",
+          "type": "number",
+          "label": "Polling interval (ms)",
+          "doc": "How often the sensor is read during live polling. 40–100 ms is a good starting point.",
+          "value": 50,
+          "attributes": [
+            {"min": 20},
+            {"max": 1000}
+          ]
+        },
+        {
+          "id": "startupToast",
+          "element": "switch",
+          "label": "Show startup status toast",
+          "doc": "Shows a toast when the plugin successfully opens the sensor or when the sensor is missing.",
+          "value": true
+        },
+        {
+          "id": "probeSensor",
+          "element": "button",
+          "label": "Probe sensor now",
+          "doc": "Reads STATUS and RAW ANGLE once and shows the result in a toast. Useful before enabling live polling.",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "system_hardware/as5600-angle-tester",
+              "method": "probeSensor",
+              "data": {}
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "calibration_section",
+      "element": "section",
+      "label": "Calibration",
+      "icon": "fa-compass",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "system_hardware/as5600-angle-tester",
+        "method": "saveCalibrationConfig"
+      },
+      "saveButton": {
+        "label": "Save calibration",
+        "data": [
+          "invertDirection",
+          "rawMin",
+          "rawMax",
+          "resolutionSteps"
+        ]
+      },
+      "content": [
+        {
+          "id": "invertDirection",
+          "element": "switch",
+          "label": "Invert direction",
+          "doc": "Reverses the calibrated 0–100% direction if your knob runs the opposite way.",
+          "value": false
+        },
+        {
+          "id": "rawMin",
+          "element": "input",
+          "type": "number",
+          "label": "Calibration raw min",
+          "doc": "Stored left stop / start raw reading (0–4095). You can type it manually or capture it with the button below.",
+          "value": 0,
+          "attributes": [
+            {"min": 0},
+            {"max": 4095}
+          ]
+        },
+        {
+          "id": "rawMax",
+          "element": "input",
+          "type": "number",
+          "label": "Calibration raw max",
+          "doc": "Stored right stop / end raw reading (0–4095). Wrap-around ranges are supported.",
+          "value": 4095,
+          "attributes": [
+            {"min": 0},
+            {"max": 4095}
+          ]
+        },
+        {
+          "id": "resolutionSteps",
+          "element": "input",
+          "type": "number",
+          "label": "Action resolution steps",
+          "doc": "How many buckets the plugin uses for toast and custom emit actions across the full calibrated range.",
+          "value": 20,
+          "attributes": [
+            {"min": 2},
+            {"max": 200}
+          ]
+        },
+        {
+          "id": "captureMin",
+          "element": "button",
+          "label": "Capture current angle as min",
+          "doc": "Turn the knob to the left/end position, then click this. The plugin stores the current RAW ANGLE as rawMin and shows a toast.",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "system_hardware/as5600-angle-tester",
+              "method": "captureMin",
+              "data": {}
+            }
+          }
+        },
+        {
+          "id": "captureMax",
+          "element": "button",
+          "label": "Capture current angle as max",
+          "doc": "Turn the knob to the right/end position, then click this. The plugin stores the current RAW ANGLE as rawMax and shows a toast.",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "system_hardware/as5600-angle-tester",
+              "method": "captureMax",
+              "data": {}
+            }
+          }
+        },
+        {
+          "id": "resetCalibration",
+          "element": "button",
+          "label": "Reset calibration to full 0–4095 range",
+          "doc": "Restores rawMin=0 and rawMax=4095.",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "system_hardware/as5600-angle-tester",
+              "method": "resetCalibration",
+              "data": {}
+            },
+            "askForConfirm": {
+              "title": "Reset calibration",
+              "message": "Reset min and max back to the full 0–4095 range?"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "action_section",
+      "element": "section",
+      "label": "Live test action",
+      "icon": "fa-sliders",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "system_hardware/as5600-angle-tester",
+        "method": "saveActionConfig"
+      },
+      "saveButton": {
+        "label": "Save action settings",
+        "data": [
+          "actionType",
+          "toastCooldownMs",
+          "volumeStepPercent",
+          "emitEndpoint",
+          "emitMethod",
+          "emitData"
+        ]
+      },
+      "content": [
+        {
+          "id": "actionType",
+          "element": "select",
+          "label": "Function while turning",
+          "doc": "Choose what the plugin should do when the angle changes during live polling.",
+          "value": {"value": "toast_percent", "label": "Toast current percent"},
+          "options": [
+            {"value": "none", "label": "Do nothing (monitor only)"},
+            {"value": "toast_percent", "label": "Toast current percent"},
+            {"value": "volumio_volume", "label": "Map angle to Volumio volume"},
+            {"value": "custom_emit", "label": "Call another plugin method"}
+          ]
+        },
+        {
+          "id": "toastCooldownMs",
+          "element": "input",
+          "type": "number",
+          "label": "Toast cooldown (ms)",
+          "doc": "Minimum time between toasts when using the toast action.",
+          "value": 350,
+          "visibleIf": {"field": "actionType", "value": "toast_percent"},
+          "attributes": [
+            {"min": 0},
+            {"max": 5000}
+          ]
+        },
+        {
+          "id": "volumeStepPercent",
+          "element": "input",
+          "type": "number",
+          "label": "Volume step quantization (%)",
+          "doc": "When using volume mapping, only send a new volume when the mapped value changes by this many percent.",
+          "value": 2,
+          "visibleIf": {"field": "actionType", "value": "volumio_volume"},
+          "attributes": [
+            {"min": 1},
+            {"max": 20}
+          ]
+        },
+        {
+          "id": "emitEndpoint",
+          "element": "input",
+          "type": "text",
+          "label": "Plugin endpoint",
+          "doc": "Endpoint of the plugin to call, for example user_interface/radio_scale_peppy or music_service/mpd.",
+          "value": "",
+          "visibleIf": {"field": "actionType", "value": "custom_emit"}
+        },
+        {
+          "id": "emitMethod",
+          "element": "input",
+          "type": "text",
+          "label": "Method name",
+          "doc": "Method to call on the target plugin. The plugin will merge your JSON below with a sensor object containing raw, normalized, percent and zone.",
+          "value": "",
+          "visibleIf": {"field": "actionType", "value": "custom_emit"}
+        },
+        {
+          "id": "emitData",
+          "element": "input",
+          "type": "text",
+          "label": "Additional JSON data",
+          "doc": "Extra JSON payload, for example {} or {\"mode\":\"test\"}. The plugin adds sensor telemetry automatically.",
+          "value": "{}",
+          "visibleIf": {"field": "actionType", "value": "custom_emit"}
+        },
+        {
+          "id": "showCurrentState",
+          "element": "button",
+          "label": "Show current processed state",
+          "doc": "Displays the last processed raw and calibrated percent in a toast.",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "system_hardware/as5600-angle-tester",
+              "method": "showCurrentState",
+              "data": {}
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
