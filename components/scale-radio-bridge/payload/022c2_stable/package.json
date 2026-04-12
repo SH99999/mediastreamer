@@ -1,0 +1,33 @@
+{
+  "name": "radioscale_overlay_bridge",
+  "version": "0.2.2-c2",
+  "description": "RSOB 0.2.2-c2 cleanroom core plus isolated Spotify add-to-playlist.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --check index.js && node --check public/app.js"
+  },
+  "author": "OpenAI",
+  "license": "MIT",
+  "volumio_info": {
+    "prettyName": "RSOB 0.2.2-c2",
+    "plugin_type": "user_interface",
+    "icon": "fa-sliders",
+    "boot_priority": 11,
+    "details": "Cleanroom metadata/lyrics core with isolated Spotify connect and playlist add.",
+    "changelog": "0.2.2-c2: stable cleanroom base plus isolated Spotify auth, lookup and playlist add.",
+    "os": ["bookworm"],
+    "architectures": ["amd64", "armhf", "arm64", "i386"]
+  },
+  "engines": {
+    "node": ">=14",
+    "volumio": ">=4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "kew": "^0.7.0",
+    "node-fetch": "^2.6.9",
+    "socket.io-client": "^4.7.5",
+    "v-conf": "^1.4.3"
+  }
+}
