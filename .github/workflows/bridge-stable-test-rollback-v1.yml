@@ -1,0 +1,26 @@
+name: bridge-stable-test-rollback-v1
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rollback_bridge_stable:
+    runs-on: [self-hosted, scale-radio, pi]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preflight writable paths on runner host
+        shell: bash
+        run: |
+          mkdir -p /opt/scale-radio/state
+          mkdir -p /opt/scale-radio/removed/bridge
+          test -w /opt/scale-radio/state
+          test -w /opt/scale-radio/removed/bridge
+
+      - name: Remove stable Bridge payload from active runtime
+        shell: bash
+        run: |
+          bash components/scale-radio-bridge/deploy_candidates/022c2_stable_remove.sh
