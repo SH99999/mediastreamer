@@ -27,7 +27,7 @@ rm -rf "$LIVE_DIR"
 mkdir -p "$LIVE_DIR"
 cp -a "$PAYLOAD_DIR"/. "$LIVE_DIR"/
 
-if [[ -x "$LIVE_DIR/install.sh" ]]; then
+if [[ -f "$LIVE_DIR/install.sh" ]]; then
   (cd "$LIVE_DIR" && bash ./install.sh)
 fi
 
