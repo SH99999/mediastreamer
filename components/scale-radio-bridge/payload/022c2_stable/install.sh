@@ -1,35 +1,25 @@
-{
-  "enabled": {"type": "boolean", "value": true},
-  "port": {"type": "number", "value": 5511},
-  "httpsPort": {"type": "number", "value": 5443},
-  "publicHost": {"type": "string", "value": ""},
-  "overlayWidthPercent": {"type": "number", "value": 36},
-  "lyricsEnabled": {"type": "boolean", "value": true},
-  "preferSyncedLyrics": {"type": "boolean", "value": true},
-  "lyricsCacheTtlSeconds": {"type": "number", "value": 21600},
-  "lyricsSyncOffsetMs": {"type": "number", "value": 0},
-  "scaleRadioEnabled": {"type": "boolean", "value": true},
-  "funModeEnabled": {"type": "boolean", "value": true},
-  "playNowEnabled": {"type": "boolean", "value": false},
-  "spotifyClientId": {"type": "string", "value": ""},
-  "spotifyScopes": {"type": "string", "value": "playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"},
-  "spotifyAccessToken": {"type": "string", "value": ""},
-  "spotifyRefreshToken": {"type": "string", "value": ""},
-  "spotifyTokenExpiresAt": {"type": "number", "value": 0},
-  "spotifyAuthorizedUserId": {"type": "string", "value": ""},
-  "pkceVerifier": {"type": "string", "value": ""},
-  "pkceState": {"type": "string", "value": ""},
-  "playlistSlot1Enabled": {"type": "boolean", "value": true},
-  "playlistSlot1Name": {"type": "string", "value": "Scale Radio 1"},
-  "playlistSlot1Id": {"type": "string", "value": ""},
-  "playlistSlot2Enabled": {"type": "boolean", "value": true},
-  "playlistSlot2Name": {"type": "string", "value": "Scale Radio 2"},
-  "playlistSlot2Id": {"type": "string", "value": ""},
-  "playlistSlot3Enabled": {"type": "boolean", "value": false},
-  "playlistSlot3Name": {"type": "string", "value": "Fun Mode 1"},
-  "playlistSlot3Id": {"type": "string", "value": ""},
-  "playlistSlot4Enabled": {"type": "boolean", "value": false},
-  "playlistSlot4Name": {"type": "string", "value": "Fun Mode 2"},
-  "playlistSlot4Id": {"type": "string", "value": ""},
-  "debugLogging": {"type": "boolean", "value": false}
+#!/bin/bash
+set -e
+PDIR="$(cd "$(dirname "$0")" && pwd)"
+CDIR="/data/configuration/user_interface/radioscale_overlay_bridge"
+CFG="$CDIR/config.json"
+DEF="$PDIR/config.json"
+mkdir -p "$CDIR"
+DEFAULT_FILE="$DEF" TARGET_FILE="$CFG" node <<'NODE'
+const fs = require('fs');
+const d = JSON.parse(fs.readFileSync(process.env.DEFAULT_FILE, 'utf8'));
+let e = {};
+try { e = JSON.parse(fs.readFileSync(process.env.TARGET_FILE, 'utf8')); } catch (err) {}
+const m = JSON.parse(JSON.stringify(d));
+for (const [k, def] of Object.entries(d)) {
+  if (!Object.prototype.hasOwnProperty.call(e, k)) continue;
+  const src = e[k];
+  if (src && typeof src === 'object' && Object.prototype.hasOwnProperty.call(src, 'value')) m[k].value = src.value;
+  else m[k].value = src;
 }
+fs.writeFileSync(process.env.TARGET_FILE, JSON.stringify(m, null, 2));
+NODE
+chown -R volumio:volumio "$CDIR" || true
+chmod 755 "$CDIR" || true
+chmod 664 "$CFG" || true
+npm install --omit=dev
