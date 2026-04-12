@@ -360,6 +360,10 @@ class RadioScaleRenderer:
         flags = self.build_display_flags(desired_visible)
         self.screen = pygame.display.set_mode(self.size, flags)
         pygame.display.set_caption('Scale FM Overlay')
+        if desired_visible:
+            # Draw a dark frame immediately on reveal so X11/SDL mode switches do
+            # not expose a bright intermediate frame before the normal draw pass.
+            self.present_startup_splash()
         self.last_ui_mode = str(self.state.get('ui_mode') or 'normal').lower()
 
     def init_theme(self):

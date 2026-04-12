@@ -1,3 +1,9 @@
+## 1.10.3
+- browse-open path now waits briefly for renderer-ready to reduce pre-overlay white flashes
+- resident reveal paints an immediate dark pre-frame before the first normal draw cycle
+- smoother pointer tuning defaults (higher visible FPS cap, lower deadbands, faster follow gains)
+- hidden standby visibility reaction tightened with lower hidden reload/sleep intervals
+
 ## 1.10.2
 - first-show pointer hydration fix
 - exit UI pre-roll to reduce white flashes

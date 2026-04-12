@@ -184,11 +184,11 @@
     "type": "string"
   },
   "pointerVisualFollowGain": {
-    "value": 0.42,
+    "value": 0.5,
     "type": "number"
   },
   "pointerVisualLockedGain": {
-    "value": 0.52,
+    "value": 0.62,
     "type": "number"
   },
   "pointerJitterEnabled": {
@@ -215,6 +215,14 @@
     "value": 0.003,
     "type": "number"
   },
+  "pointerVisualDeadbandMHz": {
+    "value": 0.004,
+    "type": "number"
+  },
+  "pointerPixelSnapDeadbandPx": {
+    "value": 0.5,
+    "type": "number"
+  },
   "rendererReadyWaitMs": {
     "value": 2200,
     "type": "number"
@@ -236,11 +244,11 @@
     "type": "number"
   },
   "visibleFpsCap": {
-    "value": 24,
+    "value": 30,
     "type": "number"
   },
   "hiddenStateReloadMs": {
-    "value": 2000,
+    "value": 180,
     "type": "number"
   },
   "deepIdleReloadMs": {
@@ -248,7 +256,7 @@
     "type": "number"
   },
   "hiddenStandbySleepMs": {
-    "value": 250,
+    "value": 70,
     "type": "number"
   },
   "deepIdleSleepMs": {

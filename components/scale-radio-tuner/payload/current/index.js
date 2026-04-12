@@ -509,7 +509,9 @@ ControllerRadioScalePeppy.prototype.handleBrowseUri = function (curUri) {
     .then(() => {
       this.logger.info('[radio_scale_peppy] handleBrowseUri ' + uri);
       if (uri === this.browseSourceUri || uri === this.browseSourceUri + '/open') {
-        return this.openScale(false).then(() => this.getBrowseRoot(true));
+        return this.openScale(false)
+          .then(() => this.waitForRendererReadyBriefly(this.getNumberConfig('rendererReadyWaitMs', 2200)))
+          .then(() => this.getBrowseRoot(true));
       }
 
       if (uri === this.browseSourceUri + '/close') {
@@ -643,7 +645,7 @@ ControllerRadioScalePeppy.prototype.waitForRendererReadyBriefly = function (time
     if (Date.now() >= deadline) {
       return Promise.resolve({ success: true, ready: false, timeout: true });
     }
-    return this.delay(40).then(poll);
+    return this.delay(25).then(poll);
   };
   return poll();
 };
@@ -1855,6 +1857,8 @@ ControllerRadioScalePeppy.prototype.writeSettingsFile = function () {
     pointer_idle_lock_ms: this.getNumberConfig('pointerIdleLockMs', 220),
     pointer_startup_settle_ms: this.getNumberConfig('pointerStartupSettleMs', 900),
     pointer_settle_epsilon_mhz: this.getNumberConfig('pointerSettleEpsilonMHz', 0.004),
+    pointer_visual_deadband_mhz: this.getNumberConfig('pointerVisualDeadbandMHz', 0.0045),
+    pointer_pixel_snap_deadband_px: this.getNumberConfig('pointerPixelSnapDeadbandPx', 0.5),
     hiss_start_delay_ms: this.getNumberConfig('hissStartDelayMs', 1600),
     pointer_jitter_enabled: this.getBooleanConfig('pointerJitterEnabled', false) === true,
     lock_visual_snap_enabled: this.getBooleanConfig('lockVisualSnapEnabled', false) === true,
