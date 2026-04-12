@@ -1,0 +1,39 @@
+{
+  "name": "radioscale_overlay_bridge",
+  "version": "0.2.3-db-cache-r1",
+  "description": "Baseline 0.2.2 with SQLite sidecar cache for lyrics, Spotify matches, negative results and playlist dedupe.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --check index.js && node --check public/app.js"
+  },
+  "author": "OpenAI",
+  "license": "MIT",
+  "volumio_info": {
+    "prettyName": "RadioScale Overlay Bridge 0.2.3 DB Cache R1",
+    "plugin_type": "user_interface",
+    "icon": "fa-sliders",
+    "boot_priority": 11,
+    "details": "Baseline 0.2.2 with SQLite sidecar cache for lyrics, Spotify matches, negative results and playlist dedupe.",
+    "changelog": "0.2.3-db-cache-r1: SQLite sidecar cache for lyrics, Spotify matches, negative results and playlist dedupe. Baseline-safe release.",
+    "os": ["bookworm"],
+    "architectures": ["amd64", "armhf", "arm64", "i386"]
+  },
+  "engines": {
+    "node": ">=14",
+    "volumio": ">=4"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "kew": "^0.7.0",
+    "node-fetch": "^2.6.9",
+    "socket.io-client": "^4.7.5",
+    "v-conf": "^1.4.3"
+  },
+  "prettyName": "RadioScale Overlay Bridge 0.2.3 DB Cache R1",
+  "pluginInfo": {
+    "prettyName": "RadioScale Overlay Bridge 0.2.3 DB Cache R1",
+    "version": "0.2.3-db-cache-r1",
+    "changelog": "0.2.3-db-cache-r1: added persistent SQLite sidecar cache without changing baseline Spotify lookup strategy."
+  }
+}
