@@ -1,0 +1,20 @@
+# MediaStreamer direct-now-playing launcher v0.3.1
+# Static appliance artwork only.
+Window.SetBackgroundTopColor(0.00, 0.00, 0.00);
+Window.SetBackgroundBottomColor(0.00, 0.00, 0.00);
+img = Image("appliance_artwork.png");
+screen_ratio = Window.GetHeight() / Window.GetWidth();
+img_ratio = img.GetHeight() / img.GetWidth();
+if (screen_ratio > img_ratio)
+ {
+  scale = Window.GetHeight() / img.GetHeight();
+ }
+else
+ {
+  scale = Window.GetWidth() / img.GetWidth();
+ }
+scaled = img.Scale(img.GetWidth() * scale, img.GetHeight() * scale);
+sprite = Sprite(scaled);
+sprite.SetX(Window.GetWidth() / 2 - scaled.GetWidth() / 2);
+sprite.SetY(Window.GetHeight() / 2 - scaled.GetHeight() / 2);
+sprite.SetZ(100);

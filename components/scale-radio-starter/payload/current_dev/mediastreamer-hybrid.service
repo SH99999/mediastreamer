@@ -1,0 +1,14 @@
+[Unit]
+Description=MediaStreamer Direct Now Playing Topmost Keeper State API Server
+After=network.target
+
+[Service]
+Type=simple
+User=volumio
+Group=volumio
+ExecStart=/usr/bin/python3 /opt/mediastreamer-hybrid/server.py --root /opt/mediastreamer-hybrid/www --state /opt/mediastreamer-hybrid/state/state.json --port 7700
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

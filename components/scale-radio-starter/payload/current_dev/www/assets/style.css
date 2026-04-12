@@ -1,0 +1,12 @@
+html, body { background:#000 !important; margin:0 !important; width:100% !important; height:100% !important; overflow:hidden !important; }
+body { position:relative !important; }
+#target-frame { position:fixed; inset:0; width:100%; height:100%; border:0; background:#000; opacity:0; transition:opacity 700ms ease; z-index:1; }
+#target-frame.ms-visible { opacity:1; }
+#artwork-overlay { position:fixed; inset:0; z-index:2; pointer-events:none; background:#000 url('/assets/appliance_artwork.png') center center / cover no-repeat; opacity:1; transition:opacity 900ms ease; }
+#artwork-overlay.ms-hidden { opacity:0; }
+#standby-overlay { position:fixed; inset:0; z-index:3; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.88); color:#f1e3bf; font-family:Arial,sans-serif; opacity:0; pointer-events:none; transition:opacity 220ms ease; }
+#standby-overlay.ms-visible { opacity:1; pointer-events:auto; }
+#standby-overlay .ms-panel { text-align:center; }
+#standby-overlay .ms-title { font-size:24px; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:20px; opacity:0.85; }
+#standby-overlay .ms-clock { font-size:88px; font-weight:300; line-height:1; margin-bottom:20px; }
+#standby-overlay .ms-hint { font-size:18px; opacity:0.75; }

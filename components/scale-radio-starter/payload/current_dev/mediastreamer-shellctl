@@ -1,0 +1,19 @@
+#!/bin/bash
+set -euo pipefail
+API="http://127.0.0.1:7700/api/state"
+cmd="${1:-status}"
+case "$cmd" in
+  standby)
+    curl -s -X POST -H 'Content-Type: application/json' -d '{"standby":true,"last_transition":'"$(date +%s%3N)"',"version":"0.3.3-direct-now-playing-topmost-keeper"}' "$API"
+    ;;
+  wake)
+    curl -s -X POST -H 'Content-Type: application/json' -d '{"standby":false,"last_transition":'"$(date +%s%3N)"',"version":"0.3.3-direct-now-playing-topmost-keeper"}' "$API"
+    ;;
+  status)
+    curl -s "$API"
+    ;;
+  *)
+    echo "Usage: mediastreamer-shellctl {standby|wake|status}" >&2
+    exit 1
+    ;;
+esac

@@ -1,0 +1,58 @@
+MediaStreamer Direct Now Playing Topmost Keeper v0.3.3
+
+1. Goal
+- keep the same appliance artwork visible from visible Plymouth into the first Chromium/X phase
+- prefer Now Playing on http://127.0.0.1:4004/
+- fallback to Volumio root on http://127.0.0.1:3000/
+- remove the remaining visible shell identity as much as possible
+
+2. What changed versus 0.3.2
+- added /opt/mediastreamer-hybrid/artwork_keeper.py
+- keeper is now a real topmost fullscreen X window using tkinter instead of only setting the X root background
+- server.py now releases the keeper shortly after the local launcher page is first requested
+- package version is now 0.3.3-direct-now-playing-topmost-keeper
+- installer removes older direct-now-playing plymouth quit drop-ins to avoid duplicate holds
+
+3. Important limitations
+- package is structurally built and syntax checked here, but not executed live on the target Pi
+- topmost fullscreen keeper depends on python3 tkinter being available on the target image
+- if tkinter is unavailable, the keeper window will not appear and the boot path may look similar to 0.3.1/0.3.2
+
+4. Installation order
+- keep bootdelay fix 0.1.0
+- uninstall the currently active 0.3.2 direct-now-playing keeper package first
+- then install this 0.3.3 package
+
+5. Install
+chmod +x install.sh uninstall.sh verify.sh
+sudo bash ./install.sh
+sudo reboot
+
+6. Verify
+sudo bash /opt/mediastreamer-direct-now-playing-topmost-keeper-install/verify.sh
+mediastreamer-shellctl standby
+mediastreamer-shellctl wake
+mediastreamer-shellctl status
+
+7. Rollback
+sudo bash /opt/mediastreamer-direct-now-playing-topmost-keeper-install/uninstall.sh
+sudo reboot
+
+8. Files changed by install
+- /opt/mediastreamer-hybrid/server.py
+- /opt/mediastreamer-hybrid/kiosk-wrapper.sh
+- /opt/mediastreamer-hybrid/artwork_keeper.py
+- /opt/mediastreamer-hybrid/www/index.html
+- /opt/mediastreamer-hybrid/www/assets/app.js
+- /opt/mediastreamer-hybrid/www/assets/style.css
+- /opt/mediastreamer-hybrid/www/assets/appliance_artwork.png
+- /etc/systemd/system/mediastreamer-hybrid.service
+- /usr/local/bin/mediastreamer-shellctl
+- /usr/share/plymouth/themes/volumio-adaptive/volumio-adaptive.script
+- /usr/share/plymouth/themes/volumio-adaptive/appliance_artwork.png
+- /etc/systemd/system/plymouth-quit.service.d/mediastreamer-direct-now-playing-topmost-keeper.conf
+
+9. Manual fixes already included
+- /tmp/mediastreamer-kiosk-ready ready-marker path
+- launcher path rather than direct 4004 start
+- state API version bump to 0.3.3-direct-now-playing-topmost-keeper

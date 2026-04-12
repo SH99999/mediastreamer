@@ -1,0 +1,7 @@
+{
+  "standby": false,
+  "startup_completed": false,
+  "startup_started_at": null,
+  "last_transition": null,
+  "version": "0.3.3-direct-now-playing-topmost-keeper"
+}

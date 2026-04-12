@@ -1,0 +1,48 @@
+MediaStreamer Direct Now Playing Topmost Keeper Patch v0.3.4
+
+1. Goal
+- reduce the remaining mediastreamer -> black -> white -> mediastreamer gap
+- do that by waiting for the topmost keeper window to be really visible before the
+  kiosk-ready marker is allowed to release Plymouth
+
+2. Scope
+- patch only, intended for an already working 0.3.3 direct-now-playing topmost-keeper install
+- no changes to bootdelay fix 0.1.0
+- no changes to Plymouth artwork assets
+- no changes to the launcher page or Now Playing target selection
+
+3. What changed
+- artwork_keeper.py now accepts --readyfile
+- artwork_keeper.py writes the ready marker only after the Tk window has been created,
+  updated, and given a short map delay
+- kiosk-wrapper.sh now launches the keeper with both pidfile and readyfile
+- kiosk-wrapper.sh waits up to about 2.4 seconds for /tmp/mediastreamer-artwork-keeper.ready
+  before it creates /tmp/mediastreamer-kiosk-ready
+- server.py version string bumped to 0.3.4-direct-now-playing-topmost-keeper-patch
+- verify.sh expanded to show the new keeper-ready references
+
+4. Install
+chmod +x install.sh uninstall.sh verify.sh
+sudo bash ./install.sh
+sudo reboot
+
+5. Verify
+sudo bash /opt/mediastreamer-direct-now-playing-topmost-keeper-patch-install/verify.sh
+mediastreamer-shellctl standby
+mediastreamer-shellctl wake
+mediastreamer-shellctl status
+
+6. Rollback
+sudo bash /opt/mediastreamer-direct-now-playing-topmost-keeper-patch-install/uninstall.sh
+sudo reboot
+
+7. Files modified by this patch
+- /opt/mediastreamer-hybrid/server.py
+- /opt/mediastreamer-hybrid/kiosk-wrapper.sh
+- /opt/mediastreamer-hybrid/artwork_keeper.py
+
+8. Important note
+- this patch was built and syntax-checked here, but not executed live on the target Pi
+- if the keeper-ready handshake does not improve the remaining black/white interval,
+  then the next step is likely an X-layer first-paint workaround rather than another
+  launch-flow patch

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MediaStreamer Launcher</title>
+  <style>html, body { margin:0; width:100%; height:100%; overflow:hidden; background:#000 url('/assets/appliance_artwork.png') center center / cover no-repeat; }</style>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <iframe id="target-frame" title="Now Playing"></iframe>
+  <div id="artwork-overlay"></div>
+  <div id="standby-overlay" aria-hidden="true">
+    <div class="ms-panel">
+      <div class="ms-title">Standby</div>
+      <div class="ms-clock">00:00</div>
+      <div class="ms-hint">Tap anywhere to wake</div>
+    </div>
+  </div>
+  <script src="/assets/app.js"></script>
+</body>
+</html>
