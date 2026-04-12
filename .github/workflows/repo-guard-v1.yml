@@ -1,0 +1,27 @@
+name: repo-guard-v1
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  repo_integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Run repo integrity checks
+        shell: bash
+        run: |
+          bash tools/ci/check_repo_integrity.sh
+
+  shell_syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Run shell syntax checks
+        shell: bash
+        run: |
+          bash tools/ci/check_shell_syntax.sh
