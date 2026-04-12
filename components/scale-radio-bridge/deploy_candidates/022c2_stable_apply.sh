@@ -4,9 +4,9 @@ set -euo pipefail
 # Apply the exact Bridge 0.2.2-c2 stable payload from the repo into the live Volumio plugin path.
 # Inputs: none. Uses the repo-relative stable payload tree.
 # Outputs: live plugin files at /data/plugins/user_interface/radioscale_overlay_bridge.
-# Side effects: overwrites the live Bridge plugin path and refreshes plugin-local dependencies via npm.
-# Failure behavior: exits non-zero on copy/install failure before reporting success.
-# Dependencies: bash, cp, rm, npm, node, Volumio plugin filesystem layout.
+# Side effects: overwrites the live Bridge plugin path, runs plugin install, restarts Volumio, waits for recovery.
+# Failure behavior: exits non-zero on copy/install/restart failure before reporting success.
+# Dependencies: bash, cp, rm, npm, node, sudo, systemctl, pgrep, Volumio plugin filesystem layout.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPONENT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -33,4 +33,20 @@ fi
 
 chown -R volumio:volumio "$LIVE_DIR" 2>/dev/null || true
 
-echo "SR_BRIDGE: applied stable Bridge payload to $LIVE_DIR"
+echo "SR_BRIDGE: restarting volumio after stable Bridge install"
+sudo systemctl restart volumio
+
+echo "SR_BRIDGE: waiting for volumio recovery"
+for i in $(seq 1 60); do
+  if systemctl is-active --quiet volumio; then
+    break
+  fi
+  sleep 2
+done
+
+if ! systemctl is-active --quiet volumio; then
+  echo "SR_BRIDGE: volumio did not recover after restart"
+  exit 2
+fi
+
+echo "SR_BRIDGE: stable Bridge payload applied to $LIVE_DIR"

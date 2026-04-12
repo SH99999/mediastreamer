@@ -5,10 +5,11 @@ set -euo pipefail
 # Inputs: none.
 # Outputs: prints healthcheck status to stdout.
 # Side effects: writes current Bridge phase to state.
-# Failure behavior: exits non-zero if required files are missing.
-# Dependencies: bash, test, Volumio plugin filesystem layout.
+# Failure behavior: exits non-zero if required files, dependencies, or baseline runtime checks fail.
+# Dependencies: bash, test, systemctl, pgrep, Volumio plugin filesystem layout.
 
 LIVE_DIR="/data/plugins/user_interface/radioscale_overlay_bridge"
+CONFIG_DIR="/data/configuration/user_interface/radioscale_overlay_bridge"
 STATE_DIR="/opt/scale-radio/state"
 mkdir -p "$STATE_DIR"
 echo "bridge_healthcheck_022c2_stable" > "$STATE_DIR/bridge.last_phase"
@@ -24,21 +25,41 @@ required=(
   "$LIVE_DIR/i18n/strings_en.json"
 )
 
-if [[ ! -d "/data/configuration/user_interface/radioscale_overlay_bridge" ]]; then
-  echo "SR_BRIDGE: missing Bridge config directory"
-  exit 2
-fi
-
-if [[ ! -d "$LIVE_DIR/node_modules/kew" ]]; then
-  echo "SR_BRIDGE: missing required dependency node_modules/kew"
-  exit 2
-fi
-
 for path in "${required[@]}"; do
   if [[ ! -f "$path" ]]; then
     echo "SR_BRIDGE: missing required live file $path"
     exit 2
   fi
 done
+
+if [[ ! -d "$CONFIG_DIR" ]]; then
+  echo "SR_BRIDGE: missing Bridge config directory $CONFIG_DIR"
+  exit 2
+fi
+
+if [[ ! -d "$LIVE_DIR/node_modules/kew" ]]; then
+  echo "SR_BRIDGE: missing required dependency $LIVE_DIR/node_modules/kew"
+  exit 2
+fi
+
+if ! systemctl is-active --quiet volumio; then
+  echo "SR_BRIDGE: volumio is not active"
+  exit 2
+fi
+
+if ! systemctl is-active --quiet volumio-kiosk; then
+  echo "SR_BRIDGE: volumio-kiosk is not active"
+  exit 2
+fi
+
+if [[ "$(pgrep -fc chromium || true)" -lt 1 ]]; then
+  echo "SR_BRIDGE: chromium is not running"
+  exit 2
+fi
+
+if [[ "$(pgrep -fc Xorg || true)" -lt 1 ]]; then
+  echo "SR_BRIDGE: Xorg is not running"
+  exit 2
+fi
 
 echo "SR_BRIDGE: stable Bridge healthcheck passed"
