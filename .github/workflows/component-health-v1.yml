@@ -1,0 +1,19 @@
+name: component-health-v1
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  active_component_hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check active components
+        shell: bash
+        run: |
+          bash tools/ci/check_active_components_v1.sh
