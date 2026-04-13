@@ -1,0 +1,19 @@
+name: governance-health-v1
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  governance_contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run governance contract checks
+        shell: bash
+        run: |
+          bash tools/ci/check_governance_contracts_v1.sh
