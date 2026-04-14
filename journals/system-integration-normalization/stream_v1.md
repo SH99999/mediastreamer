@@ -1,6 +1,8 @@
 # STREAM — system_integration_normalization
 
 ## Entries
+### first live governance loop validation
+- validated first governed demand issue path for control-plane testing
 
 ### 2026-04-12 / main / PR #26 merged
 - governance v2 docs landed on `main`
