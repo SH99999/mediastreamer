@@ -1,0 +1,50 @@
+name: repo-control-plane-sanity-check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sanity_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify autonomy and governance control-plane files
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          required = [
+            'contracts/repo/system_integration_governance_index_v4.md',
+            'contracts/repo/issue_governance_routing_standard_v1.md',
+            'contracts/repo/autonomous_execution_and_chat_intake_standard_v1.md',
+            'contracts/repo/system_integration_escalation_contract_v1.md',
+            'docs/agents/system_integration_recovery_onboarding_v4.md',
+            'docs/agents/skill_autonomous_repo_operations_v1.md',
+            'journals/system-integration-normalization/STATUS_system_integration_normalization_v5.md',
+            'journals/system-integration-normalization/DECISIONS_system_integration_normalization_v5.md',
+            'tools/governance/label_catalog_v1.json',
+            'tools/governance/autonomous_delivery_matrix_v1.json',
+            '.github/workflows/weekly-governance-report-issue.yml',
+            '.github/workflows/rebase-dev-and-integration-branches-on-main.yml',
+            '.github/workflows/ensure-governance-labels.yml',
+            '.github/workflows/open-decision-issues.yml',
+            '.github/workflows/branch-drift-issues.yml',
+            '.github/workflows/journal-freshness-issues.yml',
+            '.github/workflows/pr-governance-review.yml',
+            '.github/workflows/bootstrap-new-component.yml',
+            '.github/workflows/stale-governance-items.yml',
+            '.github/workflows/release-readiness-audit.yml',
+            '.github/workflows/governance-closeout.yml',
+            '.github/workflows/issue-context-enrichment.yml',
+            '.github/workflows/system-integration-escalation.yml',
+            '.github/workflows/autonomous-delivery-orchestrator.yml',
+            '.github/workflows/decision-verification-on-merge.yml'
+          ]
+          missing = [p for p in required if not Path(p).exists()]
+          if missing:
+            raise SystemExit('Missing required control-plane files:\n' + '\n'.join(missing))
+          print(f'control_plane_files_ok={len(required)}')
+          PY
