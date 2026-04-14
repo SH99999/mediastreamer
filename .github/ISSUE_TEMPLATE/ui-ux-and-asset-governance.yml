@@ -1,0 +1,52 @@
+name: UI/UX standard or asset governance
+description: Route UI/UX standard definition or asset-placement work into the governed issue model.
+title: "[UX/Asset] "
+labels:
+  - governance
+  - agent:ux
+  - state:needs-triage
+  - source:manual
+body:
+  - type: dropdown
+    id: demand_type
+    attributes:
+      label: Demand type
+      options:
+        - UI/UX standard definition
+        - Asset placement
+        - Shared design guidance
+        - Visual consistency issue
+    validations:
+      required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - component-only
+        - cross-component
+        - system-wide
+    validations:
+      required: true
+  - type: input
+    id: components
+    attributes:
+      label: Affected component suffixes
+      description: Example: bridge, tuner, starter
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the demand and the desired outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: assets
+    attributes:
+      label: Asset paths or placeholders
+      description: List any existing assets, missing assets, or desired target locations.
+  - type: textarea
+    id: decision_need
+    attributes:
+      label: Decision needed
+      description: State the owner decision required, if any.
