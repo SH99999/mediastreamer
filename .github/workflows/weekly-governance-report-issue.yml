@@ -1,0 +1,341 @@
+name: weekly-governance-report-issue
+
+on:
+  schedule:
+    - cron: '15 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: weekly-governance-report-issue
+  cancel-in-progress: false
+
+jobs:
+  build_weekly_governance_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all remote branches
+        shell: bash
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
+
+      - name: Build and publish weekly governance report issue
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+          import urllib.error
+          import urllib.parse
+          import urllib.request
+          from datetime import datetime, timezone, date
+          from pathlib import Path
+
+          REPO = os.environ['GITHUB_REPOSITORY']
+          TOKEN = os.environ['GITHUB_TOKEN']
+          API_BASE = f'https://api.github.com/repos/{REPO}'
+          WORKSPACE = Path(os.environ['GITHUB_WORKSPACE'])
+          STEP_SUMMARY = Path(os.environ['GITHUB_STEP_SUMMARY'])
+
+          def sh(*args):
+              return subprocess.check_output(args, text=True).strip()
+
+          def sh_lines(*args):
+              out = sh(*args)
+              return [line for line in out.splitlines() if line.strip()]
+
+          def api(method, path, data=None):
+              if path.startswith('http'):
+                  url = path
+              else:
+                  url = f'{API_BASE}{path}'
+              headers = {
+                  'Authorization': f'Bearer {TOKEN}',
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'User-Agent': 'weekly-governance-report-workflow',
+              }
+              body = None
+              if data is not None:
+                  body = json.dumps(data).encode('utf-8')
+                  headers['Content-Type'] = 'application/json'
+              req = urllib.request.Request(url, data=body, headers=headers, method=method)
+              with urllib.request.urlopen(req) as resp:
+                  raw = resp.read().decode('utf-8')
+                  return json.loads(raw) if raw else None
+
+          def api_maybe(method, path, data=None):
+              try:
+                  return api(method, path, data)
+              except urllib.error.HTTPError as e:
+                  if e.code in (404, 422):
+                      return None
+                  raise
+
+          def paginated(path):
+              page = 1
+              items = []
+              while True:
+                  joiner = '&' if '?' in path else '?'
+                  data = api('GET', f'{path}{joiner}per_page=100&page={page}')
+                  if not data:
+                      break
+                  items.extend(data)
+                  if len(data) < 100:
+                      break
+                  page += 1
+              return items
+
+          def ensure_label(name, color, description):
+              created = api_maybe('POST', '/labels', {
+                  'name': name,
+                  'color': color,
+                  'description': description,
+              })
+              return created is not None
+
+          def git_date_for(path):
+              try:
+                  return sh('git', 'log', '-1', '--format=%cs', '--', str(path))
+              except subprocess.CalledProcessError:
+                  return 'n/a'
+
+          def read_text(path):
+              try:
+                  return Path(path).read_text(encoding='utf-8')
+              except FileNotFoundError:
+                  return ''
+
+          def extract_recent_stream_heading(path):
+              text = read_text(path)
+              for line in text.splitlines():
+                  if line.startswith('### '):
+                      return line[4:].strip()
+              return 'none'
+
+          def extract_open_decisions_from_section(path):
+              text = read_text(path)
+              if not text:
+                  return []
+              lines = text.splitlines()
+              capture = False
+              section = []
+              for line in lines:
+                  if re.match(r'^##\s+Open Decisions\s*$', line):
+                      capture = True
+                      continue
+                  if capture and re.match(r'^##\s+', line):
+                      break
+                  if capture:
+                      stripped = line.strip()
+                      if stripped.startswith('- '):
+                          section.append(stripped[2:].strip())
+              return section
+
+          def extract_open_decision_entries(path):
+              text = read_text(path)
+              if not text:
+                  return []
+              results = []
+              lines = text.splitlines()
+              current = None
+              status = None
+              for line in lines:
+                  if line.startswith('### '):
+                      if current and status == 'open':
+                          results.append(current)
+                      current = line[4:].strip()
+                      status = None
+                      continue
+                  if current and line.strip().lower().startswith('- status:'):
+                      status = line.split(':', 1)[1].strip().lower()
+              if current and status == 'open':
+                  results.append(current)
+              return results
+
+          now = datetime.now(timezone.utc)
+          iso_year, iso_week, _ = now.isocalendar()
+          title = f'Weekly governance report — {iso_year}-W{iso_week:02d}'
+          generated = now.strftime('%Y-%m-%d %H:%M UTC')
+
+          ensure_label('weekly-governance-report', '1d76db', 'Scheduled governance summary generated from repo truth')
+          ensure_label('governance', '5319e7', 'Governance and repo operating doctrine')
+
+          branch_names = sh_lines('bash', '-lc', "git for-each-ref --format='%(refname:short)' refs/remotes/origin | sed 's#^origin/##' | grep -E '^(dev|integration)/' | sort -u || true")
+          drift_rows = []
+          behind_count = 0
+          diverged_count = 0
+          for branch in branch_names:
+              try:
+                  counts = sh('git', 'rev-list', '--left-right', '--count', f'origin/main...origin/{branch}')
+                  main_only, branch_only = [int(x) for x in counts.split()]
+              except subprocess.CalledProcessError:
+                  main_only, branch_only = 0, 0
+              if main_only == 0 and branch_only == 0:
+                  status = 'synced'
+              elif main_only > 0 and branch_only == 0:
+                  status = 'behind-main'
+              elif main_only == 0 and branch_only > 0:
+                  status = 'ahead-of-main'
+              else:
+                  status = 'diverged'
+              if main_only > 0:
+                  behind_count += 1
+              if main_only > 0 and branch_only > 0:
+                  diverged_count += 1
+              drift_rows.append((branch, main_only, branch_only, status))
+          drift_rows.sort(key=lambda x: (-x[1], -x[2], x[0]))
+
+          current_state_files = sorted(WORKSPACE.glob('journals/*/current_state_v1.md'))
+          journal_rows = []
+          stale_streams = []
+          component_count = 0
+          today = date.today()
+          for current_state in current_state_files:
+              component = current_state.parent.name
+              stream = current_state.parent / 'stream_v1.md'
+              current_date = git_date_for(current_state)
+              stream_date = git_date_for(stream)
+              recent_entry = extract_recent_stream_heading(stream)
+              component_count += 1
+              freshness = 'unknown'
+              if stream_date != 'n/a':
+                  stream_dt = datetime.strptime(stream_date, '%Y-%m-%d').date()
+                  age_days = (today - stream_dt).days
+                  freshness = f'{age_days}d'
+                  if age_days > 14:
+                      stale_streams.append(component)
+              journal_rows.append((component, current_date, stream_date, freshness, recent_entry))
+
+          open_decision_items = []
+          for decision_log in sorted(WORKSPACE.glob('journals/**/DECISIONS_*.md')):
+              for item in extract_open_decision_entries(decision_log):
+                  open_decision_items.append(f'{decision_log.relative_to(WORKSPACE)} — {item}')
+          for state_file in sorted(WORKSPACE.glob('journals/**/current_state_v1.md')):
+              for item in extract_open_decisions_from_section(state_file):
+                  open_decision_items.append(f'{state_file.relative_to(WORKSPACE)} — {item}')
+          for status_file in sorted(WORKSPACE.glob('journals/**/STATUS_*.md')):
+              for item in extract_open_decisions_from_section(status_file):
+                  open_decision_items.append(f'{status_file.relative_to(WORKSPACE)} — {item}')
+
+          open_prs_raw = paginated('/pulls?state=open')
+          open_prs = []
+          for pr in open_prs_raw:
+              open_prs.append({
+                  'number': pr['number'],
+                  'title': pr['title'],
+                  'head': pr['head']['ref'],
+                  'base': pr['base']['ref'],
+                  'updated_at': pr['updated_at'][:10],
+                  'url': pr['html_url'],
+              })
+
+          body_lines = []
+          body_lines.append(f'# {title}')
+          body_lines.append('')
+          body_lines.append(f'Generated: {generated}')
+          body_lines.append('')
+          body_lines.append('## Executive summary')
+          body_lines.append(f'- components scanned: {component_count}')
+          body_lines.append(f'- open pull requests: {len(open_prs)}')
+          body_lines.append(f'- active dev/integration branches scanned: {len(branch_names)}')
+          body_lines.append(f'- branches behind main: {behind_count}')
+          body_lines.append(f'- diverged branches: {diverged_count}')
+          body_lines.append(f'- open decision items found: {len(open_decision_items)}')
+          body_lines.append(f'- components with stream older than 14 days: {len(stale_streams)}')
+          body_lines.append('')
+          body_lines.append('## Branch drift against main')
+          body_lines.append('| Branch | Behind main | Ahead of main | Status |')
+          body_lines.append('|---|---:|---:|---|')
+          for branch, behind, ahead, status in drift_rows:
+              body_lines.append(f'| `{branch}` | {behind} | {ahead} | {status} |')
+          body_lines.append('')
+          body_lines.append('## Journal freshness')
+          body_lines.append('| Component | current_state last commit | stream last commit | stream age | most recent stream entry |')
+          body_lines.append('|---|---|---|---|---|')
+          for component, current_date, stream_date, freshness, recent_entry in journal_rows:
+              entry = recent_entry.replace('|', '\\|')
+              body_lines.append(f'| `{component}` | {current_date} | {stream_date} | {freshness} | {entry} |')
+          body_lines.append('')
+          body_lines.append('## Open pull requests')
+          if open_prs:
+              for pr in open_prs:
+                  body_lines.append(f'- [#{pr["number"]}]({pr["url"]}) `{pr["head"]}` → `{pr["base"]}` — {pr["title"]} (updated {pr["updated_at"]})')
+          else:
+              body_lines.append('- none')
+          body_lines.append('')
+          body_lines.append('## Open decision items')
+          if open_decision_items:
+              for item in open_decision_items:
+                  body_lines.append(f'- {item}')
+          else:
+              body_lines.append('- none detected in current decision/status/current-state files')
+          body_lines.append('')
+          body_lines.append('## Suggested operator attention')
+          if diverged_count > 0:
+              body_lines.append(f'- Review and repair diverged branches: {diverged_count}')
+          if behind_count > 0:
+              body_lines.append(f'- Rebase branches behind main: {behind_count}')
+          if open_decision_items:
+              body_lines.append(f'- Triage unresolved decision items: {len(open_decision_items)}')
+          if stale_streams:
+              body_lines.append('- Refresh stale component streams: ' + ', '.join(f'`{x}`' for x in stale_streams))
+          if not any([diverged_count, behind_count, open_decision_items, stale_streams]):
+              body_lines.append('- No immediate governance blockers detected from repo truth')
+          body_lines.append('')
+          body_lines.append('---')
+          body_lines.append('This issue was generated automatically from repo journals, status files, decision logs, open PRs, and branch state.')
+
+          body = '\n'.join(body_lines)
+
+          existing = None
+          issues = paginated('/issues?state=all&labels=weekly-governance-report')
+          for issue in issues:
+              if 'pull_request' in issue:
+                  continue
+              if issue.get('title') == title:
+                  existing = issue
+                  break
+
+          labels = ['weekly-governance-report', 'governance']
+          action = None
+          issue_url = None
+          if existing:
+              api('PATCH', f"/issues/{existing['number']}", {
+                  'title': title,
+                  'body': body,
+                  'labels': labels,
+                  'state': 'open',
+              })
+              action = f"updated issue #{existing['number']}"
+              issue_url = existing['html_url']
+          else:
+              created = api('POST', '/issues', {
+                  'title': title,
+                  'body': body,
+                  'labels': labels,
+              })
+              action = f"created issue #{created['number']}"
+              issue_url = created['html_url']
+
+          STEP_SUMMARY.write_text(
+              STEP_SUMMARY.read_text(encoding='utf-8') +
+              f"\n### Weekly governance report issue\n- {action}\n- {issue_url}\n",
+              encoding='utf-8'
+          )
+          print(action)
+          print(issue_url)
+          PY
