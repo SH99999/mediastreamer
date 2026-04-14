@@ -1,0 +1,138 @@
+name: issue-intake-normalizer-v2
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to normalize manually"
+        required: true
+        default: "59"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  normalize_issue_intake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Normalize governed intake labels
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_ISSUE_NUMBER: ${{ github.event.issue.number }}
+          INPUT_ISSUE_NUMBER: ${{ inputs.issue_number }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          issue_number = (os.environ.get('EVENT_ISSUE_NUMBER') or os.environ.get('INPUT_ISSUE_NUMBER') or '').strip()
+          if not issue_number:
+            raise SystemExit('No issue number available')
+          base = f'https://api.github.com/repos/{repo}'
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'issue-intake-normalizer-v2'
+          }
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          def normalize_text(s):
+            return re.sub(r'[^a-z0-9]+', ' ', (s or '').lower()).strip()
+
+          def section_value(body, heading_variants):
+            lines = body.splitlines()
+            normalized_variants = {normalize_text(v) for v in heading_variants}
+            start = None
+            for i, line in enumerate(lines):
+              if line.startswith('### '):
+                hdr = normalize_text(line[4:])
+                if hdr in normalized_variants:
+                  start = i + 1
+                  break
+            if start is None:
+              return ''
+            collected = []
+            for line in lines[start:]:
+              if line.startswith('### '):
+                break
+              stripped = line.strip()
+              if stripped and not stripped.startswith('<!--'):
+                collected.append(stripped)
+            return '\n'.join(collected).strip()
+
+          issue = req('GET', f'/issues/{issue_number}')
+          if 'pull_request' in issue:
+            raise SystemExit(0)
+
+          labels = [l['name'] for l in issue.get('labels', [])]
+          title = issue.get('title') or ''
+          body = issue.get('body') or ''
+          if not title.startswith('[Demand]') and not title.startswith('[UX/Asset]'):
+            raise SystemExit(0)
+
+          managed_prefixes = ('impact:', 'type:', 'agent:', 'component:')
+          keep = {label for label in labels if not label.startswith(managed_prefixes)}
+          add = set(keep)
+
+          impact_map = {
+            'component-only': 'impact:component-only',
+            'cross-component': 'impact:cross-component',
+            'system-wide': 'impact:system-wide',
+          }
+          demand_map = {
+            'Feature': 'type:follow-up',
+            'Defect': 'type:defect',
+            'Decision': 'type:decision',
+            'Governance update': 'type:governance-update',
+            'Integration risk': 'type:integration-risk',
+            'Follow-up': 'type:follow-up',
+            'UI/UX standard definition': 'type:governance-update',
+            'Asset placement': 'type:follow-up',
+            'Shared design guidance': 'type:governance-update',
+            'Visual consistency issue': 'type:defect',
+          }
+
+          impact = section_value(body, ['Impact'])
+          if impact in impact_map:
+            add.add(impact_map[impact])
+
+          demand_type = section_value(body, ['Demand type', 'Demand tyoe'])
+          if demand_type in demand_map:
+            add.add(demand_map[demand_type])
+
+          component_text = section_value(body, ['Affected component suffixes', 'Primary component suffix', 'Primary compenent suffix'])
+          for comp in re.split(r'[\s,]+', component_text):
+            comp = comp.strip().lower()
+            if comp:
+              add.add(f'component:{comp}')
+
+          agent = section_value(body, ['Preferred agent lane', 'Pereferred agent lane']).strip().lower()
+          if agent:
+            add.add(f'agent:{agent}')
+          elif title.startswith('[UX/Asset]'):
+            add.add('agent:ux')
+
+          if 'impact:cross-component' in add or 'impact:system-wide' in add:
+            add.add('agent:system-integration')
+
+          if title.startswith('[Demand]') and 'agent:ux' in add and 'Preferred agent lane' not in body and 'Pereferred agent lane' not in body:
+            add.discard('agent:ux')
+
+          req('PATCH', f'/issues/{issue_number}', {'labels': sorted(add)})
+          print(f'normalized_issue={issue_number} labels={sorted(add)}')
+          PY
