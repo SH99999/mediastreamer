@@ -1,0 +1,116 @@
+name: release-readiness-audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_set:
+        description: "Audit all active components or one component suffix"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - single
+      component_suffix:
+        description: "Component suffix when target_set=single, for example bridge"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  audit_release_readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all remote branches
+        shell: bash
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
+
+      - name: Audit release readiness
+        shell: bash
+        env:
+          TARGET_SET: ${{ inputs.target_set }}
+          COMPONENT_SUFFIX: ${{ inputs.component_suffix }}
+        run: |
+          python3 - <<'PY'
+          import os, re, subprocess
+          from pathlib import Path
+
+          workspace = Path(os.environ['GITHUB_WORKSPACE'])
+          summary_path = Path(os.environ['GITHUB_STEP_SUMMARY'])
+          target_set = os.environ['TARGET_SET']
+          component_suffix = os.environ['COMPONENT_SUFFIX'].strip()
+
+          def sh(*args):
+            return subprocess.check_output(args, text=True).strip()
+
+          components = [
+            ('scale-radio-bridge', 'bridge'),
+            ('scale-radio-tuner', 'tuner'),
+            ('scale-radio-starter', 'starter'),
+            ('scale-radio-autoswitch', 'autoswitch'),
+            ('scale-radio-fun-line', 'fun-line'),
+            ('scale-radio-hardware', 'hardware'),
+            ('system-integration-normalization', 'system-integration'),
+          ]
+
+          if target_set == 'single':
+            components = [c for c in components if c[1] == component_suffix]
+            if not components:
+              raise SystemExit(f'Unknown component suffix: {component_suffix}')
+
+          lines = ['# Release readiness audit', '', '| Component | README | current_state | stream | branch drift | open decisions | status |', '|---|---|---|---|---|---:|---|']
+          failures = []
+
+          for component_dir, suffix in components:
+            readme = workspace / f'components/scale-radio-{suffix}/README.md' if suffix != 'system-integration' else None
+            current_state = workspace / f'journals/{component_dir}/current_state_v1.md'
+            stream = workspace / f'journals/{component_dir}/stream_v1.md'
+            has_readme = True if readme is None else readme.exists()
+            has_current = current_state.exists()
+            has_stream = stream.exists()
+
+            branch_ref = f'origin/dev/{suffix}' if suffix != 'system-integration' else 'origin/integration/staging'
+            try:
+              behind, ahead = [int(x) for x in sh('git', 'rev-list', '--left-right', '--count', f'origin/main...{branch_ref}').split()]
+              drift = f'{behind} behind / {ahead} ahead'
+            except Exception:
+              behind, ahead = 999, 0
+              drift = 'branch missing'
+
+            open_decisions = 0
+            if current_state.exists():
+              text = current_state.read_text(encoding='utf-8')
+              if '## Open Decisions' in text:
+                section = text.split('## Open Decisions', 1)[1]
+                open_decisions += len(re.findall(r'^- ', section, flags=re.M))
+            decisions_glob = list((workspace / f'journals/{component_dir}').glob('DECISIONS_*.md'))
+            for dfile in decisions_glob:
+              text = dfile.read_text(encoding='utf-8')
+              blocks = re.findall(r'^### .*?(?=^### |\Z)', text, flags=re.M | re.S)
+              for block in blocks:
+                if re.search(r'^- Status:\s*open\b', block, flags=re.M | re.I):
+                  open_decisions += 1
+
+            status = 'ok'
+            if not (has_readme and has_current and has_stream):
+              status = 'missing-docs'
+              failures.append(f'{suffix}: missing docs')
+            elif behind > 0:
+              status = 'branch-drift'
+              failures.append(f'{suffix}: branch behind main')
+            elif open_decisions > 0:
+              status = 'open-decisions'
+
+            lines.append(f'| `{suffix}` | {has_readme} | {has_current} | {has_stream} | {drift} | {open_decisions} | {status} |')
+
+          summary_path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          if failures:
+            raise SystemExit('\n'.join(failures))
+          PY
