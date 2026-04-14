@@ -1,0 +1,58 @@
+name: Governed demand intake
+description: Create a governed repo demand for feature, defect, decision, or integration work.
+title: "[Demand] "
+labels:
+  - governance
+  - state:needs-triage
+  - source:manual
+body:
+  - type: dropdown
+    id: demand_type
+    attributes:
+      label: Demand type
+      options:
+        - Feature
+        - Defect
+        - Decision
+        - Governance update
+        - Integration risk
+        - Follow-up
+    validations:
+      required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Impact
+      options:
+        - component-only
+        - cross-component
+        - system-wide
+    validations:
+      required: true
+  - type: input
+    id: component
+    attributes:
+      label: Primary component suffix
+      description: Example: bridge, tuner, starter, autoswitch, fun-line, hardware, system-integration
+  - type: input
+    id: agent
+    attributes:
+      label: Preferred agent lane
+      description: Example: system-integration, bridge, tuner, ux
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the demand and expected outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: repo_truth
+    attributes:
+      label: Known repo truth or affected docs
+      description: List known journals, decision logs, contracts, workflows, or assets involved.
+  - type: textarea
+    id: owner_decision
+    attributes:
+      label: Owner decision needed
+      description: State the actual decision that should be surfaced if one is required.
