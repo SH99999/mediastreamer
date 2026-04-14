@@ -1,0 +1,5 @@
+Replace `components/AGENTS.md` with the following addition under `## Component development rules`:
+- `bootstrap new components using contracts/repo/new_component_intake_standard_v2.md before adding payload structure`
+
+Optional clarification under `## Path discipline`:
+- `new component roots must use components/scale-radio-<component-suffix>/`
