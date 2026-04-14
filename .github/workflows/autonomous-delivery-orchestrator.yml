@@ -1,0 +1,118 @@
+name: autonomous-delivery-orchestrator
+
+on:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: "Git ref to deploy through the autonomous orchestrator"
+        required: true
+        default: "dev/bridge"
+      component:
+        description: "Component suffix, for example bridge"
+        required: true
+        default: "bridge"
+
+permissions:
+  contents: read
+  actions: write
+  issues: write
+  pull-requests: read
+
+jobs:
+  orchestrate_delivery:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Dispatch supported autonomous delivery
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          INPUT_GIT_REF: ${{ inputs.git_ref }}
+          INPUT_COMPONENT: ${{ inputs.component }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+          from pathlib import Path
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          event_name = os.environ['EVENT_NAME']
+          pr_number = os.environ.get('PR_NUMBER') or ''
+          pr_head_ref = os.environ.get('PR_HEAD_REF') or ''
+          pr_title = os.environ.get('PR_TITLE') or ''
+          input_git_ref = os.environ.get('INPUT_GIT_REF') or ''
+          input_component = os.environ.get('INPUT_COMPONENT') or ''
+          matrix = json.loads(Path('tools/governance/autonomous_delivery_matrix_v1.json').read_text(encoding='utf-8'))['components']
+          base = f'https://api.github.com/repos/{repo}'
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'autonomous-delivery-orchestrator'
+          }
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          def route_from_event():
+            if event_name == 'workflow_dispatch':
+              return input_component.strip(), input_git_ref.strip(), 'manual-dispatch'
+            m = re.fullmatch(r'dev/([a-z0-9-]+)', pr_head_ref.strip())
+            if m:
+              return m.group(1), pr_head_ref.strip(), 'merged-dev-branch'
+            return None, None, 'non-dev-pr-head'
+
+          component, git_ref, reason = route_from_event()
+          if not component or not git_ref:
+            print(f'skipped: {reason}')
+            raise SystemExit(0)
+
+          spec = matrix.get(component)
+          if not spec or not spec.get('auto_delivery_supported'):
+            title = f'Autonomous delivery skipped — {component}'
+            body = '\n'.join([
+              '# Autonomous delivery skipped',
+              '',
+              f'- component: `{component}`',
+              f'- git ref: `{git_ref}`',
+              f'- reason: `{spec.get("reason", "not in delivery matrix") if spec else "not in delivery matrix"}`',
+              '',
+              '## Required next step',
+              '- normalize deploy and rollback contracts before enabling autonomous delivery for this component',
+            ])
+            req('POST', '/issues', {'title': title, 'body': body, 'labels': ['governance','component:system-integration','agent:system-integration','type:integration-risk','impact:system-wide','state:ready-for-agent','source:manual']})
+            raise SystemExit(0)
+
+          payload = spec.get('default_payload', 'current_dev')
+          workflow = spec['deploy_workflow']
+          req('POST', f'/actions/workflows/{workflow}/dispatches', {'ref': 'main', 'inputs': {'git_ref': git_ref, 'component': component, 'payload': payload}})
+
+          if pr_number:
+            req('POST', f'/issues/{pr_number}/comments', {'body': '\n'.join([
+              '<!-- autonomous-delivery-orchestrator -->',
+              'Autonomous delivery dispatched.',
+              '',
+              f'- component: `{component}`',
+              f'- git ref: `{git_ref}`',
+              f'- payload: `{payload}`',
+              f'- source: `{reason}`',
+              '- rollback remains governed by the target deploy workflow if the deployment path fails.',
+            ])})
+          else:
+            print(f'dispatched component={component} git_ref={git_ref} payload={payload}')
+          PY
