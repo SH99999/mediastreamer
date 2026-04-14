@@ -1,0 +1,100 @@
+name: decision-verification-on-merge
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  verify_decision_docs:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify referenced decision issues have doc updates
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          pr_number = os.environ['PR_NUMBER']
+          base = f'https://api.github.com/repos/{repo}'
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'decision-verification-on-merge'
+          }
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          def paginated(path):
+            page = 1
+            items = []
+            while True:
+              joiner = '&' if '?' in path else '?'
+              batch = req('GET', f'{path}{joiner}per_page=100&page={page}')
+              if not batch:
+                break
+              items.extend(batch)
+              if len(batch) < 100:
+                break
+              page += 1
+            return items
+
+          def refs(text):
+            return sorted(set(int(x) for x in re.findall(r'(?<![A-Za-z0-9_])#(\d+)', text or '')))
+
+          pr = req('GET', f'/pulls/{pr_number}')
+          issue_like = req('GET', f'/issues/{pr_number}')
+          referenced = sorted(set(refs((pr.get('title') or '') + '\n' + (pr.get('body') or ''))))
+          files = [f['filename'] for f in paginated(f'/pulls/{pr_number}/files')]
+          has_doc_update = any(
+            path.startswith('contracts/repo/') or
+            path.startswith('journals/')
+            for path in files
+          )
+
+          for issue_number in referenced:
+            issue = req('GET', f'/issues/{issue_number}')
+            if 'pull_request' in issue:
+              continue
+            labels = [l['name'] for l in issue.get('labels', [])]
+            if 'type:decision' not in labels:
+              continue
+
+            if has_doc_update:
+              continue
+
+            retained = [name for name in labels if not name.startswith('state:')]
+            final_labels = sorted(set(retained + ['state:docs-update-required']))
+            req('PATCH', f'/issues/{issue_number}', {'labels': final_labels, 'state': 'open'})
+
+            marker = f'<!-- decision-verification:{pr_number}:{issue_number} -->'
+            comments = paginated(f'/issues/{issue_number}/comments')
+            if not any(marker in (c.get('body') or '') for c in comments):
+              req('POST', f'/issues/{issue_number}/comments', {'body': '\n'.join([
+                marker,
+                'Decision verification warning:',
+                '',
+                f'- merged PR: #{pr_number}',
+                '- the merged PR referenced this decision issue but did not change governance or journal paths',
+                '- the issue was returned to `state:docs-update-required` for follow-up',
+              ])})
+          PY
