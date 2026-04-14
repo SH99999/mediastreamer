@@ -1,0 +1,141 @@
+name: pr-governance-review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  governance_review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Review PR governance impact
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          pr_number = os.environ['PR_NUMBER']
+          base = f'https://api.github.com/repos/{repo}'
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'pr-governance-review'
+          }
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          def paginated(path):
+            page = 1
+            items = []
+            while True:
+              joiner = '&' if '?' in path else '?'
+              batch = req('GET', f'{path}{joiner}per_page=100&page={page}')
+              if not batch:
+                break
+              items.extend(batch)
+              if len(batch) < 100:
+                break
+              page += 1
+            return items
+
+          files = paginated(f'/pulls/{pr_number}/files')
+          filenames = [f['filename'] for f in files]
+
+          components = set()
+          touched_governance = False
+          touched_journals = False
+          touched_workflows = False
+          touched_deploy = False
+
+          for name in filenames:
+            m = re.match(r'^components/scale-radio-([^/]+)/', name)
+            if m:
+              components.add(m.group(1))
+            m = re.match(r'^journals/scale-radio-([^/]+)/', name)
+            if m:
+              components.add(m.group(1))
+              touched_journals = True
+            if name.startswith('journals/system-integration-normalization/'):
+              components.add('system-integration')
+              touched_journals = True
+            if name.startswith('contracts/repo/'):
+              components.add('system-integration')
+              touched_governance = True
+            if name.startswith('.github/workflows/'):
+              components.add('system-integration')
+              touched_workflows = True
+            if name.startswith('tools/deploy/'):
+              components.add('system-integration')
+              touched_deploy = True
+
+          if touched_governance or touched_workflows or touched_deploy or len(components) > 1 or 'system-integration' in components:
+            impact = 'impact:system-wide'
+          elif len(components) == 1:
+            impact = 'impact:component-only'
+          else:
+            impact = 'impact:cross-component'
+
+          issue = req('GET', f'/issues/{pr_number}')
+          existing_labels = [l['name'] for l in issue.get('labels', [])]
+          new_labels = ['source:pr-review', impact]
+          if touched_governance or touched_journals:
+            new_labels.append('governance')
+          if impact == 'impact:system-wide':
+            new_labels.append('agent:system-integration')
+          for comp in sorted(components):
+            new_labels.append(f'component:{comp}')
+          final_labels = sorted(set(existing_labels + new_labels))
+          req('PATCH', f'/issues/{pr_number}', {'labels': final_labels})
+
+          marker = '<!-- governance-pr-review -->'
+          lines = [marker, '## Governance review summary', '']
+          lines.append('- components touched: ' + (', '.join(f'`{c}`' for c in sorted(components)) if components else 'none detected from governed paths'))
+          lines.append(f'- impact classification: `{impact}`')
+          lines.append(f'- governance docs touched: `{str(touched_governance).lower()}`')
+          lines.append(f'- journals touched: `{str(touched_journals).lower()}`')
+          lines.append(f'- workflows touched: `{str(touched_workflows).lower()}`')
+          lines.append(f'- deploy tooling touched: `{str(touched_deploy).lower()}`')
+          lines.append('')
+          lines.append('## Review prompts')
+          if components and not touched_journals:
+            lines.append('- This PR touches governed component paths but does not update journals. Confirm that no journal update is required.')
+          if touched_governance or touched_workflows or touched_deploy:
+            lines.append('- This PR affects repo control-plane truth. Confirm impact on deploy, rollback, and governance docs.')
+          if impact != 'impact:component-only':
+            lines.append('- This PR should be treated as system-integration relevant.')
+          if not components:
+            lines.append('- No governed component path was detected. Confirm that this is intentional.')
+          body = '\n'.join(lines)
+
+          comments = paginated(f'/issues/{pr_number}/comments')
+          existing = None
+          for comment in comments:
+            if marker in (comment.get('body') or ''):
+              existing = comment
+              break
+          if existing:
+            req('PATCH', f"/issues/comments/{existing['id']}", {'body': body})
+          else:
+            req('POST', f'/issues/{pr_number}/comments', {'body': body})
+          PY
