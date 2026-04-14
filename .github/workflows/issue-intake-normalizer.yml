@@ -60,7 +60,11 @@ jobs:
           if not title.startswith('[Demand]') and not title.startswith('[UX/Asset]'):
             raise SystemExit(0)
 
-          add = set(labels)
+           managed_prefix = ('impact:', 'type:', 'agent:', 'component:')
+            keep = {label for label in labels
+            if not
+            label.startswith(managed_prefixes)}
+            add = set(keep)
 
           impact_map = {
             'component-only': 'impact:component-only',
@@ -100,7 +104,9 @@ jobs:
             add.add('agent:ux')
 
           if 'impact:cross-component' in add or 'impact:system-wide' in add:
-            add.add('agent:system-integration')
+            add.discard('agent:ux') if 'agent:ux' in add and title.startswith('[Demand]') else None
+            
+            add('agent:system-integration')
 
           req('PATCH', f'/issues/{issue_number}', {'labels': sorted(add)})
           PY
