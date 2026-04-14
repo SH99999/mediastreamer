@@ -8,6 +8,7 @@ This file applies to everything under `components/`.
 - a component may contain multiple artifacts/plugins with different roles
 - default artifact roles include `runtime`, `launcher`, `service`, `renderer`, `source_tile`, `bridge`, `ui_entry`, `helper`
 - keep artifact role language explicit in docs, deploy candidates, and journals
+- `bootstrap new components using contracts/repo/new_component_intake_standard_v2.md before adding payload structure`
 
 ## Volumio 4 plugin expectations
 - align with Volumio 4 / Bookworm realities
