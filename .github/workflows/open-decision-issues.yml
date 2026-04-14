@@ -1,0 +1,187 @@
+name: open-decision-issues
+
+on:
+  schedule:
+    - cron: '30 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync_open_decision_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create and update open decision issues
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request, urllib.error
+          from pathlib import Path
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          base = f'https://api.github.com/repos/{repo}'
+          workspace = Path(os.environ['GITHUB_WORKSPACE'])
+
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'open-decision-issues'
+          }
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          def paginated(path):
+            page = 1
+            items = []
+            while True:
+              joiner = '&' if '?' in path else '?'
+              batch = req('GET', f'{path}{joiner}per_page=100&page={page}')
+              if not batch:
+                break
+              items.extend(batch)
+              if len(batch) < 100:
+                break
+              page += 1
+            return items
+
+          def slug(text):
+            out = re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
+            return out[:60] or 'item'
+
+          def route_for_component_dir(component_dir):
+            mapping = {
+              'scale-radio-bridge': ('bridge', 'agent:bridge', 'impact:component-only'),
+              'scale-radio-tuner': ('tuner', 'agent:tuner', 'impact:component-only'),
+              'scale-radio-starter': ('starter', 'agent:starter', 'impact:component-only'),
+              'scale-radio-autoswitch': ('autoswitch', 'agent:autoswitch', 'impact:component-only'),
+              'scale-radio-fun-line': ('fun-line', 'agent:fun-line', 'impact:component-only'),
+              'scale-radio-hardware': ('hardware', 'agent:hardware', 'impact:component-only'),
+              'system-integration-normalization': ('system-integration', 'agent:system-integration', 'impact:system-wide'),
+            }
+            return mapping.get(component_dir, ('system-integration', 'agent:system-integration', 'impact:system-wide'))
+
+          def extract_open_section_bullets(path):
+            text = path.read_text(encoding='utf-8')
+            lines = text.splitlines()
+            capture = False
+            items = []
+            for line in lines:
+              if re.match(r'^##\s+Open Decisions\s*$', line):
+                capture = True
+                continue
+              if capture and re.match(r'^##\s+', line):
+                break
+              if capture and line.strip().startswith('- '):
+                items.append(line.strip()[2:].strip())
+            return items
+
+          def extract_open_decision_entries(path):
+            text = path.read_text(encoding='utf-8')
+            lines = text.splitlines()
+            items = []
+            current = None
+            status = None
+            for line in lines:
+              if line.startswith('### '):
+                if current and status == 'open':
+                  items.append(current)
+                current = line[4:].strip()
+                status = None
+                continue
+              if current and line.strip().lower().startswith('- status:'):
+                status = line.split(':', 1)[1].strip().lower()
+            if current and status == 'open':
+              items.append(current)
+            return items
+
+          desired = {}
+
+          for path in sorted(workspace.glob('journals/**/DECISIONS_*.md')):
+            component, agent, impact = route_for_component_dir(path.parent.name)
+            for item in extract_open_decision_entries(path):
+              key = f'decision:{path.relative_to(workspace)}:{slug(item)}'
+              desired[key] = {
+                'title': f'Open decision — {component} — {item}',
+                'body': '\n'.join([
+                  f'<!-- governance-key: {key} -->',
+                  '# Open decision item',
+                  '',
+                  f'- component route: `{component}`',
+                  f'- source file: `{path.relative_to(workspace)}`',
+                  f'- item: {item}',
+                  '',
+                  '## Required next step',
+                  '- owner decision needed',
+                  '- after decision, update all affected governance docs and journals',
+                ]),
+                'labels': ['governance', 'type:decision', 'source:decision-scan', 'state:needs-decision', f'component:{component}', agent, impact],
+              }
+
+          for pattern in ('journals/**/current_state_v1.md', 'journals/**/STATUS_*.md'):
+            for path in sorted(workspace.glob(pattern)):
+              component, agent, impact = route_for_component_dir(path.parent.name)
+              for item in extract_open_section_bullets(path):
+                key = f'decision:{path.relative_to(workspace)}:{slug(item)}'
+                desired[key] = {
+                  'title': f'Open decision — {component} — {item}',
+                  'body': '\n'.join([
+                    f'<!-- governance-key: {key} -->',
+                    '# Open decision item',
+                    '',
+                    f'- component route: `{component}`',
+                    f'- source file: `{path.relative_to(workspace)}`',
+                    f'- item: {item}',
+                    '',
+                    '## Required next step',
+                    '- owner decision needed',
+                    '- after decision, update all affected governance docs and journals',
+                  ]),
+                  'labels': ['governance', 'type:decision', 'source:decision-scan', 'state:needs-decision', f'component:{component}', agent, impact],
+                }
+
+          existing = {}
+          for issue in paginated('/issues?state=all&labels=type:decision,source:decision-scan'):
+            if 'pull_request' in issue:
+              continue
+            body = issue.get('body') or ''
+            m = re.search(r'<!--\s*governance-key:\s*(.*?)\s*-->', body)
+            if m:
+              existing[m.group(1)] = issue
+
+          for key, spec in desired.items():
+            if key in existing:
+              req('PATCH', f"/issues/{existing[key]['number']}", {
+                'title': spec['title'],
+                'body': spec['body'],
+                'labels': spec['labels'],
+                'state': 'open',
+              })
+            else:
+              req('POST', '/issues', {
+                'title': spec['title'],
+                'body': spec['body'],
+                'labels': spec['labels'],
+              })
+
+          for key, issue in existing.items():
+            if key not in desired and issue.get('state') == 'open':
+              req('PATCH', f"/issues/{issue['number']}", {'state': 'closed'})
+
+          print(f'desired={len(desired)} existing={len(existing)}')
+          PY

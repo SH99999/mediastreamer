@@ -1,0 +1,46 @@
+name: ensure-governance-labels
+
+on:
+  schedule:
+    - cron: '0 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  ensure_labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure governance labels
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error, urllib.parse
+          from pathlib import Path
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          labels = json.loads(Path('tools/governance/label_catalog_v1.json').read_text(encoding='utf-8'))['labels']
+          base = f'https://api.github.com/repos/{repo}'
+          headers = {'Authorization': f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'ensure-governance-labels'}
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None: h['Content-Type']='application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+          for label in labels:
+            try:
+              req('POST','/labels',label)
+            except urllib.error.HTTPError as e:
+              if e.code == 422:
+                req('PATCH', f"/labels/{urllib.parse.quote(label['name'], safe='')}", {'new_name':label['name'],'color':label['color'],'description':label['description']})
+              else:
+                raise
+          PY

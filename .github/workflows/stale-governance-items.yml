@@ -1,0 +1,95 @@
+name: stale-governance-items
+
+on:
+  schedule:
+    - cron: '15 6 * * 3'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  mark_stale_governance_items:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Flag stale governance issues and PRs
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from datetime import datetime, timezone
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          base = f'https://api.github.com/repos/{repo}'
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'stale-governance-items'
+          }
+          now = datetime.now(timezone.utc)
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          def paginated(path):
+            page = 1
+            items = []
+            while True:
+              joiner = '&' if '?' in path else '?'
+              batch = req('GET', f'{path}{joiner}per_page=100&page={page}')
+              if not batch:
+                break
+              items.extend(batch)
+              if len(batch) < 100:
+                break
+              page += 1
+            return items
+
+          stale_label = {'name':'state:blocked','color':'fef2c0','description':'Blocked by dependency or missing decision'}
+          try:
+            req('POST','/labels',stale_label)
+          except Exception:
+            pass
+
+          marker = '<!-- stale-governance-nudge -->'
+          issue_count = 0
+          for issue in paginated('/issues?state=open&labels=governance'):
+            if 'pull_request' in issue:
+              continue
+            updated = datetime.fromisoformat(issue['updated_at'].replace('Z', '+00:00'))
+            age = (now - updated).days
+            if age < 14:
+              continue
+            comments = paginated(f"/issues/{issue['number']}/comments")
+            already = any(marker in (c.get('body') or '') for c in comments)
+            if not already:
+              req('POST', f"/issues/{issue['number']}/comments", {'body': '\n'.join([marker, 'This governance issue has been inactive for more than 14 days.', '', 'Please decide whether it should be resolved, reprioritized, or closed.'])})
+            issue_count += 1
+
+          pr_count = 0
+          for pr in paginated('/pulls?state=open'):
+            updated = datetime.fromisoformat(pr['updated_at'].replace('Z', '+00:00'))
+            age = (now - updated).days
+            if age < 14:
+              continue
+            comments = paginated(f"/issues/{pr['number']}/comments")
+            already = any(marker in (c.get('body') or '') for c in comments)
+            if not already:
+              req('POST', f"/issues/{pr['number']}/comments", {'body': '\n'.join([marker, 'This PR has been inactive for more than 14 days.', '', 'Please decide whether it should be merged, revised, or closed.'])})
+            pr_count += 1
+
+          print(f'stale_governance_issues={issue_count} stale_prs={pr_count}')
+          PY

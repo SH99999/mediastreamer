@@ -1,0 +1,152 @@
+name: bootstrap-new-component
+
+on:
+  workflow_dispatch:
+    inputs:
+      component_suffix:
+        description: "New component suffix, for example display-sync"
+        required: true
+      purpose:
+        description: "Short purpose summary for the new component"
+        required: true
+      non_goals:
+        description: "Short non-goals summary"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bootstrap_component:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bootstrap component structure and open PR
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMPONENT_SUFFIX: ${{ inputs.component_suffix }}
+          PURPOSE: ${{ inputs.purpose }}
+          NON_GOALS: ${{ inputs.non_goals }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, subprocess, urllib.request
+          from pathlib import Path
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          suffix = os.environ['COMPONENT_SUFFIX'].strip().lower()
+          purpose = os.environ['PURPOSE'].strip()
+          non_goals = os.environ['NON_GOALS'].strip()
+          if not re.fullmatch(r'[a-z0-9-]+', suffix):
+            raise SystemExit('component_suffix must match [a-z0-9-]+')
+          component_name = f'scale-radio-{suffix}'
+          branch_name = f'bootstrap-{suffix}'
+          base = f'https://api.github.com/repos/{repo}'
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'bootstrap-new-component'
+          }
+
+          def sh(*args):
+            return subprocess.check_output(args, text=True).strip()
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          Path(f'components/{component_name}').mkdir(parents=True, exist_ok=True)
+          Path(f'journals/{component_name}').mkdir(parents=True, exist_ok=True)
+
+          readme = Path(f'components/{component_name}/README.md')
+          readme.write_text('\n'.join([
+            f'# {component_name}',
+            '',
+            '## Purpose',
+            purpose,
+            '',
+            '## Boundaries',
+            f'- canonical component name: `{component_name}`',
+            f'- long-lived branch lane: `dev/{suffix}`',
+            '- journals are the repo-native truth source for this component',
+            '',
+            '## Non-goals',
+            non_goals or '- to be refined in follow-up governance or component delivery work',
+            '',
+            '## Journals',
+            f'- `journals/{component_name}/current_state_v1.md`',
+            f'- `journals/{component_name}/stream_v1.md`',
+          ]) + '\n', encoding='utf-8')
+
+          current_state = Path(f'journals/{component_name}/current_state_v1.md')
+          current_state.write_text('\n'.join([
+            f'# COMPONENT CURRENT STATE — {component_name}',
+            '',
+            '## Scope',
+            f'- component name: `{component_name}`',
+            f'- branch lane: `dev/{suffix}`',
+            f'- current purpose: {purpose}',
+            '',
+            '## What exists now',
+            '- bootstrap structure created',
+            '- component README created',
+            '- current_state and stream journals created',
+            '',
+            '## What is untested',
+            '- payload implementation',
+            '- deployment',
+            '- rollback',
+            '',
+            '## Next recommended step',
+            f'- create or align `dev/{suffix}` from current `main` after this PR is merged',
+          ]) + '\n', encoding='utf-8')
+
+          stream = Path(f'journals/{component_name}/stream_v1.md')
+          stream.write_text('\n'.join([
+            f'# STREAM — {component_name}',
+            '',
+            '## Entries',
+            '',
+            '### bootstrap created',
+            f'- component `{component_name}` was introduced through the standard bootstrap workflow',
+            f'- intended long-lived branch lane: `dev/{suffix}`',
+          ]) + '\n', encoding='utf-8')
+
+          sh('git', 'config', 'user.name', 'github-actions[bot]')
+          sh('git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com')
+          sh('git', 'checkout', '-b', branch_name)
+          sh('git', 'add', str(readme), str(current_state), str(stream))
+          sh('git', 'commit', '-m', f'Bootstrap new component {component_name}')
+          sh('git', 'push', '-u', 'origin', branch_name)
+
+          pr = req('POST', '/pulls', {
+            'title': f'Bootstrap new component {component_name}',
+            'head': branch_name,
+            'base': 'main',
+            'body': '\n'.join([
+              f'Bootstraps `{component_name}` using the governed component intake pattern.',
+              '',
+              'Included:',
+              f'- `components/{component_name}/README.md`',
+              f'- `journals/{component_name}/current_state_v1.md`',
+              f'- `journals/{component_name}/stream_v1.md`',
+              '',
+              'Next step after merge:',
+              f'- create or align `dev/{suffix}` from current `main`',
+            ])
+          })
+          print(pr['html_url'])
+          PY

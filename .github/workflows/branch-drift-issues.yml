@@ -1,0 +1,127 @@
+name: branch-drift-issues
+
+on:
+  schedule:
+    - cron: '45 5 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync_branch_drift_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all remote branches
+        shell: bash
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
+
+      - name: Create and update branch drift issues
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, subprocess, urllib.request, urllib.error
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          base = f'https://api.github.com/repos/{repo}'
+
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'branch-drift-issues'
+          }
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          def paginated(path):
+            page = 1
+            items = []
+            while True:
+              joiner = '&' if '?' in path else '?'
+              batch = req('GET', f'{path}{joiner}per_page=100&page={page}')
+              if not batch:
+                break
+              items.extend(batch)
+              if len(batch) < 100:
+                break
+              page += 1
+            return items
+
+          def sh(*args):
+            return subprocess.check_output(args, text=True).strip()
+
+          def classify(branch):
+            if branch.startswith('dev/'):
+              suffix = branch.split('/', 1)[1]
+              return suffix, f'agent:{suffix}', 'impact:component-only'
+            return 'system-integration', 'agent:system-integration', 'impact:cross-component'
+
+          branches = sh('bash', '-lc', "git for-each-ref --format='%(refname:short)' refs/remotes/origin | sed 's#^origin/##' | grep -E '^(dev|integration)/' | sort -u || true").splitlines()
+          desired = {}
+
+          for branch in branches:
+            if not branch:
+              continue
+            behind, ahead = [int(x) for x in sh('git', 'rev-list', '--left-right', '--count', f'origin/main...origin/{branch}').split()]
+            if behind == 0:
+              continue
+            component, agent, impact = classify(branch)
+            state = 'diverged' if ahead > 0 else 'behind-main'
+            key = f'branch-drift:{branch}'
+            desired[key] = {
+              'title': f'Branch drift — {branch}',
+              'body': '\n'.join([
+                f'<!-- governance-key: {key} -->',
+                '# Branch drift detected',
+                '',
+                f'- branch: `{branch}`',
+                f'- behind main: {behind}',
+                f'- ahead of main: {ahead}',
+                f'- state: {state}',
+                '',
+                '## Required next step',
+                '- align the branch to main using the approved rebase workflow',
+                '- update impacted journals or governance docs if the rebase reveals drift',
+              ]),
+              'labels': ['governance', 'type:branch-drift', 'source:branch-monitor', 'state:ready-for-agent', f'component:{component}', agent, impact],
+            }
+
+          existing = {}
+          for issue in paginated('/issues?state=all&labels=type:branch-drift,source:branch-monitor'):
+            if 'pull_request' in issue:
+              continue
+            body = issue.get('body') or ''
+            m = re.search(r'<!--\s*governance-key:\s*(.*?)\s*-->', body)
+            if m:
+              existing[m.group(1)] = issue
+
+          for key, spec in desired.items():
+            if key in existing:
+              req('PATCH', f"/issues/{existing[key]['number']}", {'title': spec['title'], 'body': spec['body'], 'labels': spec['labels'], 'state': 'open'})
+            else:
+              req('POST', '/issues', {'title': spec['title'], 'body': spec['body'], 'labels': spec['labels']})
+
+          for key, issue in existing.items():
+            if key not in desired and issue.get('state') == 'open':
+              req('PATCH', f"/issues/{issue['number']}", {'state': 'closed'})
+
+          print(f'desired={len(desired)} existing={len(existing)}')
+          PY
