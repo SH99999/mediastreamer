@@ -1,0 +1,12 @@
+Replace `AGENTS.md` with the following updates:
+
+1. In `## Read first`, add these lines after `contracts/repo/repository_language_standard_v2.md`:
+- `contracts/repo/system_integration_governance_index_v3.md`
+- `contracts/repo/new_component_intake_standard_v2.md`
+- `docs/agents/system_integration_recovery_onboarding_v3.md`
+
+2. In `## Required behavior for agents`, add this line:
+- `bootstrap new components using contracts/repo/new_component_intake_standard_v2.md`
+
+3. In `## Skills and reference docs`, add this line:
+- `docs/agents/system_integration_recovery_onboarding_v3.md`
