@@ -1,0 +1,149 @@
+name: journal-freshness-issues
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sync_journal_freshness_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create and update journal freshness issues
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, subprocess, urllib.request, urllib.error
+          from datetime import datetime, date
+          from pathlib import Path
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          base = f'https://api.github.com/repos/{repo}'
+          workspace = Path(os.environ['GITHUB_WORKSPACE'])
+
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'journal-freshness-issues'
+          }
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          def paginated(path):
+            page = 1
+            items = []
+            while True:
+              joiner = '&' if '?' in path else '?'
+              batch = req('GET', f'{path}{joiner}per_page=100&page={page}')
+              if not batch:
+                break
+              items.extend(batch)
+              if len(batch) < 100:
+                break
+              page += 1
+            return items
+
+          def sh(*args):
+            return subprocess.check_output(args, text=True).strip()
+
+          def last_commit_date(path):
+            try:
+              return sh('git', 'log', '-1', '--format=%cs', '--', str(path))
+            except subprocess.CalledProcessError:
+              return None
+
+          def classify(component_dir):
+            mapping = {
+              'scale-radio-bridge': ('bridge', 'agent:bridge', 'impact:component-only'),
+              'scale-radio-tuner': ('tuner', 'agent:tuner', 'impact:component-only'),
+              'scale-radio-starter': ('starter', 'agent:starter', 'impact:component-only'),
+              'scale-radio-autoswitch': ('autoswitch', 'agent:autoswitch', 'impact:component-only'),
+              'scale-radio-fun-line': ('fun-line', 'agent:fun-line', 'impact:component-only'),
+              'scale-radio-hardware': ('hardware', 'agent:hardware', 'impact:component-only'),
+              'system-integration-normalization': ('system-integration', 'agent:system-integration', 'impact:system-wide'),
+            }
+            return mapping.get(component_dir, ('system-integration', 'agent:system-integration', 'impact:system-wide'))
+
+          today = date.today()
+          desired = {}
+
+          for current_state in sorted(workspace.glob('journals/*/current_state_v1.md')):
+            component, agent, impact = classify(current_state.parent.name)
+            stream = current_state.parent / 'stream_v1.md'
+            current_date = last_commit_date(current_state)
+            stream_date = last_commit_date(stream)
+            current_age = None if current_date is None else (today - datetime.strptime(current_date, '%Y-%m-%d').date()).days
+            stream_age = None if stream_date is None else (today - datetime.strptime(stream_date, '%Y-%m-%d').date()).days
+
+            reasons = []
+            if current_age is None:
+              reasons.append('missing current_state history')
+            elif current_age > 30:
+              reasons.append(f'current_state older than 30d ({current_age}d)')
+            if stream_age is None:
+              reasons.append('missing stream history')
+            elif stream_age > 14:
+              reasons.append(f'stream older than 14d ({stream_age}d)')
+
+            if not reasons:
+              continue
+
+            key = f'journal-gap:{current_state.parent.name}'
+            desired[key] = {
+              'title': f'Journal freshness gap — {component}',
+              'body': '\n'.join([
+                f'<!-- governance-key: {key} -->',
+                '# Journal freshness gap',
+                '',
+                f'- component route: `{component}`',
+                f'- journal path: `{current_state.parent.relative_to(workspace)}`',
+                f'- reasons: {", ".join(reasons)}',
+                '',
+                '## Required next step',
+                '- review whether repo truth is stale',
+                '- update current_state and stream if the component changed materially',
+              ]),
+              'labels': ['governance', 'type:journal-gap', 'source:journal-monitor', 'state:ready-for-agent', f'component:{component}', agent, impact],
+            }
+
+          existing = {}
+          for issue in paginated('/issues?state=all&labels=type:journal-gap,source:journal-monitor'):
+            if 'pull_request' in issue:
+              continue
+            body = issue.get('body') or ''
+            m = re.search(r'<!--\s*governance-key:\s*(.*?)\s*-->', body)
+            if m:
+              existing[m.group(1)] = issue
+
+          for key, spec in desired.items():
+            if key in existing:
+              req('PATCH', f"/issues/{existing[key]['number']}", {'title': spec['title'], 'body': spec['body'], 'labels': spec['labels'], 'state': 'open'})
+            else:
+              req('POST', '/issues', {'title': spec['title'], 'body': spec['body'], 'labels': spec['labels']})
+
+          for key, issue in existing.items():
+            if key not in desired and issue.get('state') == 'open':
+              req('PATCH', f"/issues/{issue['number']}", {'state': 'closed'})
+
+          print(f'desired={len(desired)} existing={len(existing)}')
+          PY
