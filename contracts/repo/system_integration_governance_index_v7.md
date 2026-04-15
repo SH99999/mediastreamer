@@ -22,19 +22,27 @@ This file is the current entrypoint for system integration governance, recovery,
 10. `contracts/repo/system_integration_escalation_contract_v1.md`
 11. `contracts/repo/protected_main_truth_maintenance_operating_model_v1.md`
 12. `contracts/repo/deploy_target_exclusivity_standard_v1.md`
-13. `contracts/repo/truthful_execution_and_negative_answer_standard_v1.md`
-14. `contracts/repo/git_release_tagging_standard_v1.md`
-15. `docs/agents/system_integration_recovery_onboarding_v7.md`
-16. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-17. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-18. `journals/system-integration-normalization/stream_v6.md`
+13. `contracts/repo/deploy_process_standard_v1.md`
+14. `contracts/repo/ui_gui_governance_standard_v1.md`
+15. `contracts/repo/truthful_execution_and_negative_answer_standard_v1.md`
+16. `contracts/repo/git_release_tagging_standard_v1.md`
+17. `contracts/repo/governance_unification_delivery_plan_v1.md`
+18. `contracts/repo/ui_ux_stage_b_autonomous_loop_standard_v1.md`
+19. `docs/agents/agent_git_bootstrap_v1.md`
+20. `docs/agents/system_integration_recovery_onboarding_v7.md`
+21. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+22. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+23. `journals/system-integration-normalization/stream_v6.md`
+24. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+25. `tools/governance/scale_radio_governance_delivery_views_v1.md`
 
 ## Locked operating model
 - the repository remains public until further notice
 - `main` remains the protected truth branch
 - agents and chats work on non-`main` branches
+- SI/governance changes must use a dedicated `si/<topic>` branch (not generic branch names), then push that branch and open/update a PR to `main`
 - deploy/test happens from those branches
-- accepted work merges to `main` only after packaged review and owner acceptance
+- accepted work merges to `main` only after packaged review, owner coordination, and owner acceptance
 - journals, decisions, and streams remain mandatory repo truth
 
 ## Working rule

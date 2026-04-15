@@ -114,6 +114,51 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 
 ### DEC-system_integration_normalization-25
 - Status: locked
+- Decision: the current GUI concept is sufficient until full integration is explicitly opened and approved through SI governance.
+- Date context: UI/GUI governance stabilization phase
+- Why this was chosen: dev can proceed without blocking on speculative UI redesign while still keeping UI work governed.
+- What it affects: UI/GUI backlog prioritization, intake scope, and SI stream tracking.
+- What it explicitly does NOT affect: the requirement that UI/GUI work follows the same branch/PR/journal governance model.
+- Follow-up needed: reopen only when full integration is intentionally started.
+
+### DEC-system_integration_normalization-26
+- Status: locked
+- Decision: source-project behavior remains out of deploy-lane scope for now because interaction is governed in hardware via encoder short/long press.
+- Date context: tuner scope-clarification phase
+- Why this was chosen: prevents false deploy-contract expectations for artifacts intentionally controlled outside the current software deploy lane.
+- What it affects: tuner deploy acceptance scope, SI status wording, and next-step prioritization.
+- What it explicitly does NOT affect: future inclusion of source artifacts once full integration scope is explicitly opened.
+- Follow-up needed: reassess when full integration is opened.
+
+### DEC-system_integration_normalization-27
+- Status: locked
+- Decision: SI/governance execution must run on a dedicated branch per package using the `si/<topic>` pattern, then push that branch and open/update PRs from that same branch to protected `main`.
+- Date context: branch-governance hardening phase
+- Why this was chosen: removes ambiguity from generic working branches and enforces one clear local->git branch->PR promotion path for governed SI truth changes.
+- What it affects: SI branch naming, push behavior, PR routing, and onboarding expectations for replacement chats and Codex lanes.
+- What it explicitly does NOT affect: component specialist branch doctrine (`dev/<component>`) or exception-only use of `integration/staging`.
+- Follow-up needed: keep AGENTS, SI index, and SI onboarding aligned with this branch rule.
+
+### DEC-system_integration_normalization-28
+- Status: locked
+- Decision: SI onboarding must include explicit branch `work` rejection and remote preflight requirements (`git` remote must target `https://github.com/SH99999/mediastreamer.git`) before SI push/PR handoff.
+- Date context: SI onboarding clarity hardening phase
+- Why this was chosen: replacement agents need deterministic branch and remote checks to avoid local-only completion or ambiguous push targets.
+- What it affects: SI onboarding checklist, agent preflight behavior, and PR readiness validation.
+- What it explicitly does NOT affect: component runtime deploy contracts or autonomous support-matrix gating.
+- Follow-up needed: keep onboarding, AGENTS, and SI status wording synchronized when remote strategy changes.
+
+### DEC-system_integration_normalization-29
+- Status: locked
+- Decision: stage-B UI/UX autonomy uses proposal-reference intake (`proposal URI/path + revision`), owner decision packet output (`decision_output_v1`), and project-view blueprint truth in-repo.
+- Date context: stage-B autonomy expansion phase
+- Why this was chosen: multiple UI/UX proposal iterations require deterministic, low-click owner decisions and auditable routing without chat-memory dependency.
+- What it affects: issue templates, SI onboarding, UI/UX governance intake, and owner decision preparation.
+- What it explicitly does NOT affect: protected-`main` owner approval gate or support-matrix delivery gating for runtime deploy.
+- Follow-up needed: apply project views to `https://github.com/users/SH99999/projects/1` with owner credentials if API access is unavailable in the current execution lane.
+
+### DEC-system_integration_normalization-30
+- Status: locked
 - Decision: tuner is promoted into the autonomous delivery support matrix with governed defaults `git_ref=dev/tuner`, `payload=current`, `deploy_workflow=component-test-deploy-v10.yml`, and `rollback_workflow=component-test-rollback-v10.yml`.
 - Date context: tuner autonomy promotion phase
 - Why this was chosen: tuner deploy and rollback are now validated on the target Pi, and `dev/tuner` is aligned with `main`, so the support matrix can safely dispatch the same governed lane autonomously.

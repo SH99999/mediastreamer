@@ -51,8 +51,23 @@ body:
     attributes:
       label: Known repo truth or affected docs
       description: List known journals, decision logs, contracts, workflows, or assets involved.
+  - type: input
+    id: proposal_uri
+    attributes:
+      label: Proposal markdown URI or repo path
+      description: Optional but recommended for external chat proposals.
+  - type: input
+    id: proposal_revision
+    attributes:
+      label: Proposal revision or digest
+      description: Commit SHA, tag, or digest for reproducible proposal references.
   - type: textarea
     id: owner_decision
     attributes:
       label: Owner decision needed
       description: State the actual decision that should be surfaced if one is required.
+  - type: textarea
+    id: decision_options
+    attributes:
+      label: Decision options (2-3)
+      description: Provide mutually exclusive options and identify one recommended option.

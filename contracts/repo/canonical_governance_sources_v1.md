@@ -22,6 +22,8 @@ These define:
 ### 2. Naming and release doctrine
 - `contracts/repo/naming_and_release_numbering_standard_v1.md`
 - `contracts/repo/release_intake_and_delivery_status_v2.md`
+- `contracts/repo/deploy_process_standard_v1.md`
+- `contracts/repo/deploy_target_exclusivity_standard_v1.md`
 
 These define:
 - naming rules
@@ -33,9 +35,14 @@ These define:
 - `contracts/repo/component_journal_policy_v2.md`
 - `contracts/repo/repository_language_standard_v2.md`
 
-### 4. Agent-facing operational files
+### 4. UI/GUI governance doctrine
+- `contracts/repo/ui_gui_governance_standard_v1.md`
+
+### 5. Agent-facing operational files
 - `AGENTS.md`
 - `components/AGENTS.md`
+- `contracts/repo/system_integration_governance_index_v7.md`
+- `contracts/repo/governance_unification_delivery_plan_v1.md`
 - `docs/agents/*`
 
 ## Interpretation rule
