@@ -1,6 +1,6 @@
 # COMPONENT STATUS — system_integration_normalization
 
-Status note: this v8 file remains the current SI/N status addendum and is updated here after successful tuner target-Pi validation.
+Status note: this v8 file remains the current SI/N status addendum and is updated here after successful tuner target-Pi validation and autonomy promotion.
 
 ## 1. Scope
 - component name: system_integration_normalization
@@ -21,11 +21,12 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - a protected-main truth maintenance operating model exists for safe handling of connector mutation limits
   - a target deploy/test exclusivity contract and lock-aware workflow family exist on `main`
   - bridge deploy and rollback are validated on the target Pi
-  - tuner deploy and rollback are now also validated on the target Pi through the manual lock-aware workflow lane
+  - tuner deploy and rollback are validated on the target Pi through the manual lock-aware workflow lane
+  - bridge and tuner are both enabled in the autonomous delivery support matrix
 - what partially works:
-  - autonomous delivery is still support-matrix limited and not yet broad across all active components
+  - autonomous delivery remains support-matrix gated, now including Bridge, Tuner, and Fun Line while other components remain unsupported
   - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
-  - tuner deploy normalization currently covers the overlay/runtime/service lane only; the separate `radio_scale_source` artifact is still not normalized as a deployable repo payload
+  - tuner deploy normalization is intentionally scoped to overlay/runtime/service while source-selection behavior remains hardware-governed (encoder short/long press) until full integration
 - what is broken:
   - unsupported components still cannot use autonomous delivery and must still escalate or no-op safely
 - what was tested:
@@ -40,9 +41,10 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 
 ## 3. Repository Mapping
 - correct component path in repo: `journals/system-integration-normalization/`
+- active SI UI/GUI governance stream path: `journals/system-integration-normalization/ui_gui_stream_v1.md`
 - correct truth contracts: `contracts/repo/`
 - correct support data path: `tools/governance/`
-- correct branch model: `main` for truth; short-lived repo-control-plane branches for SI changes; `integration/staging` as an exception-only branch
+- correct branch model: `main` for truth; dedicated short-lived `si/<topic>` branches for SI/governance changes; `integration/staging` as an exception-only branch
 
 ## 4. Locked Decisions
 ### DEC-SIN-12
@@ -90,21 +92,40 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 - rationale: parallel deploys destroy test validity and make rollback anchors ambiguous.
 - impact: deploy/test/rollback workflows must respect target-slot state such as `free`, `deploying`, `test_open`, `rollback_running`, and `blocked`.
 
+### DEC-SIN-21
+- decision: SI/governance work must follow a dedicated branch path `si/<topic>` from local implementation to pushed branch and PR to protected `main`.
+- rationale: branch clarity is required for autonomous governance discipline and avoids drift from generic local branch names.
+- impact: SI lane execution, onboarding, and PR preparation now require explicit SI branch naming and same-branch promotion to `main`.
+
+### DEC-SIN-22
+- decision: SI onboarding preflight must explicitly reject branch name `work` for SI truth changes and must verify remote `git` points to `https://github.com/SH99999/mediastreamer.git` before push/PR handoff.
+- rationale: avoids ambiguous local execution and prevents pushes to the wrong remote.
+- impact: replacement SI agents must run branch+remote preflight checks before packaging governed SI changes.
+
+### DEC-SIN-23
+- decision: stage-B UI/UX autonomy requires proposal-reference fields and decision options in intake issues, plus `decision_output_v1` as canonical owner decision output block.
+- rationale: repeated UI/UX iterations need deterministic automation anchors and low-click owner decision handling.
+- impact: issue templates and onboarding now require proposal URI/revision and decision options; project view setup follows the in-repo blueprint.
+
 ## 5. Open Decisions
-- when tuner should enter the autonomous delivery support matrix after its now-successful manual Pi validation
-- when additional components beyond bridge and tuner become delivery-capable in the autonomous support matrix
+- when additional components beyond bridge, tuner, and fun-line become delivery-capable in the autonomous support matrix
 - whether the repository should later move to private visibility if the cost/risk tradeoff changes
 - whether low-risk PR classes should later auto-merge once the current packaged-review model has matured further
+- whether project view creation for `Scale Radio Governance & Delivery` should be executed by API automation or owner one-time manual apply from the canonical blueprint
 
 ## 6. Runtime / Deployment Notes
 - current validated deploy/rollback reference components:
   - Bridge
   - Tuner overlay/runtime/service lane
-- delivery support matrix on `main` remains conservative until tuner is explicitly promoted by decision
+- next manual validation target with repo deploy lane ready:
+  - Fun Line overlay lane (`current`)
+- delivery support matrix on `main` now supports Bridge, Tuner, and Fun Line for autonomous dispatch
+- autonomous deploy line remains partial at repository scope because other components are still unsupported
 - owner remains the final onsite acceptance gate before stable truth is merged to `main`
-- tuner still has one explicit contract gap: the separate `radio_scale_source` artifact is not yet normalized inside the new deploy lane
+- source-project artifacts remain temporarily out of deploy-lane scope and are controlled via hardware interaction rules (encoder short/long press) until full integration
 
 ## 7. Next Recommended Steps
-1. decide whether tuner should now enter the autonomous delivery matrix
-2. normalize the separate `radio_scale_source` artifact if tuner must again ship both overlay and source as one governed lane
-3. normalize the next component wrapper contract after bridge and tuner
+1. normalize the separate `radio_scale_source` artifact if tuner must again ship both overlay and source as one governed lane
+2. normalize the next component wrapper contract after bridge and tuner
+3. keep source-project scope boundaries explicit (hardware-governed until full integration)
+4. standardize immutable payload naming and governed pointer resolution across deployable components

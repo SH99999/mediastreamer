@@ -11,10 +11,10 @@ Before touching files, read these governance documents on `main`:
 - `contracts/repo/release_intake_and_delivery_status_v2.md`
 - `contracts/repo/component_journal_policy_v2.md`
 - `contracts/repo/repository_language_standard_v2.md`
-- `contracts/repo/system_integration_governance_index_v5.md`
+- `contracts/repo/system_integration_governance_index_v7.md`
 - `contracts/repo/new_component_intake_standard_v2.md`
 - `contracts/repo/protected_main_truth_maintenance_operating_model_v1.md`
-- `docs/agents/system_integration_recovery_onboarding_v5.md`
+- `docs/agents/system_integration_recovery_onboarding_v7.md`
 
 ## Core doctrine
 - `main` is the canonical protected truth branch for workflows, governance, accepted stable artifacts, and operator-visible execution paths.
@@ -39,9 +39,10 @@ Before touching files, read these governance documents on `main`:
 
 ## Workflow doctrine
 - active deploy workflows live on `main`
-- current supported deploy lane is the v6 generic component workflow family unless newer governance supersedes it
+- current supported deploy lane is the active governed workflow family referenced by the current SI governance index and deploy process standard
 - do not reintroduce obsolete workflow generations
 - system integration should use short-lived repo-control-plane branches to `main` by default
+- SI/governance branch names must be explicit and dedicated (recommended pattern: `si/<topic>`); do not use ambiguous generic branches such as `work` for SI truth mutations
 
 ## CI doctrine
 - keep the repository free of Python cache artifacts
@@ -50,6 +51,12 @@ Before touching files, read these governance documents on `main`:
 
 ## Required behavior for agents
 - make repository changes in a dedicated non-`main` branch
+- never mutate `main` directly; use a dedicated working branch and open a PR to `main` after owner coordination
+- for SI/governance scope, create a dedicated SI branch first (`si/<topic>`), perform local changes there, then push that branch and open/update a PR from that branch to `main`
+- do not use the generic branch name `work` for SI/governance mutations; rename or recreate to `si/<topic>` before changing repo truth
+- before pushing or preparing PR handoff, verify remote `git` points to the canonical repository URL and push the active SI branch to that remote
+- at session start, run `bash tools/governance/agent_git_bootstrap_v1.sh` and report bootstrap status immediately
+- the first owner-facing reply must explicitly state what is ready now and exactly what owner action is needed (or `none`)
 - keep changes scoped and governance-consistent
 - prefer component-level changes over ad-hoc plugin-fragment changes
 - if a new operational rule is introduced, put it into governance docs instead of relying on chat memory
@@ -62,4 +69,4 @@ Agents should consult:
 - `docs/agents/skill_volumio4_plugin_development_v1.md`
 - `docs/agents/skill_overlay_component_governance_v1.md`
 - `docs/agents/reference_repositories_and_docs_v1.md`
-- `docs/agents/system_integration_recovery_onboarding_v5.md`
+- `docs/agents/system_integration_recovery_onboarding_v7.md`

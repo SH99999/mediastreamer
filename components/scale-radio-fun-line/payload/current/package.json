@@ -1,0 +1,9 @@
+{
+  "name": "fun_linea_overlay",
+  "version": "0.4.2-repo-current",
+  "description": "Scale Radio Fun Line overlay runtime payload",
+  "main": "index.js",
+  "dependencies": {
+    "kew": "^0.7.0"
+  }
+}

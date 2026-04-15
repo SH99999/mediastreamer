@@ -45,7 +45,19 @@ Do not assume deep specialist implementation ownership inside a component unless
   - governed Git release-tagging standard
 - current deploy truth snapshot:
   - bridge deploy and rollback are validated on the target Pi
-  - tuner now has a real repo-driven manual deploy/rollback lane and awaits first Pi validation
+  - tuner deploy and rollback are also validated on the target Pi through the manual lock-aware workflow lane
+  - tuner autonomous-delivery matrix promotion is active for the overlay/runtime/service lane
+  - fun-line deploy lane is now repo-normalized for manual lock-aware deploy and rollback testing
+
+
+## SI stream functions in this repo
+The system-integration stream operates as the control-plane function set for the repository:
+- maintain governance contract consistency and document-chain freshness
+- enforce branch doctrine (`main` truth, `dev/<component>` work lanes, `integration/staging` exception-only)
+- keep issue-routing and escalation automation aligned with governed labels and workflows
+- preserve truthful repo state in status/decision/stream journals
+- guard deploy/rollback operating rules (including target-slot exclusivity)
+- route blockers transparently instead of claiming partial or fabricated completion
 
 ## Read order
 1. `contracts/repo/system_integration_governance_index_v7.md`
@@ -61,19 +73,35 @@ Do not assume deep specialist implementation ownership inside a component unless
 11. `contracts/repo/system_integration_escalation_contract_v1.md`
 12. `contracts/repo/protected_main_truth_maintenance_operating_model_v1.md`
 13. `contracts/repo/deploy_target_exclusivity_standard_v1.md`
-14. `contracts/repo/truthful_execution_and_negative_answer_standard_v1.md`
-15. `contracts/repo/git_release_tagging_standard_v1.md`
-16. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-17. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-18. `journals/system-integration-normalization/stream_v6.md`
-19. `journals/scale-radio-bridge/current_state_v1.md`
-20. `journals/scale-radio-tuner/current_state_v2.md`
+14. `contracts/repo/deploy_process_standard_v1.md`
+15. `contracts/repo/ui_gui_governance_standard_v1.md`
+16. `contracts/repo/truthful_execution_and_negative_answer_standard_v1.md`
+17. `contracts/repo/git_release_tagging_standard_v1.md`
+18. `contracts/repo/governance_unification_delivery_plan_v1.md`
+19. `docs/agents/agent_git_bootstrap_v1.md`
+20. `contracts/repo/ui_ux_stage_b_autonomous_loop_standard_v1.md`
+21. `docs/agents/chatgpt_governed_intake_prompt_v1.md`
+22. `docs/agents/chat_to_git_delivery_process_v1.md`
+23. `docs/agents/container_startup_setup_v1.md`
+24. `docs/agents/onboarding_prompts_all_streams_v1.md`
+25. `docs/agents/fallback_connector_blocked_manual_v1.md`
+26. `tools/governance/scale_radio_governance_delivery_views_v1.md`
+27. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+28. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+29. `journals/system-integration-normalization/stream_v6.md`
+30. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+31. `journals/scale-radio-bridge/current_state_v1.md`
+32. `journals/scale-radio-tuner/current_state_v2.md`
 
 ## Locked operating rules
 - `main` is the protected truth branch and final owner acceptance gate
 - agents and chats work on non-`main` branches
+- SI/governance lanes must use a dedicated `si/<topic>` branch for each packaged change set; do not use generic branch names for SI truth updates
+- SI branch flow is mandatory: chat line -> local implementation on `si/<topic>` -> push same branch -> deploy/test from branch -> manual verification -> fix on same branch if needed -> PR `si/<topic>` to `main` -> owner approval
+- branch name `work` is not valid for SI-governance truth mutations; if detected, switch to a dedicated `si/<topic>` branch before continuing
+- remote preflight is mandatory before push/PR handoff: ensure remote `git` exists and targets `https://github.com/SH99999/mediastreamer.git`
 - deploy/test happens from the working branch
-- accepted work merges to `main` only after packaged review and owner acceptance
+- accepted work merges to `main` only after packaged review, owner coordination, and owner acceptance
 - system integration uses short-lived repo-control-plane branches to `main` by default
 - `integration/staging` is exception-only for temporary integration-owned staging work
 - journals, decisions, and streams are mandatory repo truth and must not be treated as optional paperwork
@@ -122,12 +150,44 @@ Do not assume deep specialist implementation ownership inside a component unless
 - if a component is not support-matrix delivery-capable, do not pretend autonomous delivery support exists
 - keep repo-truth cleanup visible in docs, journals, and issues instead of hiding uncertainty
 
+## SI branch + remote preflight checklist
+Run this before mutating SI/governance truth files:
+1. `git branch --show-current` returns `si/<topic>` (not `main`, not `work`)
+2. `git remote get-url git` returns `https://github.com/SH99999/mediastreamer.git`
+3. local branch is clean enough to package a focused SI change set
+4. push uses the same SI branch that will be used for the PR to `main`
+5. latest base sync is confirmed (auto-sync bootstrap line `base sync: ok`, or explicit blocker is reported)
+
+## Agent bootstrap + first reply contract
+At session start, run:
+- `bash tools/governance/agent_git_bootstrap_v1.sh`
+
+Immediately reply with:
+1. branch status
+2. canonical remote status
+3. base sync status
+4. push-auth status
+5. ready-now scope
+6. exact owner action required (or `none`)
+
+If push auth is blocked, ask for one concrete owner action first (runtime token/auth or owner-side push), then continue with local prep and PR packaging.
+If the runtime stalls during generic setup, keep cloud startup in Auto mode (or use the minimal wrapper documented in `docs/agents/codex_cloud_environment_setup_v1.md`) and run `bash tools/governance/container_startup_setup_v1.sh` before repeating bootstrap.
+
+## Stage-B proposal autonomy checklist (UI/UX + component/runtime)
+Use this when an external GPT chat produced a `.md` proposal:
+1. create/update a governed intake issue (`[UX/Asset]` or `[Demand]`) and include the proposal URI/path + immutable revision or digest
+2. ensure labels normalize to the correct specialist route (`agent:ux` or the relevant `agent:<component>`) and SI escalation labels when impact is cross-component/system-wide
+3. ensure issue contains owner decision packet inputs (options, recommendation, downstream governance files, specialist routing map)
+4. keep owner output in `decision_output_v1` block format so routing can trigger deterministically
+5. when owner provides external ChatGPT proposal, require URI-based intake fields from `docs/agents/chatgpt_governed_intake_prompt_v1.md` (avoid repeated manual copy/paste)
+6. if project-view API access is unavailable in the current lane, keep `tools/governance/scale_radio_governance_delivery_views_v1.md` as canonical manual apply blueprint and log the blocker in SI stream
+7. enforce end-of-turn delivery status block from `docs/agents/chat_to_git_delivery_process_v1.md` using exact `Delivered to Git: YES/NO` wording
+
 ## Current practical priorities
 1. keep the governance and issue control-plane working
 2. keep active branches aligned to `main`
-3. validate the new tuner manual deploy/rollback lane on the target Pi
-4. decide whether tuner can join the autonomous delivery matrix after first Pi validation
-5. resolve repo-truth uncertainty where still open, highest priority:
+3. keep source-project scope explicit as hardware-governed until full integration is opened
+4. resolve repo-truth uncertainty where still open, highest priority:
    - starter
    - fun-line
    - hardware

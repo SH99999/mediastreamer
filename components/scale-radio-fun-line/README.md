@@ -19,6 +19,13 @@ It is not a core renderer, playback engine, or ownership-master component.
 - avoid two simultaneously heavy active renderers with Radio Scale
 - reintroduce only one production visual pass first: Dog Line
 
+## Deploy contract paths
+- payload pointer: `components/scale-radio-fun-line/payload/current/`
+- deploy candidates:
+  - `components/scale-radio-fun-line/deploy_candidates/apply_payload_v1.sh`
+  - `components/scale-radio-fun-line/deploy_candidates/healthcheck_runtime_v1.sh`
+  - `components/scale-radio-fun-line/deploy_candidates/remove_active_v1.sh`
+
 ## See also
 - `journals/scale-radio-fun-line/current_state_v1.md`
 - `journals/scale-radio-fun-line/stream_v1.md`

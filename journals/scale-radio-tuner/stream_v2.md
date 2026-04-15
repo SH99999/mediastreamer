@@ -15,3 +15,7 @@ Status note: this v2 file supersedes `stream_v1.md` as the current tuner stream 
 - 2026-04-15: Added non-interactive privileged execution support for tuner deploy/rollback through `PI_SUDO_PASSWORD` on the runner.
 - 2026-04-15: Manual tuner deploy succeeded on the target Pi.
 - 2026-04-15: Manual tuner rollback succeeded on the target Pi.
+- 2026-04-15: Autonomous delivery matrix v3 now marks tuner as supported with `dev/tuner` + `current` defaults and v10 deploy/rollback workflows.
+- 2026-04-15: Shared wrapper compatibility was expanded so `tools/deploy/sr-deploy-wrapper-v2.sh` now resolves and executes tuner deploy/rollback contracts, not only bridge.
+- 2026-04-15: Tuner artifact-role language was normalized in current-state (`tuner:runtime`, `tuner:service`, `tuner:source_tile`) to keep multi-artifact acceptance explicit.
+- 2026-04-15: Scope decision recorded that source-project behavior remains hardware-governed (encoder short/long press) and therefore out of deploy-lane scope until full integration is explicitly opened.

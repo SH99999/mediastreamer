@@ -12,6 +12,7 @@ That does **not** automatically justify separate branches.
 - `main` = truth for workflows, governance, accepted stable artifacts, and operator-visible execution paths.
 - `dev/<component>` = active component work lane.
 - `integration/staging` = optional integration-owned temporary branch kept aligned to `main` when actively used.
+- `si/<topic>` = short-lived system-integration/governance control-plane branch for repo-truth updates that are not component payload work.
 
 `integration/staging` is **not** a second truth branch.
 
@@ -37,6 +38,13 @@ That does **not** automatically justify separate branches.
 - owned by system integration / normalization
 - used for temporary integration packaging, repo-control-plane work, contract alignment, and staging-only integration blocks
 - should be reset or realigned to current `main` when reused
+
+### si/<topic>
+- owned by system integration / normalization
+- dedicated branch for one packaged SI/governance change set from local workspace to PR
+- must be pushed as its own branch and reviewed via PR to `main`
+- should be deleted after merge to avoid branch drift
+- avoid ambiguous generic names (for example `work`) for SI-governance truth changes
 
 ### dev/<component>
 - owned by the relevant specialist lane for that component
