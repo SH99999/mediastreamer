@@ -1,0 +1,53 @@
+name: component-test-release-slot-v2
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Target Pi slot identifier"
+        required: true
+        default: "primary"
+      component:
+        description: "Component that currently owns the test slot"
+        required: true
+        default: "bridge"
+      git_ref:
+        description: "Git ref that currently owns the test slot"
+        required: true
+        default: "dev/bridge"
+      payload:
+        description: "Payload currently associated with the test slot"
+        required: true
+        default: "current_dev"
+      reason:
+        description: "Why the slot is being released"
+        required: true
+        default: "accepted_candidate"
+      force:
+        description: "Force release even if the recorded state does not match"
+        required: true
+        default: "false"
+
+concurrency:
+  group: scale-radio-${{ inputs.target }}-deploy-slot
+  cancel-in-progress: false
+
+jobs:
+  release_target_slot:
+    runs-on: [self-hosted, scale-radio, pi]
+    steps:
+      - name: Checkout workflow repo state
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preflight writable paths on runner host
+        shell: bash
+        run: |
+          mkdir -p /opt/scale-radio/state
+          test -w /opt/scale-radio/state
+
+      - name: Release target test slot
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v2.sh release "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "release:${GITHUB_RUN_ID}" "${{ inputs.reason }}" "${{ inputs.force }}"
