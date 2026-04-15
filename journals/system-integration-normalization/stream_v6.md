@@ -216,3 +216,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated owner operational reference and SI read chains to include status prompt/report automation paths
 - locked SI decisions/status entries for this operating model (`DEC-system_integration_normalization-32`, `DEC-SIN-25`)
 - purpose: allow simple prompts like `status tuner` to return short, visual, link-backed outputs from Git-truth data
+
+### 2026-04-15 / si/deploy-test-strategy-v1 / measurable Pi deployment test strategy and component guide
+- added `contracts/repo/deployment_test_strategy_standard_v1.md` defining measurable run metrics, evidence bundle contract, layered checks, pass/fail rule, and chart/report generation expectations
+- added `docs/agents/pi_component_test_guide_v1.md` with per-component test checklist guidance and execution flow for standard + component-specific verification scripts
+- added `tools/governance/pi_test_results_report_v1.py` to aggregate run bundles and emit markdown summary tables plus Mermaid charts for pass-rate and deploy-duration trends
+- updated SI governance index and SI onboarding read orders to include the new deploy-test strategy standard
+- purpose: ensure each Pi test run yields structured, comparable, and visualizable data for owner decisions and autonomy gating
