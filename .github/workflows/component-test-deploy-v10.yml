@@ -31,6 +31,8 @@ concurrency:
 jobs:
   deploy_component:
     runs-on: [self-hosted, scale-radio, pi]
+    env:
+      PI_SUDO_PASSWORD: ${{ secrets.PI_SUDO_PASSWORD }}
     steps:
       - name: Checkout workflow/control-plane repository state
         uses: actions/checkout@v4

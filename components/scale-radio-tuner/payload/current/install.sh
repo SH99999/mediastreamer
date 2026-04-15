@@ -1,10 +1,23 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+run_sudo() {
+  if sudo -n true 2>/dev/null; then
+    sudo "$@"
+    return
+  fi
+  if [ -n "${PI_SUDO_PASSWORD:-}" ]; then
+    printf '%s\n' "$PI_SUDO_PASSWORD" | sudo -S -p '' "$@"
+    return
+  fi
+  echo "SR_TUNER: sudo access required but PI_SUDO_PASSWORD is not available" >&2
+  exit 2
+}
 
 export DEBIAN_FRONTEND=noninteractive
 echo "Installing Scale FM Overlay dependencies"
-sudo apt-get update
-sudo apt-get -y install python3-pygame python3-pil fonts-dejavu-core alsa-utils --no-install-recommends
+run_sudo apt-get update
+run_sudo apt-get -y install python3-pygame python3-pil fonts-dejavu-core alsa-utils --no-install-recommends
 
 PLUGIN_DIR="/data/plugins/user_interface/radio_scale_peppy"
 PLAYLIST_DIR="/data/playlist"
@@ -12,8 +25,8 @@ PLAYLIST_PATH="$PLAYLIST_DIR/radioscale_base"
 FAV_DIR="/data/favourites"
 MY_WEB_RADIO_PATH="$FAV_DIR/my-web-radio"
 
-[ -d "$PLAYLIST_DIR" ] || sudo mkdir -p "$PLAYLIST_DIR"
-[ -d "$FAV_DIR" ] || sudo mkdir -p "$FAV_DIR"
+[ -d "$PLAYLIST_DIR" ] || run_sudo mkdir -p "$PLAYLIST_DIR"
+[ -d "$FAV_DIR" ] || run_sudo mkdir -p "$FAV_DIR"
 
 python3 <<'PY2'
 import json
@@ -53,22 +66,22 @@ if changed or not my_web_radio.exists():
 PY2
 
 if [ -d "$PLUGIN_DIR" ]; then
-  sudo chmod +x "$PLUGIN_DIR/run_radio_scale.sh" || true
-  sudo chmod +x "$PLUGIN_DIR/install.sh" || true
-  sudo chmod +x "$PLUGIN_DIR/uninstall.sh" || true
+  run_sudo chmod +x "$PLUGIN_DIR/run_radio_scale.sh" || true
+  run_sudo chmod +x "$PLUGIN_DIR/install.sh" || true
+  run_sudo chmod +x "$PLUGIN_DIR/uninstall.sh" || true
 fi
 
 SERVICE_SRC="$PLUGIN_DIR/systemd/scale_fm_renderer.service"
 SERVICE_DST="/etc/systemd/system/scale_fm_renderer.service"
 
 if [ -f "$SERVICE_SRC" ]; then
-  sudo cp "$SERVICE_SRC" "$SERVICE_DST"
-  sudo chmod 644 "$SERVICE_DST"
-  sudo chmod +x "$PLUGIN_DIR/run_renderer_daemon.sh" || true
-  sudo systemctl daemon-reload || true
-  sudo systemctl enable scale_fm_renderer.service || true
-  sudo systemctl restart scale_fm_renderer.service || true
+  run_sudo cp "$SERVICE_SRC" "$SERVICE_DST"
+  run_sudo chmod 644 "$SERVICE_DST"
+  run_sudo chmod +x "$PLUGIN_DIR/run_renderer_daemon.sh" || true
+  run_sudo systemctl daemon-reload || true
+  run_sudo systemctl enable scale_fm_renderer.service || true
+  run_sudo systemctl restart scale_fm_renderer.service || true
 fi
 
-echo "plugininstallend" 
+echo "plugininstallend"
 exit 0

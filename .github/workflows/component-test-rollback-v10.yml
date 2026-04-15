@@ -27,6 +27,8 @@ concurrency:
 jobs:
   rollback_component:
     runs-on: [self-hosted, scale-radio, pi]
+    env:
+      PI_SUDO_PASSWORD: ${{ secrets.PI_SUDO_PASSWORD }}
     steps:
       - name: Checkout workflow repo state
         uses: actions/checkout@v4
