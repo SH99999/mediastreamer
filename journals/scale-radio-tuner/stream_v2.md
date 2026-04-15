@@ -15,3 +15,4 @@ Status note: this v2 file supersedes `stream_v1.md` as the current tuner stream 
 - 2026-04-15: Added non-interactive privileged execution support for tuner deploy/rollback through `PI_SUDO_PASSWORD` on the runner.
 - 2026-04-15: Manual tuner deploy succeeded on the target Pi.
 - 2026-04-15: Manual tuner rollback succeeded on the target Pi.
+- 2026-04-15: Tuner was promoted into the autonomous delivery matrix with `dev/tuner` and payload `current` as the governed defaults.

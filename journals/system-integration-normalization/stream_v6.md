@@ -41,3 +41,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - added non-interactive privileged execution support for tuner through `PI_SUDO_PASSWORD`
 - tuner deploy and tuner rollback both completed successfully on the target Pi
 - purpose: establish tuner as the second validated manual deploy/rollback lane while keeping autonomous promotion as a separate explicit decision
+
+### 2026-04-15 / main / Tuner autonomy promotion
+- tuner was promoted into the autonomous delivery support matrix
+- matrix defaults were fixed to `dev/tuner` plus payload `current`
+- bridge matrix defaults were refreshed to the currently validated v9 workflow pair
+- purpose: keep execution moving forward without a manual-only holding pattern once the validated runtime lane already exists
