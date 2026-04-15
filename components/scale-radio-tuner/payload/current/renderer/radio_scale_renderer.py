@@ -96,15 +96,16 @@ DEFAULT_SETTINGS = {
     'station_label_levels': 3,
     'use_layer_theme': True,
     'theme_name': 'braun_hd',
-    'pointer_visual_follow_gain': 0.38,
-    'pointer_visual_locked_gain': 0.48,
+    'pointer_visual_follow_gain': 0.52,
+    'pointer_visual_locked_gain': 0.62,
     'pointer_jitter_enabled': False,
     'lock_visual_snap_enabled': False,
-    'pointer_idle_lock_ms': 220,
-    'pointer_startup_settle_ms': 900,
+    'pointer_idle_lock_ms': 180,
+    'pointer_startup_settle_ms': 700,
     'pointer_settle_epsilon_mhz': 0.004,
-    'pointer_visual_deadband_mhz': 0.006,
-    'pointer_pixel_snap_deadband_px': 1.0,
+    'pointer_visual_deadband_mhz': 0.0035,
+    'pointer_pixel_snap_deadband_px': 0.45,
+    'overlay_owner_poll_ms': 120,
 }
 
 DEFAULT_STATE = {
@@ -173,6 +174,7 @@ class RadioScaleRenderer:
         self.last_ui_mode = 'normal'
         self.overlay_owner = 'none'
         self.overlay_owner_mtime = None
+        self.overlay_owner_next_reload_at = 0.0
         self.hidden_reload_due_at = 0.0
 
     def reload_settings(self, force=False):
@@ -206,7 +208,13 @@ class RadioScaleRenderer:
         visible appliance surface without changing any legacy Volumio call
         methods. Scale FM renders actively only while owner=scale_fm.
         """
+        if not force:
+            now = time.monotonic()
+            if now < self.overlay_owner_next_reload_at:
+                return
         owner_path = Path(str(self.settings.get('shared_overlay_owner_path') or OWNER_PATH))
+        poll_ms = max(30, int(self.settings.get('overlay_owner_poll_ms', 120) or 120))
+        self.overlay_owner_next_reload_at = time.monotonic() + (poll_ms / 1000.0)
         try:
             mtime = owner_path.stat().st_mtime
         except FileNotFoundError:
@@ -360,6 +368,11 @@ class RadioScaleRenderer:
         flags = self.build_display_flags(desired_visible)
         self.screen = pygame.display.set_mode(self.size, flags)
         pygame.display.set_caption('Scale FM Overlay')
+        if desired_visible:
+            # Paint a dark guard frame immediately after the visibility switch so
+            # Chromium/X11 does not briefly expose a white frame before the next
+            # full renderer draw cycle.
+            self.present_startup_splash()
         self.last_ui_mode = str(self.state.get('ui_mode') or 'normal').lower()
 
     def init_theme(self):
