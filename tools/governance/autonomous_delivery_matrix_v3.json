@@ -8,8 +8,11 @@
       "rollback_workflow": "component-test-rollback-v8.yml"
     },
     "tuner": {
-      "auto_delivery_supported": false,
-      "reason": "deploy contract not yet normalized"
+      "auto_delivery_supported": true,
+      "default_git_ref": "dev/tuner",
+      "default_payload": "current",
+      "deploy_workflow": "component-test-deploy-v10.yml",
+      "rollback_workflow": "component-test-rollback-v10.yml"
     },
     "starter": {
       "auto_delivery_supported": false,
@@ -20,8 +23,11 @@
       "reason": "deploy contract not yet normalized"
     },
     "fun-line": {
-      "auto_delivery_supported": false,
-      "reason": "deploy contract not yet normalized"
+      "auto_delivery_supported": true,
+      "default_git_ref": "dev/fun-line",
+      "default_payload": "current",
+      "deploy_workflow": "component-test-deploy-v10.yml",
+      "rollback_workflow": "component-test-rollback-v10.yml"
     },
     "hardware": {
       "auto_delivery_supported": false,

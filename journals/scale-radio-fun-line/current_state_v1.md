@@ -8,11 +8,14 @@
 
 ## Repo truth
 - dedicated branch `dev/fun-line` exists
-- legacy handover confirms the runtime baseline and decision set strongly, but repo payload normalization remains incomplete and should be treated as an active normalization task
-- this component should remain dev-only for now
+- repo payload pointer now exists at `components/scale-radio-fun-line/payload/current/` for governed deploy testing
+- repo deploy candidate scripts now exist for apply/healthcheck/remove under `components/scale-radio-fun-line/deploy_candidates/`
+- component remains in manual validation stage until target-Pi deploy and rollback evidence is recorded
 
 ## Lifecycle status
-- `payload_partial`
+- `payload_complete`
+- `deployment_candidate_started`
+- `deploy_ready`
 - `functional_acceptance_open`
 
 ## Accepted baseline
@@ -30,11 +33,11 @@
 - later 0.5.0 and 0.6.0 lines are not authoritative runtime baselines
 - config pages repeatedly failed and remain non-authoritative
 - importer/catalog workflow must be treated as unvalidated/non-working
-- exact repo-normalized payload paths for overlay/source/packs remain unresolved
+- payload path is normalized for deploy testing, but target-Pi validation evidence is still pending
 - component must remain carefully coordinated with tuner so two heavy active renderers are never running simultaneously
 
 ## Repo-normalized next action
-1. normalize repo truth around `0.4.2` only
-2. mark later 0.5.0 and 0.6.0 lines as nonleading/partial in repo docs
-3. preserve existing encoder/GPIO open-close hooks unchanged
-4. reintroduce only one production visual pass first: Dog Line
+1. run target-Pi manual deploy test via `component-test-deploy-v10.yml` for `fun-line/current`
+2. run target-Pi manual rollback test via `component-test-rollback-v10.yml` for `fun-line/current`
+3. record deploy/rollback evidence in stream and SI status before autonomous promotion is treated as fully validated
+4. preserve existing encoder/GPIO open-close hooks unchanged and keep Dog Line as first production actor

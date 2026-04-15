@@ -45,8 +45,23 @@ body:
     attributes:
       label: Asset paths or placeholders
       description: List any existing assets, missing assets, or desired target locations.
+  - type: input
+    id: proposal_uri
+    attributes:
+      label: Proposal markdown URI or repo path
+      description: Link or path to the source proposal document (preferred immutable reference).
+  - type: input
+    id: proposal_revision
+    attributes:
+      label: Proposal revision or digest
+      description: Commit SHA, tag, or digest that locks the referenced proposal version.
   - type: textarea
     id: decision_need
     attributes:
       label: Decision needed
       description: State the owner decision required, if any.
+  - type: textarea
+    id: decision_options
+    attributes:
+      label: Decision options (2-3)
+      description: Provide mutually exclusive options and identify one recommended option.

@@ -10,7 +10,7 @@ on:
       component:
         description: "Component to deploy"
         required: true
-        default: "tuner"
+        default: "fun-line"
       payload:
         description: "Payload directory name or governed pointer"
         required: true

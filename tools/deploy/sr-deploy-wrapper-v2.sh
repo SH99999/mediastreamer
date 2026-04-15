@@ -40,6 +40,51 @@ resolve_bridge_payload() {
   exit 2
 }
 
+
+resolve_tuner_payload() {
+  local requested="$1"
+  local payload_root="$REPO_ROOT/components/scale-radio-tuner/payload"
+  if [[ -d "$payload_root/$requested" ]]; then
+    printf '%s\n' "$requested"
+    return 0
+  fi
+
+  case "$requested" in
+    current_dev|current)
+      if [[ -d "$payload_root/current" ]]; then
+        echo "SR_TUNER: resolving payload alias $requested -> current" >&2
+        printf '%s\n' "current"
+        return 0
+      fi
+      ;;
+  esac
+
+  echo "SR_TUNER: unresolved payload alias $requested under $payload_root" >&2
+  exit 2
+}
+
+resolve_fun_line_payload() {
+  local requested="$1"
+  local payload_root="$REPO_ROOT/components/scale-radio-fun-line/payload"
+  if [[ -d "$payload_root/$requested" ]]; then
+    printf '%s\n' "$requested"
+    return 0
+  fi
+
+  case "$requested" in
+    current_dev|current)
+      if [[ -d "$payload_root/current" ]]; then
+        echo "SR_FUN_LINE: resolving payload alias $requested -> current" >&2
+        printf '%s\n' "current"
+        return 0
+      fi
+      ;;
+  esac
+
+  echo "SR_FUN_LINE: unresolved payload alias $requested under $payload_root" >&2
+  exit 2
+}
+
 case "$COMPONENT" in
   bridge)
     BASE="$REPO_ROOT/components/scale-radio-bridge/deploy_candidates"
@@ -47,6 +92,20 @@ case "$COMPONENT" in
     HEALTH="$BASE/healthcheck_runtime_v2.sh"
     REMOVE="$BASE/remove_active_v2.sh"
     RESOLVED_PAYLOAD="$(resolve_bridge_payload "$PAYLOAD")"
+    ;;
+  tuner)
+    BASE="$REPO_ROOT/components/scale-radio-tuner/deploy_candidates"
+    APPLY="$BASE/apply_payload_v1.sh"
+    HEALTH="$BASE/healthcheck_runtime_v1.sh"
+    REMOVE="$BASE/remove_active_v1.sh"
+    RESOLVED_PAYLOAD="$(resolve_tuner_payload "$PAYLOAD")"
+    ;;
+  fun-line)
+    BASE="$REPO_ROOT/components/scale-radio-fun-line/deploy_candidates"
+    APPLY="$BASE/apply_payload_v1.sh"
+    HEALTH="$BASE/healthcheck_runtime_v1.sh"
+    REMOVE="$BASE/remove_active_v1.sh"
+    RESOLVED_PAYLOAD="$(resolve_fun_line_payload "$PAYLOAD")"
     ;;
   *)
     echo "Unsupported component: $COMPONENT"
