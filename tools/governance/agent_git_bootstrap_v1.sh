@@ -90,10 +90,31 @@ PUSH_AUTH_DETAIL="auth not available in current runtime"
 PROBE_REF="refs/heads/_bootstrap_auth_probe_$(date +%s)"
 BASE_SYNC_STATUS="skipped"
 BASE_SYNC_DETAIL="disabled or non-target branch"
+TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
 
 if git push --dry-run "${REMOTE_NAME}" "HEAD:${PROBE_REF}" >/dev/null 2>&1; then
   PUSH_AUTH_STATUS="ok"
   PUSH_AUTH_DETAIL="push dry-run succeeded"
+elif [[ -n "${TOKEN}" ]]; then
+  REMOTE_ACTUAL_URL="$(git remote get-url "${REMOTE_NAME}")"
+  if [[ "${REMOTE_ACTUAL_URL}" =~ ^https://github.com/ ]]; then
+    git config --local credential.helper \
+      '!f() { test -n "${GH_TOKEN:-${GITHUB_TOKEN:-}}" || exit 0; echo username=x-access-token; echo password="${GH_TOKEN:-${GITHUB_TOKEN:-}}"; }; f'
+    if git push --dry-run "${REMOTE_NAME}" "HEAD:${PROBE_REF}" >/dev/null 2>&1; then
+      PUSH_AUTH_STATUS="ok"
+      PUSH_AUTH_DETAIL="configured credential helper from GH_TOKEN/GITHUB_TOKEN"
+    else
+      AUTH_REMOTE_URL="https://x-access-token:${TOKEN}@${REMOTE_ACTUAL_URL#https://}"
+      if git push --dry-run "${AUTH_REMOTE_URL}" "HEAD:${PROBE_REF}" >/dev/null 2>&1; then
+        PUSH_AUTH_STATUS="ok"
+        PUSH_AUTH_DETAIL="env token is usable for authenticated HTTPS push"
+      else
+        PUSH_AUTH_DETAIL="token present but push dry-run failed"
+      fi
+    fi
+  else
+    PUSH_AUTH_DETAIL="token present but remote is not HTTPS github URL"
+  fi
 fi
 
 if [[ "${AUTO_SYNC_MAIN}" == "true" && "${CURRENT_BRANCH}" != "(detached-head)" && "${CURRENT_BRANCH}" != "${BASE_BRANCH}" ]]; then

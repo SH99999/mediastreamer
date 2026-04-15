@@ -49,6 +49,8 @@ Pass criteria:
 - `push auth: ok`
 - `Auth check: result=ok`
 
+Note: `agent_git_bootstrap_v1.sh` now attempts a local credential-helper configuration from `GH_TOKEN`/`GITHUB_TOKEN` when plain HTTPS push auth fails, then rechecks push auth.
+
 ## 5) If push is still blocked
 - verify `GH_TOKEN` and `GITHUB_TOKEN` are visible in runtime session env
 - verify token has repo write + pull request write permissions

@@ -192,3 +192,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - branch prep behavior now checks out remote branch when available, otherwise creates requested branch from `git/main`
 - updated `docs/agents/agent_git_bootstrap_v1.md` to document branch-target mode and the new `branch prep` status line in required first reply format
 - purpose: avoid repeated `src refspec ... does not match any` failures when agents start on non-target branches like `work`
+
+### 2026-04-15 / si/bootstrap-push-auth-fallback / token-backed git push probing
+- updated `tools/governance/agent_git_bootstrap_v1.sh` so when `GH_TOKEN`/`GITHUB_TOKEN` exists but plain HTTPS push auth fails, bootstrap configures a local repo credential helper and retries push probing
+- fallback now also tests tokenized HTTPS URL probe and reports explicit detail (`configured credential helper...` vs `token present but push dry-run failed`)
+- updated agent/cloud setup docs to reflect this behavior and reduce false `push auth: blocked` statuses in Codex cloud sessions
+- purpose: let agent lanes with valid env tokens push with standard `git push -u git <branch>` instead of failing on username prompt

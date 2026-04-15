@@ -25,6 +25,7 @@ Behavior:
 - if `dev/bridge` exists on remote, it is checked out locally
 - if missing, it is created from `git/main`
 - invalid branch names (not `si/*`, `dev/*`, `integration/*`) are rejected
+- if `GH_TOKEN`/`GITHUB_TOKEN` exists and plain push auth fails, bootstrap configures a local repo credential helper for `https://github.com` and re-probes push auth
 
 Optional environment overrides:
 - `CANONICAL_REMOTE_NAME` (default: `git`)
