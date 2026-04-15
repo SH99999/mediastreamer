@@ -1,0 +1,73 @@
+name: component-test-rollback-v9
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: "Git ref containing the component remove script"
+        required: true
+        default: "dev/bridge"
+      component:
+        description: "Component to roll back"
+        required: true
+        default: "bridge"
+      payload:
+        description: "Payload directory name or governed pointer"
+        required: true
+        default: "current_dev"
+      target:
+        description: "Target Pi slot identifier"
+        required: true
+        default: "primary"
+
+concurrency:
+  group: scale-radio-${{ inputs.target }}-deploy-slot
+  cancel-in-progress: false
+
+jobs:
+  rollback_component:
+    runs-on: [self-hosted, scale-radio, pi]
+    steps:
+      - name: Checkout workflow repo state
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout selected component ref
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.git_ref }}
+          path: target_ref
+
+      - name: Preflight writable paths on runner host
+        shell: bash
+        run: |
+          mkdir -p /opt/scale-radio/state
+          mkdir -p "/opt/scale-radio/removed/${{ inputs.component }}"
+          test -w /opt/scale-radio/state
+          test -w "/opt/scale-radio/removed/${{ inputs.component }}"
+
+      - name: Acquire target rollback slot
+        id: acquire_slot
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v3.sh acquire-rollback "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "rollback:${GITHUB_RUN_ID}"
+
+      - name: Roll back selected payload via repo wrapper
+        id: rollback_payload
+        shell: bash
+        run: |
+          bash tools/deploy/sr-deploy-wrapper-v2.sh rollback "${{ inputs.component }}" "${{ inputs.payload }}" "$GITHUB_WORKSPACE/target_ref"
+
+      - name: Release target slot after successful rollback
+        if: success()
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v3.sh release "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "rollback:${GITHUB_RUN_ID}" "rollback_completed"
+
+      - name: Mark target slot blocked on rollback failure
+        if: failure()
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v3.sh mark-blocked "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "rollback:${GITHUB_RUN_ID}" "rollback_incomplete"
