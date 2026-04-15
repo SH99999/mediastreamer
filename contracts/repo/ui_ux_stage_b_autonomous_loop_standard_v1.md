@@ -67,6 +67,28 @@ decision_output_v1:
     - update_labels_and_state
 ```
 
+
+## Owner-to-agent input contract (no repeated copy/paste)
+For external ChatGPT outputs, owner input to SI/agent should be a URI-based governed intake request, not repeated raw-text copy/paste.
+
+Required owner input fields:
+- `source_proposal_uri`
+- `proposal_revision`
+- `demand_type`
+- `components`
+- `decision_need`
+- `decision_options` + `recommended_option`
+
+Reference prompt and strict YAML format:
+- `docs/agents/chatgpt_governed_intake_prompt_v1.md`
+
+Agent execution expectation after receiving this input:
+1. populate/update governed intake fields
+2. produce `decision_output_v1`
+3. commit on dedicated branch (`si/<topic>` for SI/governance scope)
+4. push branch and open PR to `main`
+5. report only final owner approval action (or exact blocker)
+
 ## Project-view readiness rule
 The project `Scale Radio Governance & Delivery` must provide owner-facing views that separate:
 - decisions waiting for owner approval
