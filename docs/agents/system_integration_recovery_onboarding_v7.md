@@ -151,6 +151,7 @@ Run this before mutating SI/governance truth files:
 2. `git remote get-url git` returns `https://github.com/SH99999/mediastreamer.git`
 3. local branch is clean enough to package a focused SI change set
 4. push uses the same SI branch that will be used for the PR to `main`
+5. latest base sync is confirmed (auto-sync bootstrap line `base sync: ok`, or explicit blocker is reported)
 
 ## Agent bootstrap + first reply contract
 At session start, run:
@@ -159,9 +160,10 @@ At session start, run:
 Immediately reply with:
 1. branch status
 2. canonical remote status
-3. push-auth status
-4. ready-now scope
-5. exact owner action required (or `none`)
+3. base sync status
+4. push-auth status
+5. ready-now scope
+6. exact owner action required (or `none`)
 
 If push auth is blocked, ask for one concrete owner action first (runtime token/auth or owner-side push), then continue with local prep and PR packaging.
 

@@ -1,6 +1,9 @@
 name: rebase-dev-and-integration-branches-on-main
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       target_set:
@@ -51,6 +54,10 @@ jobs:
 
           target_set="${{ inputs.target_set }}"
           target_branch="${{ inputs.target_branch }}"
+
+          if [[ -z "$target_set" ]]; then
+            target_set="all"
+          fi
 
           if [[ "$target_set" == "all" ]]; then
             mapfile -t branches < <(

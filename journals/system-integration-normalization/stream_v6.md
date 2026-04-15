@@ -124,3 +124,15 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 ### 2026-04-15 / si/pr83-followup / PR83 review-comment fixes
 - updated `agent_git_bootstrap_v1.sh` so canonical SSH and HTTPS remote forms are treated as equivalent and existing working SSH remotes are not forcibly rewritten
 - purpose: avoid breaking already-working SSH-auth environments when mandatory bootstrap is executed
+
+### 2026-04-15 / si/agent-bootstrap-git / zero-click rebase automation follow-up
+- updated `rebase-dev-and-integration-branches-on-main.yml` so branch rebasing auto-triggers on every push to `main` (while preserving manual dispatch)
+- updated `agent_git_bootstrap_v1.sh` to auto-fetch and rebase `si/*`, `dev/*`, and `integration/*` branches onto latest `git/main` at session start when the working tree is clean
+- updated bootstrap/onboarding docs to require reporting `base sync` status in the first owner-facing reply
+- purpose: minimize owner clicks after merge by keeping repo branches and agent local bases current by default
+
+### 2026-04-15 / main / Tuner autonomy promotion
+- tuner was promoted into the autonomous delivery support matrix
+- matrix defaults were fixed to `dev/tuner` plus payload `current`
+- bridge matrix defaults were refreshed to the currently validated v9 workflow pair
+- purpose: keep execution moving forward without a manual-only holding pattern once the validated runtime lane already exists

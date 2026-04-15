@@ -4,8 +4,8 @@
       "auto_delivery_supported": true,
       "default_git_ref": "dev/bridge",
       "default_payload": "current_dev",
-      "deploy_workflow": "component-test-deploy-v8.yml",
-      "rollback_workflow": "component-test-rollback-v8.yml"
+      "deploy_workflow": "component-test-deploy-v9.yml",
+      "rollback_workflow": "component-test-rollback-v9.yml"
     },
     "tuner": {
       "auto_delivery_supported": true,

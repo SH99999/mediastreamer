@@ -1,6 +1,6 @@
 # COMPONENT STATUS — system_integration_normalization
 
-Status note: this v8 file remains the current SI/N status addendum and is updated here after successful tuner target-Pi validation.
+Status note: this v8 file remains the current SI/N status addendum and is updated here after successful tuner target-Pi validation and autonomy promotion.
 
 ## 1. Scope
 - component name: system_integration_normalization
@@ -21,7 +21,8 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - a protected-main truth maintenance operating model exists for safe handling of connector mutation limits
   - a target deploy/test exclusivity contract and lock-aware workflow family exist on `main`
   - bridge deploy and rollback are validated on the target Pi
-  - tuner deploy and rollback are now also validated on the target Pi through the manual lock-aware workflow lane
+  - tuner deploy and rollback are validated on the target Pi through the manual lock-aware workflow lane
+  - bridge and tuner are both enabled in the autonomous delivery support matrix
 - what partially works:
   - autonomous delivery remains support-matrix gated, now including Bridge, Tuner, and Fun Line while other components remain unsupported
   - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
@@ -124,6 +125,7 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 - source-project artifacts remain temporarily out of deploy-lane scope and are controlled via hardware interaction rules (encoder short/long press) until full integration
 
 ## 7. Next Recommended Steps
-1. normalize the next component wrapper contract after bridge and tuner
-2. keep source-project scope boundaries explicit (hardware-governed until full integration)
-3. reassess full multi-artifact tuner integration only when full integration is explicitly opened
+1. normalize the separate `radio_scale_source` artifact if tuner must again ship both overlay and source as one governed lane
+2. normalize the next component wrapper contract after bridge and tuner
+3. keep source-project scope boundaries explicit (hardware-governed until full integration)
+4. standardize immutable payload naming and governed pointer resolution across deployable components
