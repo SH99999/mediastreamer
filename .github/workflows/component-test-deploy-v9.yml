@@ -1,0 +1,95 @@
+name: component-test-deploy-v9
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_ref:
+        description: "Git ref containing the component payload and deploy scripts"
+        required: true
+        default: "dev/bridge"
+      component:
+        description: "Component to deploy"
+        required: true
+        default: "bridge"
+      payload:
+        description: "Payload directory name or governed pointer"
+        required: true
+        default: "current_dev"
+      target:
+        description: "Target Pi slot identifier"
+        required: true
+        default: "primary"
+      test_hold_minutes:
+        description: "Minutes to reserve the target for post-deploy testing"
+        required: true
+        default: "240"
+
+concurrency:
+  group: scale-radio-${{ inputs.target }}-deploy-slot
+  cancel-in-progress: false
+
+jobs:
+  deploy_component:
+    runs-on: [self-hosted, scale-radio, pi]
+    steps:
+      - name: Checkout workflow/control-plane repository state
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout selected component ref
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.git_ref }}
+          path: target_ref
+
+      - name: Preflight writable paths on runner host
+        shell: bash
+        run: |
+          mkdir -p /opt/scale-radio/state
+          mkdir -p "/opt/scale-radio/removed/${{ inputs.component }}"
+          mkdir -p /data/plugins/user_interface
+          mkdir -p /data/configuration/user_interface
+          test -w /opt/scale-radio/state
+          test -w "/opt/scale-radio/removed/${{ inputs.component }}"
+          test -w /data/plugins/user_interface
+          test -w /data/configuration/user_interface
+
+      - name: Acquire target deploy slot
+        id: acquire_slot
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v3.sh acquire-deploy "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "deploy:${GITHUB_RUN_ID}" "${{ inputs.test_hold_minutes }}"
+
+      - name: Apply selected payload via repo wrapper
+        id: apply_payload
+        shell: bash
+        run: |
+          bash tools/deploy/sr-deploy-wrapper-v2.sh deploy "${{ inputs.component }}" "${{ inputs.payload }}" "$GITHUB_WORKSPACE/target_ref"
+
+      - name: Mark target slot as test_open
+        if: success()
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v3.sh mark-test-open "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "deploy:${GITHUB_RUN_ID}" "${{ inputs.test_hold_minutes }}"
+
+      - name: Roll back selected payload on failure
+        id: rollback_on_failure
+        if: failure()
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v3.sh acquire-rollback "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "deploy-failure-rollback:${GITHUB_RUN_ID}"
+          bash tools/deploy/sr-deploy-wrapper-v2.sh rollback "${{ inputs.component }}" "${{ inputs.payload }}" "$GITHUB_WORKSPACE/target_ref"
+
+      - name: Release target slot after successful failure rollback
+        if: always() && steps.apply_payload.outcome == 'failure' && steps.rollback_on_failure.outcome == 'success'
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v3.sh release "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "deploy-failure-rollback:${GITHUB_RUN_ID}" "deploy_failed_rollback_completed"
+
+      - name: Mark target slot blocked when deploy/rollback did not complete cleanly
+        if: always() && steps.apply_payload.outcome == 'failure' && steps.rollback_on_failure.outcome != 'success'
+        shell: bash
+        run: |
+          bash tools/deploy/pi-test-slot-v3.sh mark-blocked "${{ inputs.target }}" "${{ inputs.component }}" "${{ inputs.git_ref }}" "${{ inputs.payload }}" "deploy:${GITHUB_RUN_ID}" "deploy_or_failure_rollback_incomplete"
