@@ -1,0 +1,35 @@
+{
+  "components": {
+    "bridge": {
+      "auto_delivery_supported": true,
+      "default_git_ref": "dev/bridge",
+      "default_payload": "current_dev",
+      "deploy_workflow": "component-test-deploy-v7.yml",
+      "rollback_workflow": "component-test-rollback-v7.yml"
+    },
+    "tuner": {
+      "auto_delivery_supported": false,
+      "reason": "deploy contract not yet normalized"
+    },
+    "starter": {
+      "auto_delivery_supported": false,
+      "reason": "starter repo truth and deploy contract remain unresolved"
+    },
+    "autoswitch": {
+      "auto_delivery_supported": false,
+      "reason": "deploy contract not yet normalized"
+    },
+    "fun-line": {
+      "auto_delivery_supported": false,
+      "reason": "deploy contract not yet normalized"
+    },
+    "hardware": {
+      "auto_delivery_supported": false,
+      "reason": "non-deploy payload lane"
+    },
+    "system-integration": {
+      "auto_delivery_supported": false,
+      "reason": "control-plane lane"
+    }
+  }
+}
