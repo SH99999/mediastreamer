@@ -1,6 +1,6 @@
 # COMPONENT STATUS — system_integration_normalization
 
-Status note: this v8 file supersedes the earlier v7 deploy-exclusivity addendum as the current SI/N status addendum.
+Status note: this v8 file remains the current SI/N status addendum and is updated here after successful tuner target-Pi validation.
 
 ## 1. Scope
 - component name: system_integration_normalization
@@ -20,8 +20,8 @@ Status note: this v8 file supersedes the earlier v7 deploy-exclusivity addendum 
   - an autonomous execution doctrine and SI escalation contract exist in repo form
   - a protected-main truth maintenance operating model exists for safe handling of connector mutation limits
   - a target deploy/test exclusivity contract and lock-aware workflow family exist on `main`
-  - bridge deploy and rollback are now validated on the target Pi
-  - tuner now has a real repo-driven manual deploy/rollback lane through `sr-deploy-wrapper-v3.sh` plus `component-test-deploy-v10.yml` / `component-test-rollback-v10.yml`
+  - bridge deploy and rollback are validated on the target Pi
+  - tuner deploy and rollback are now also validated on the target Pi through the manual lock-aware workflow lane
 - what partially works:
   - autonomous delivery is still support-matrix limited and not yet broad across all active components
   - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
@@ -32,10 +32,10 @@ Status note: this v8 file supersedes the earlier v7 deploy-exclusivity addendum 
   - governance reporting and routing layers were merged and are available on `main`
   - project auto-add and project views were confirmed to work with the governance label model
   - branch creation and new-file repo-truth updates through the connector are working
-  - bridge lock-aware deploy and rollback path are now validated on the real Pi
+  - bridge lock-aware deploy and rollback path are validated on the real Pi
+  - tuner lock-aware deploy and rollback path are validated on the real Pi
 - what is untested:
   - broader autonomous delivery beyond the current support matrix
-  - the new tuner manual deploy/rollback lane on the target Pi
   - a future connector path for safe in-place mutation of all protected truth files
 
 ## 3. Repository Mapping
@@ -91,22 +91,20 @@ Status note: this v8 file supersedes the earlier v7 deploy-exclusivity addendum 
 - impact: deploy/test/rollback workflows must respect target-slot state such as `free`, `deploying`, `test_open`, `rollback_running`, and `blocked`.
 
 ## 5. Open Decisions
-- when tuner can enter the autonomous delivery support matrix after first Pi validation
+- when tuner should enter the autonomous delivery support matrix after its now-successful manual Pi validation
 - when additional components beyond bridge and tuner become delivery-capable in the autonomous support matrix
 - whether the repository should later move to private visibility if the cost/risk tradeoff changes
 - whether low-risk PR classes should later auto-merge once the current packaged-review model has matured further
 
 ## 6. Runtime / Deployment Notes
-- current validated deploy/rollback reference component: Bridge
-- current repo-driven manual deploy candidates:
+- current validated deploy/rollback reference components:
   - Bridge
   - Tuner overlay/runtime/service lane
-- delivery support matrix on `main` remains conservative until tuner is validated on the target Pi
+- delivery support matrix on `main` remains conservative until tuner is explicitly promoted by decision
 - owner remains the final onsite acceptance gate before stable truth is merged to `main`
 - tuner still has one explicit contract gap: the separate `radio_scale_source` artifact is not yet normalized inside the new deploy lane
 
 ## 7. Next Recommended Steps
-1. run the first tuner Pi validation via `component-test-deploy-v10`
-2. validate tuner rollback via `component-test-rollback-v10`
-3. decide whether tuner can enter the autonomous delivery matrix after successful Pi validation
-4. normalize the next component wrapper contract after tuner proves the lane
+1. decide whether tuner should now enter the autonomous delivery matrix
+2. normalize the separate `radio_scale_source` artifact if tuner must again ship both overlay and source as one governed lane
+3. normalize the next component wrapper contract after bridge and tuner

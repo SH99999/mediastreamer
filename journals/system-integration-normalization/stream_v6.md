@@ -28,11 +28,16 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - bridge deploy and rollback were then validated on the target Pi
 - purpose: prove the lock-aware deploy/test slot model with one real reference component
 
-### 2026-04-15 / tuner-deploy-lane-1 / current branch
+### 2026-04-15 / main / Tuner deploy-lane build-out
 - verified that the imported tuner payload already exists in repo at `components/scale-radio-tuner/payload/current/`
 - replaced the old placeholder tuner deploy hooks with real deploy candidate scripts under `components/scale-radio-tuner/deploy_candidates/`
 - added `tools/deploy/sr-deploy-wrapper-v3.sh` so bridge and tuner can both use the generic wrapper family
 - added `component-test-deploy-v10.yml` and `component-test-rollback-v10.yml` for manual tuner validation on the target Pi
 - updated tuner current-state and stream truth to reflect the new deploy lane and the still-open `radio_scale_source` gap
-- updated SI status to reflect that bridge is validated and tuner is now a real manual deploy candidate awaiting Pi validation
+- updated SI status to reflect that bridge is validated and tuner became a real manual deploy candidate
 - purpose: move the next active component from legacy placeholder deploy doctrine into an actually executable repo-driven lane without pretending Pi validation already happened
+
+### 2026-04-15 / main / Tuner validation follow-up
+- added non-interactive privileged execution support for tuner through `PI_SUDO_PASSWORD`
+- tuner deploy and tuner rollback both completed successfully on the target Pi
+- purpose: establish tuner as the second validated manual deploy/rollback lane while keeping autonomous promotion as a separate explicit decision
