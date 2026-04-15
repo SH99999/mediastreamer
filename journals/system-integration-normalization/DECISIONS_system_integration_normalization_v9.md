@@ -1,6 +1,6 @@
 # DECISION LOG — system_integration_normalization
 
-Status note: this v9 file supersedes the earlier v8 truthfulness addendum as the current SI/N decision addendum.
+Status note: this v9 file remains the current SI/N decision addendum and is updated here after tuner autonomy promotion.
 
 ## Decision Entries
 
@@ -112,5 +112,14 @@ Status note: this v9 file supersedes the earlier v8 truthfulness addendum as the
 - What it explicitly does NOT affect: payload pointer names such as `current_dev` and `current`, or the requirement to keep journals and release handoff fields up to date.
 - Follow-up needed: add tags conservatively only when a baseline is actually accepted or locked as rollback truth.
 
+### DEC-system_integration_normalization-25
+- Status: locked
+- Decision: tuner is promoted into the autonomous delivery support matrix with governed defaults `git_ref=dev/tuner`, `payload=current`, `deploy_workflow=component-test-deploy-v10.yml`, and `rollback_workflow=component-test-rollback-v10.yml`.
+- Date context: tuner autonomy promotion phase
+- Why this was chosen: tuner deploy and rollback are now validated on the target Pi, and `dev/tuner` is aligned with `main`, so the support matrix can safely dispatch the same governed lane autonomously.
+- What it affects: autonomous delivery dispatch, issue/PR-driven tuner auto-deploy routing, and SI support-matrix truth.
+- What it explicitly does NOT affect: the still-open need to normalize the separate `radio_scale_source` artifact as part of the governed tuner component contract.
+- Follow-up needed: normalize the remaining source-artifact gap without disabling the validated overlay/runtime/service lane.
+
 ## Superseded Decisions
-- The earlier v8 truthfulness addendum remains historical; this v9 file is the current release-tagging addendum.
+- The earlier v8 truthfulness addendum remains historical; this v9 file is the current release-tagging addendum plus tuner autonomy promotion update.

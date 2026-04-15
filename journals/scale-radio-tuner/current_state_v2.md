@@ -1,6 +1,6 @@
 # CURRENT STATE — scale-radio-tuner
 
-Status note: this v2 file remains the current tuner deploy-lane truth and is updated here after successful target-Pi validation.
+Status note: this v2 file remains the current tuner deploy-lane truth and is updated here after successful target-Pi validation and autonomous-delivery promotion.
 
 ## Component
 - normalized component name: `scale-radio-tuner`
@@ -24,6 +24,7 @@ Status note: this v2 file remains the current tuner deploy-lane truth and is upd
 - manual test workflows now exist through:
   - `.github/workflows/component-test-deploy-v10.yml`
   - `.github/workflows/component-test-rollback-v10.yml`
+- tuner is now enabled in `tools/governance/autonomous_delivery_matrix_v3.json`
 
 ## Lifecycle status
 - `payload_complete`
@@ -32,6 +33,7 @@ Status note: this v2 file remains the current tuner deploy-lane truth and is upd
 - `deploy_validated_on_pi`
 - `rollback_validated_on_pi`
 - `manual_runtime_validation_passed`
+- `autonomous_delivery_enabled`
 - `functional_acceptance_open`
 
 ## Accepted baseline
@@ -50,6 +52,7 @@ Status note: this v2 file remains the current tuner deploy-lane truth and is upd
 - deploy lane installs the payload directly to `/data/plugins/user_interface/radio_scale_peppy`, runs `npm install`, executes the payload install script, and validates the renderer service/runtime path
 - rollback lane archives the active tuner runtime and removes the active renderer service cleanly
 - both deploy and rollback are now validated on the target Pi through the governed lock-aware workflow lane
+- tuner is now enabled for autonomous delivery dispatch via the shared control plane
 
 ## Current gaps
 - the currently normalized deploy lane covers the overlay and resident renderer service only
@@ -57,9 +60,7 @@ Status note: this v2 file remains the current tuner deploy-lane truth and is upd
 - first-show pointer sweep after boot remains unresolved
 - exit white flashes remain unresolved
 - pointer flicker/jitter is not fully solved
-- autonomous delivery support for tuner is still an explicit follow-up decision and is not promoted automatically by this update
 
 ## Repo-normalized next action
-1. decide whether tuner should now enter the autonomous delivery matrix after successful manual Pi validation
-2. import or normalize the separate `radio_scale_source` artifact if the governed component must again ship both overlay and source as one deploy lane
-3. normalize the next component onto the same repo-driven deploy/rollback model after bridge and tuner
+1. normalize the separate `radio_scale_source` artifact if the governed component must again ship both overlay and source as one deploy lane
+2. normalize the next component onto the same repo-driven deploy/rollback model after bridge and tuner

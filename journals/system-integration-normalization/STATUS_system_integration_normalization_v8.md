@@ -1,6 +1,6 @@
 # COMPONENT STATUS — system_integration_normalization
 
-Status note: this v8 file remains the current SI/N status addendum and is updated here after successful tuner target-Pi validation.
+Status note: this v8 file remains the current SI/N status addendum and is updated here after successful tuner target-Pi validation and autonomy promotion.
 
 ## 1. Scope
 - component name: system_integration_normalization
@@ -21,7 +21,8 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - a protected-main truth maintenance operating model exists for safe handling of connector mutation limits
   - a target deploy/test exclusivity contract and lock-aware workflow family exist on `main`
   - bridge deploy and rollback are validated on the target Pi
-  - tuner deploy and rollback are now also validated on the target Pi through the manual lock-aware workflow lane
+  - tuner deploy and rollback are validated on the target Pi through the manual lock-aware workflow lane
+  - bridge and tuner are both enabled in the autonomous delivery support matrix
 - what partially works:
   - autonomous delivery is still support-matrix limited and not yet broad across all active components
   - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
@@ -91,7 +92,6 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 - impact: deploy/test/rollback workflows must respect target-slot state such as `free`, `deploying`, `test_open`, `rollback_running`, and `blocked`.
 
 ## 5. Open Decisions
-- when tuner should enter the autonomous delivery support matrix after its now-successful manual Pi validation
 - when additional components beyond bridge and tuner become delivery-capable in the autonomous support matrix
 - whether the repository should later move to private visibility if the cost/risk tradeoff changes
 - whether low-risk PR classes should later auto-merge once the current packaged-review model has matured further
@@ -100,11 +100,11 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 - current validated deploy/rollback reference components:
   - Bridge
   - Tuner overlay/runtime/service lane
-- delivery support matrix on `main` remains conservative until tuner is explicitly promoted by decision
+- bridge and tuner are enabled in the autonomous delivery support matrix on `main`
 - owner remains the final onsite acceptance gate before stable truth is merged to `main`
 - tuner still has one explicit contract gap: the separate `radio_scale_source` artifact is not yet normalized inside the new deploy lane
 
 ## 7. Next Recommended Steps
-1. decide whether tuner should now enter the autonomous delivery matrix
-2. normalize the separate `radio_scale_source` artifact if tuner must again ship both overlay and source as one governed lane
-3. normalize the next component wrapper contract after bridge and tuner
+1. normalize the separate `radio_scale_source` artifact if tuner must again ship both overlay and source as one governed lane
+2. normalize the next component wrapper contract after bridge and tuner
+3. standardize immutable payload naming and governed pointer resolution across deployable components
