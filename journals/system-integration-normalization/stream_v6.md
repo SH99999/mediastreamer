@@ -142,3 +142,47 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated Stage-B autonomy standard to require URI-based intake fields and explicit agent execution expectations through PR-ready handoff
 - updated SI onboarding read order/checklist to include the new prompt contract for external ChatGPT proposal ingestion
 - purpose: make proposal handoff deterministic so agents can take over Git/governance lifting and leave owner with approval-only action
+
+### 2026-04-15 / si/chat-delivery-instructions / explicit delivered-to-git status contract
+- added `docs/agents/chat_to_git_delivery_process_v1.md` with exact ordered execution steps (bootstrap, branching, mutation, validation, push, PR) and mandatory final status blocks
+- updated `docs/agents/chatgpt_governed_intake_prompt_v1.md` to require explicit `Delivered to Git: YES/NO` reporting with branch/commit/PR or blocker+owner-action
+- updated SI governance index and SI onboarding read chains to include the new chat-to-git process document
+- purpose: remove ambiguity for external chats and force one clear owner-facing statement about whether delivery reached Git or is blocked
+
+### 2026-04-15 / si/container-startup-setup-v1 / container startup setup normalization
+- added `tools/governance/container_startup_setup_v1.sh` to provide deterministic runtime initialization for cloud agents
+- script now aligns both remotes (`git` canonical + `origin` compatibility), runs bounded npm dependency installs only on payload paths with `package.json`, and executes bootstrap/auth diagnostics
+- added `docs/agents/container_startup_setup_v1.md` with one-command usage and environment variable contract
+- updated SI onboarding and SI governance index read chains to include the new container startup setup document
+- purpose: avoid startup stalls in generic setup phases and reduce repeated owner troubleshooting for runtime auth/remote drift
+
+### 2026-04-15 / si/container-startup-fix / cloud startup non-blocking and auth probe hardening
+- updated `tools/governance/container_startup_setup_v1.sh` to default `RUN_NPM_INSTALL=false` so startup does not hang on dependency installation; bounded npm install remains opt-in via env flag
+- added `tools/governance/setup_auth_check_v1.sh` and integrated token-aware dry-run probing so runtime can verify whether env token auth is actually usable for push
+- updated bootstrap logic to retry push auth probe with authenticated HTTPS URL when `GH_TOKEN`/`GITHUB_TOKEN` exists but credential helpers are unavailable
+- updated container startup documentation with explicit Codex cloud behavior notes (setup-only token visibility vs runtime availability) and startup recommendations
+- purpose: make cloud runtime startup deterministic and prevent repeated false-negative "push auth blocked" loops caused by setup/runtime auth mismatch
+
+### 2026-04-15 / si/container-startup-fix / codex-cloud environment setup clarification
+- updated startup script to skip clone unless `ALLOW_CLONE_IF_MISSING=true`, reducing risk of blocking startup when repo is not yet mounted
+- published explicit owner-facing Codex cloud setup checklist in `docs/agents/codex_cloud_environment_setup_v1.md` with exact env vars and minimal custom startup wrapper
+- updated container startup documentation and onboarding/index read chains to point to the new cloud setup checklist
+- purpose: provide one clear configuration path (auto setup preferred, minimal custom wrapper optional) so agents start reliably without environment-level trial and error
+
+### 2026-04-15 / si/onboarding-prompts-all-streams / unified stream onboarding prompts
+- added `docs/agents/onboarding_prompts_all_streams_v1.md` with exact copy/paste onboarding prompts for all active stream lanes (SI, GUI/UI, bridge, tuner, fun-line, starter, autoswitch, hardware)
+- included a dedicated GUI/UI onboarding prompt and shared Delivered-to-Git completion contract for deterministic owner-facing status
+- updated SI governance index and SI onboarding read order to include the new all-stream prompt catalog
+- purpose: provide one canonical prompt source so owner can spin up any stream agent without retyping lane-specific governance constraints
+
+### 2026-04-15 / si/onboarding-prompts-all-streams / connector-blocked fallback manual
+- added `docs/agents/fallback_connector_blocked_manual_v1.md` with exact fallback sequence for connector/write failures (issue create blocked, push blocked, PR create blocked)
+- codified deterministic packaging of missing GitHub mutations into repo artifacts plus one-action owner handoff in `Delivered to Git: NO` format
+- updated SI governance index and onboarding read order to include the fallback manual in canonical agent startup docs
+- purpose: keep delivery truthful and operational when ChatGPT/Codex lanes cannot mutate GitHub directly due connector limitations
+
+### 2026-04-15 / si/cloud-startup-quickfix / startup diagnostics decoupled from container boot
+- updated `tools/governance/container_startup_setup_v1.sh` to skip governance diagnostics by default (`RUN_GOVERNANCE_DIAGNOSTICS=false`) so container startup cannot stall on bootstrap/auth checks
+- updated cloud setup docs to include the new env flag and explicit post-start verification flow (`agent_git_bootstrap_v1.sh` + `setup_auth_check_v1.sh`)
+- documented why branch-only docs can show GitHub 404 when opened via `main` URLs before merge, with guidance to use PR branch/files-changed view
+- purpose: keep Codex cloud startup deterministic while preserving governance diagnostics as explicit, operator-triggered checks after boot
