@@ -186,3 +186,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated cloud setup docs to include the new env flag and explicit post-start verification flow (`agent_git_bootstrap_v1.sh` + `setup_auth_check_v1.sh`)
 - documented why branch-only docs can show GitHub 404 when opened via `main` URLs before merge, with guidance to use PR branch/files-changed view
 - purpose: keep Codex cloud startup deterministic while preserving governance diagnostics as explicit, operator-triggered checks after boot
+
+### 2026-04-15 / si/bootstrap-branch-prep / prevent refspec-missing startup failures
+- updated `tools/governance/agent_git_bootstrap_v1.sh` to accept an optional requested branch argument (`si/*`, `dev/*`, `integration/*`) and automatically prepare that branch before push steps
+- branch prep behavior now checks out remote branch when available, otherwise creates requested branch from `git/main`
+- updated `docs/agents/agent_git_bootstrap_v1.md` to document branch-target mode and the new `branch prep` status line in required first reply format
+- purpose: avoid repeated `src refspec ... does not match any` failures when agents start on non-target branches like `work`

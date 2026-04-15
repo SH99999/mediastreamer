@@ -15,6 +15,17 @@ Run:
 bash tools/governance/agent_git_bootstrap_v1.sh
 ```
 
+Optional branch-target mode (recommended when you know the lane up front):
+
+```bash
+bash tools/governance/agent_git_bootstrap_v1.sh dev/bridge
+```
+
+Behavior:
+- if `dev/bridge` exists on remote, it is checked out locally
+- if missing, it is created from `git/main`
+- invalid branch names (not `si/*`, `dev/*`, `integration/*`) are rejected
+
 Optional environment overrides:
 - `CANONICAL_REMOTE_NAME` (default: `git`)
 - `CANONICAL_REMOTE_URL` (default: `https://github.com/SH99999/mediastreamer.git`)
@@ -25,10 +36,11 @@ Optional environment overrides:
 Immediately after bootstrap, the agent must report:
 1. current branch
 2. canonical remote status
-3. base sync status
-4. push-auth status
-5. what the agent can do immediately without owner input
-6. what owner action is required (if any)
+3. branch prep status
+4. base sync status
+5. push-auth status
+6. what the agent can do immediately without owner input
+7. what owner action is required (if any)
 
 Use this concise format:
 
@@ -36,6 +48,7 @@ Use this concise format:
 Bootstrap status:
 - branch: <branch>
 - remote(git): <ok|missing|wrong-url>
+- branch prep: <ok|skipped|blocked>
 - base sync: <ok|skipped|blocked>
 - push auth: <ok|blocked>
 - ready now: <what will be done next>

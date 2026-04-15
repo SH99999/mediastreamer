@@ -6,6 +6,7 @@ REMOTE_URL="${CANONICAL_REMOTE_URL:-https://github.com/SH99999/mediastreamer.git
 CANONICAL_OWNER_REPO="${CANONICAL_OWNER_REPO:-SH99999/mediastreamer}"
 BASE_BRANCH="${CANONICAL_BASE_BRANCH:-main}"
 AUTO_SYNC_MAIN="${AUTO_SYNC_MAIN:-true}"
+REQUESTED_BRANCH="${1:-${REQUESTED_BRANCH:-}}"
 
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "error: not inside a git repository"
@@ -16,6 +17,8 @@ CURRENT_BRANCH="$(git branch --show-current 2>/dev/null || true)"
 if [[ -z "${CURRENT_BRANCH}" ]]; then
   CURRENT_BRANCH="(detached-head)"
 fi
+BRANCH_PREP_STATUS="skipped"
+BRANCH_PREP_DETAIL="no requested branch"
 
 normalize_remote_identity() {
   local url="$1"
@@ -47,6 +50,39 @@ if git remote get-url "${REMOTE_NAME}" >/dev/null 2>&1; then
 else
   git remote add "${REMOTE_NAME}" "${REMOTE_URL}"
   REMOTE_STATUS="ok (added)"
+fi
+
+if [[ -n "${REQUESTED_BRANCH}" ]]; then
+  if [[ "${REQUESTED_BRANCH}" =~ ^(si|dev|integration)/ ]]; then
+    if [[ "${CURRENT_BRANCH}" == "${REQUESTED_BRANCH}" ]]; then
+      BRANCH_PREP_STATUS="ok"
+      BRANCH_PREP_DETAIL="already on requested branch"
+    else
+      if git show-ref --verify --quiet "refs/remotes/${REMOTE_NAME}/${REQUESTED_BRANCH}"; then
+        git checkout -B "${REQUESTED_BRANCH}" "${REMOTE_NAME}/${REQUESTED_BRANCH}" >/dev/null 2>&1
+        BRANCH_PREP_STATUS="ok"
+        BRANCH_PREP_DETAIL="checked out ${REQUESTED_BRANCH} from ${REMOTE_NAME}/${REQUESTED_BRANCH}"
+      elif git fetch "${REMOTE_NAME}" "${BASE_BRANCH}" >/dev/null 2>&1 && git show-ref --verify --quiet "refs/remotes/${REMOTE_NAME}/${BASE_BRANCH}"; then
+        git checkout -B "${REQUESTED_BRANCH}" "${REMOTE_NAME}/${BASE_BRANCH}" >/dev/null 2>&1
+        BRANCH_PREP_STATUS="ok"
+        BRANCH_PREP_DETAIL="created ${REQUESTED_BRANCH} from ${REMOTE_NAME}/${BASE_BRANCH}"
+      elif git show-ref --verify --quiet "refs/heads/${REQUESTED_BRANCH}"; then
+        git checkout "${REQUESTED_BRANCH}" >/dev/null 2>&1
+        BRANCH_PREP_STATUS="ok"
+        BRANCH_PREP_DETAIL="checked out existing local branch"
+      else
+        BRANCH_PREP_STATUS="blocked"
+        BRANCH_PREP_DETAIL="could not create or checkout requested branch"
+      fi
+      CURRENT_BRANCH="$(git branch --show-current 2>/dev/null || true)"
+      if [[ -z "${CURRENT_BRANCH}" ]]; then
+        CURRENT_BRANCH="(detached-head)"
+      fi
+    fi
+  else
+    BRANCH_PREP_STATUS="blocked"
+    BRANCH_PREP_DETAIL="requested branch must match si/*, dev/*, or integration/*"
+  fi
 fi
 
 PUSH_AUTH_STATUS="blocked"
@@ -87,6 +123,7 @@ fi
 echo "Bootstrap status:"
 echo "- branch: ${CURRENT_BRANCH}"
 echo "- remote(${REMOTE_NAME}): ${REMOTE_STATUS}"
+echo "- branch prep: ${BRANCH_PREP_STATUS} (${BRANCH_PREP_DETAIL})"
 echo "- base sync: ${BASE_SYNC_STATUS} (${BASE_SYNC_DETAIL})"
 echo "- push auth: ${PUSH_AUTH_STATUS} (${PUSH_AUTH_DETAIL})"
 
