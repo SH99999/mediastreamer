@@ -8,3 +8,5 @@ Historical note: `stream_v2.md` is the active tuner stream. Keep this v1 file re
 - 2026-04-13: Locked public method contract and fixed `scale_fm_renderer.service` naming carried into repo truth.
 - 2026-04-13: Shared overlay-owner handling via `/tmp/mediastreamer_active_overlay.json` recorded as governed behavior.
 - 2026-04-13: Remaining gaps recorded as runtime validation, first-show pointer sweep, exit white flashes, pointer jitter, and incomplete OE1 cleanup.
+
+- 2026-04-15: Revalidated active tuner deploy scope on `dev/tuner` as `tuner:runtime` (`radio_scale_peppy`) plus `tuner:service` (`scale_fm_renderer.service`); `tuner:source_tile` (`radio_scale_source`) remains hardware-governed and out of deploy-lane scope.
