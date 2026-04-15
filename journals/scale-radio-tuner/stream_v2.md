@@ -12,3 +12,6 @@ Status note: this v2 file supersedes `stream_v1.md` as the current tuner stream 
 - 2026-04-15: Added generic wrapper support for tuner via `tools/deploy/sr-deploy-wrapper-v3.sh`.
 - 2026-04-15: Added manual workflow generation `component-test-deploy-v10.yml` and `component-test-rollback-v10.yml` so tuner can now enter the same lock-aware Pi test-slot model as bridge.
 - 2026-04-15: Kept the separate `radio_scale_source` artifact explicit as a remaining deploy-lane gap instead of pretending the full multi-artifact tuner contract is already imported.
+- 2026-04-15: Added non-interactive privileged execution support for tuner deploy/rollback through `PI_SUDO_PASSWORD` on the runner.
+- 2026-04-15: Manual tuner deploy succeeded on the target Pi.
+- 2026-04-15: Manual tuner rollback succeeded on the target Pi.
