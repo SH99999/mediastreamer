@@ -80,13 +80,14 @@ The system-integration stream operates as the control-plane function set for the
 18. `contracts/repo/governance_unification_delivery_plan_v1.md`
 19. `docs/agents/agent_git_bootstrap_v1.md`
 20. `contracts/repo/ui_ux_stage_b_autonomous_loop_standard_v1.md`
-21. `tools/governance/scale_radio_governance_delivery_views_v1.md`
-22. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-23. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-24. `journals/system-integration-normalization/stream_v6.md`
-25. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-26. `journals/scale-radio-bridge/current_state_v1.md`
-27. `journals/scale-radio-tuner/current_state_v2.md`
+21. `docs/agents/chatgpt_governed_intake_prompt_v1.md`
+22. `tools/governance/scale_radio_governance_delivery_views_v1.md`
+23. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+24. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+25. `journals/system-integration-normalization/stream_v6.md`
+26. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+27. `journals/scale-radio-bridge/current_state_v1.md`
+28. `journals/scale-radio-tuner/current_state_v2.md`
 
 ## Locked operating rules
 - `main` is the protected truth branch and final owner acceptance gate
@@ -173,7 +174,8 @@ Use this when an external GPT chat produced a `.md` proposal:
 2. ensure labels normalize to the correct specialist route (`agent:ux` or the relevant `agent:<component>`) and SI escalation labels when impact is cross-component/system-wide
 3. ensure issue contains owner decision packet inputs (options, recommendation, downstream governance files, specialist routing map)
 4. keep owner output in `decision_output_v1` block format so routing can trigger deterministically
-5. if project-view API access is unavailable in the current lane, keep `tools/governance/scale_radio_governance_delivery_views_v1.md` as canonical manual apply blueprint and log the blocker in SI stream
+5. when owner provides external ChatGPT proposal, require URI-based intake fields from `docs/agents/chatgpt_governed_intake_prompt_v1.md` (avoid repeated manual copy/paste)
+6. if project-view API access is unavailable in the current lane, keep `tools/governance/scale_radio_governance_delivery_views_v1.md` as canonical manual apply blueprint and log the blocker in SI stream
 
 ## Current practical priorities
 1. keep the governance and issue control-plane working

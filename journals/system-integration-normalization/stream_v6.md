@@ -136,3 +136,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - matrix defaults were fixed to `dev/tuner` plus payload `current`
 - bridge matrix defaults were refreshed to the currently validated v9 workflow pair
 - purpose: keep execution moving forward without a manual-only holding pattern once the validated runtime lane already exists
+
+### 2026-04-15 / si/chatgpt-intake-prompt / URI-based owner prompt for governed intake
+- added `docs/agents/chatgpt_governed_intake_prompt_v1.md` with minimal and strict templates so owner can provide one structured input and avoid repeated copy/paste from external chats
+- updated Stage-B autonomy standard to require URI-based intake fields and explicit agent execution expectations through PR-ready handoff
+- updated SI onboarding read order/checklist to include the new prompt contract for external ChatGPT proposal ingestion
+- purpose: make proposal handoff deterministic so agents can take over Git/governance lifting and leave owner with approval-only action
