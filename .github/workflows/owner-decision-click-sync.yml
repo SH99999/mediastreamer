@@ -1,0 +1,149 @@
+name: owner-decision-click-sync
+
+on:
+  issue_comment:
+    types: [created, edited]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number"
+        required: true
+      decision:
+        description: "accept | changes-requested | reject"
+        required: true
+      merge_authorization:
+        description: "yes | no"
+        required: true
+      docs_journals_complete:
+        description: "yes | no"
+        required: true
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  sync_owner_decision:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync structured owner decision to labels
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ISSUE_NUMBER: ${{ github.event.issue.number }}
+          EVENT_IS_PR: ${{ github.event.issue.pull_request.url }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          INPUT_PR_NUMBER: ${{ inputs.pr_number }}
+          INPUT_DECISION: ${{ inputs.decision }}
+          INPUT_MERGE: ${{ inputs.merge_authorization }}
+          INPUT_DOCS: ${{ inputs.docs_journals_complete }}
+          OWNER_DECISION_AUTOMATION_ENABLED: ${{ vars.OWNER_DECISION_AUTOMATION_ENABLED }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GITHUB_TOKEN']
+          base = f'https://api.github.com/repos/{repo}'
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'User-Agent': 'owner-decision-click-sync'
+          }
+
+          def req(method, path, data=None):
+            body = None if data is None else json.dumps(data).encode('utf-8')
+            h = dict(headers)
+            if body is not None:
+              h['Content-Type'] = 'application/json'
+            r = urllib.request.Request(base + path, data=body, headers=h, method=method)
+            with urllib.request.urlopen(r) as resp:
+              raw = resp.read().decode('utf-8')
+              return json.loads(raw) if raw else None
+
+          enabled = (os.environ.get('OWNER_DECISION_AUTOMATION_ENABLED') or 'true').strip().lower()
+          if enabled in ('false', '0', 'no', 'off'):
+            print('automation_disabled=true')
+            raise SystemExit(0)
+
+          event_name = os.environ.get('EVENT_NAME')
+          pr_number = None
+          decision = None
+          merge_auth = None
+          docs_done = None
+
+          if event_name == 'workflow_dispatch':
+            pr_number = (os.environ.get('INPUT_PR_NUMBER') or '').strip()
+            decision = (os.environ.get('INPUT_DECISION') or '').strip().lower()
+            merge_auth = (os.environ.get('INPUT_MERGE') or '').strip().lower()
+            docs_done = (os.environ.get('INPUT_DOCS') or '').strip().lower()
+          else:
+            issue_number = (os.environ.get('EVENT_ISSUE_NUMBER') or '').strip()
+            is_pr = (os.environ.get('EVENT_IS_PR') or '').strip()
+            body = os.environ.get('COMMENT_BODY') or ''
+            if not issue_number or not is_pr:
+              raise SystemExit(0)
+            if '<!-- owner-decision-v1 -->' not in body:
+              raise SystemExit(0)
+            pr_number = issue_number
+
+            def pick(name):
+              m = re.search(rf'^{name}\s*:\s*(.+)$', body, flags=re.IGNORECASE | re.MULTILINE)
+              return (m.group(1).strip().lower() if m else '')
+
+            decision = pick('decision')
+            merge_auth = pick('merge_authorization')
+            docs_done = pick('docs_journals_complete')
+
+          if not pr_number:
+            raise SystemExit(0)
+
+          valid_decisions = {'accept', 'changes-requested', 'reject'}
+          valid_yesno = {'yes', 'no'}
+
+          if decision not in valid_decisions or merge_auth not in valid_yesno or docs_done not in valid_yesno:
+            marker = '<!-- owner-decision-sync:blocker -->'
+            msg = '\n'.join([
+              marker,
+              'Owner decision sync blocked: invalid or incomplete decision fields.',
+              '',
+              'Required fields:',
+              '- decision: accept | changes-requested | reject',
+              '- merge_authorization: yes | no',
+              '- docs_journals_complete: yes | no',
+            ])
+            req('POST', f'/issues/{pr_number}/comments', {'body': msg})
+            raise SystemExit(0)
+
+          issue = req('GET', f'/issues/{pr_number}')
+          existing = [l['name'] for l in issue.get('labels', [])]
+          state_labels = {'state:needs-triage','state:ready-for-agent','state:needs-decision','state:awaiting-owner','state:docs-update-required','state:done'}
+          labels = [l for l in existing if l not in state_labels]
+
+          if decision == 'accept' and merge_auth == 'yes' and docs_done == 'yes':
+            state = 'state:awaiting-owner'
+          elif decision == 'accept' and merge_auth == 'yes' and docs_done == 'no':
+            state = 'state:docs-update-required'
+          elif decision == 'changes-requested':
+            state = 'state:ready-for-agent'
+          else:
+            state = 'state:done'
+
+          labels.append(state)
+          labels.append('source:owner-click-decision')
+          req('PATCH', f'/issues/{pr_number}', {'labels': sorted(set(labels))})
+
+          summary = '\n'.join([
+            '<!-- owner-decision-sync:applied -->',
+            'Owner decision sync applied.',
+            f'- decision: `{decision}`',
+            f'- merge_authorization: `{merge_auth}`',
+            f'- docs_journals_complete: `{docs_done}`',
+            f'- resulting state label: `{state}`'
+          ])
+          req('POST', f'/issues/{pr_number}/comments', {'body': summary})
+          print(f'pr={pr_number} state={state}')
+          PY

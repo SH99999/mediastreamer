@@ -19,6 +19,21 @@ Use this short format in chat or PR comment:
 - `mandatory follow-up: <required change>`
 - `merge authorization: yes | no`
 
+
+## Click-based owner decision (project/custom-field compatible)
+Preferred: set decision via project custom fields.
+Fallback: post this structured PR comment block:
+
+```text
+<!-- owner-decision-v1 -->
+decision: accept
+merge_authorization: yes
+docs_journals_complete: yes
+```
+
+Automation syncs labels/state from this block through `owner-decision-click-sync.yml`.
+Rollback switch: set repository variable `OWNER_DECISION_AUTOMATION_ENABLED=false` to disable automation and return to manual labeling/comments.
+
 ## Are we ready to develop? (YES/NO gate)
 Answer **YES** only if all are true:
 1. `main` is protected and PR-gated.
@@ -88,6 +103,8 @@ Interpretation:
 - [System integration escalation workflow](../../.github/workflows/system-integration-escalation.yml)
 - [Open decision issues workflow](../../.github/workflows/open-decision-issues.yml)
 - [Governance closeout workflow](../../.github/workflows/governance-closeout.yml)
+- [owner-decision-click-sync workflow](../../.github/workflows/owner-decision-click-sync.yml)
+- [governance-model-robustness-check-v1 workflow](../../.github/workflows/governance-model-robustness-check-v1.yml)
 
 ### Governance panel/view references
 - [Project views blueprint](../../tools/governance/scale_radio_governance_delivery_views_v1.md)
