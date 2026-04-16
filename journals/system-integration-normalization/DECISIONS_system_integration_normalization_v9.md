@@ -194,3 +194,12 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: governance issue lifecycle reliability, owner queue trust, and closeout workflow behavior after merged PRs.
 - What it explicitly does NOT affect: explicit PR-body close keywords after all closeout conditions are satisfied.
 - Follow-up needed: periodically audit legacy open SI escalation items and close stale merged-source items with documented reasons.
+
+### DEC-system_integration_normalization-34
+- Status: locked
+- Decision: SI startup must use one tiered onboarding model derived from a single active authority path (AGENTS -> SI governance index -> SI TOM -> current SI status/decisions/stream); historical SI streams and superseded docs are Tier-2 deep history only.
+- Date context: authority-compression onboarding hardening phase
+- Why this was chosen: replacing parallel startup chains with one active path reduces misreads, lowers onboarding burden, and prevents historical docs from competing with current truth.
+- What it affects: SI role prompts, bootstrap reference mapping, onboarding guidance, and historical-stream labeling discipline.
+- What it explicitly does NOT affect: preservation of historical materials for forensic/audit use.
+- Follow-up needed: keep active startup references pointed at current truth and enforce deep-history boundaries when new stream generations are added.

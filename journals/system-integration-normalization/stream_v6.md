@@ -464,3 +464,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - hardened `.github/workflows/governance-closeout.yml` so `state:done` requires merged-source evidence and governance/journal/docs truth-path updates; otherwise issues remain open with `state:docs-update-required` plus an audit-trail comment
 - updated SI status/decision truth to lock the new closeout evidence gate and queue-trust behavior
 - purpose: stabilize immediate SI TOM package priorities without adding new dashboards/prompts/meta surfaces
+
+### 2026-04-16 / si/authority-compression-onboarding-hardening-v1 / tiered onboarding + active-truth compression + historical boundary hardening
+- updated SI governance index and SI onboarding to lock a single active SI truth path and tiered onboarding model (`Tier 0` < 5 min, `Tier 1` < 15 min, `Tier 2` deep-history only)
+- aligned SI role start prompt and bootstrap reference/profile docs with the same active-truth chain to remove competing startup entry paths
+- marked SI stream generations `stream_v1.md` through `stream_v5.md` as explicit historical/read-only and tightened superseded-doc handling for deep-history-only use
+- updated SI status and decisions with locked authority-compression rule (`DEC-system_integration_normalization-34`)
+- purpose: reduce startup read burden and ambiguity without introducing new dashboards/boards/html/prompt sprawl

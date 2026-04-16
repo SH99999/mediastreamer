@@ -12,6 +12,7 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 - what currently works:
   - governance, issue-routing, and reporting workflows exist on `main`
   - governance closeout now applies evidence-gated state transitions so referenced governance issues move to `state:done` only when a merged source PR exists and governance/journal/docs truth paths were updated in the merged PR
+  - SI onboarding is now tiered (`Tier 0` safe-start, `Tier 1` working context, `Tier 2` deep history) and active startup truth is explicitly anchored to AGENTS + SI index + SI TOM + current SI status/decisions/stream
   - one-click branch rebase exists for all current and future `dev/*` and `integration/*` branches
   - weekly governance report issues are generated from repo truth
   - open decisions, branch drift, and journal freshness can become governance-routed issues automatically

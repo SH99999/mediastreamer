@@ -1,5 +1,7 @@
 # STREAM — system_integration_normalization
 
+Historical status: this file is historical/read-only and must not receive new entries. Active SI stream truth is `stream_v6.md`.
+
 ## Entries
 ### first live governance loop validation
 - validated first governed demand issue path for control-plane testing

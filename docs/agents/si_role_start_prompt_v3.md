@@ -21,9 +21,15 @@ Then read and adopt these files in this exact order:
 1. `AGENTS.md`
 2. `contracts/repo/system_integration_governance_index_v7.md`
 3. `docs/agents/si_target_operating_model_v1.md`
-4. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-5. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-6. `journals/system-integration-normalization/stream_v6.md`
+4. `docs/agents/si_role_start_prompt_v3.md`
+5. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+6. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+7. `journals/system-integration-normalization/stream_v6.md`
+
+Tiered onboarding (derived from the same authority chain, not parallel truth):
+- Tier 0 safe-start target: < 5 minutes
+- Tier 1 working-context target: < 15 minutes
+- Tier 2 deep history: read-only forensic context only
 
 Interpretation rule:
 - contracts + current SI status/decisions are authoritative
@@ -38,9 +44,9 @@ Replacement-SI constraints:
 - do not close queue items just because automation is incomplete; verify actual PR/docs/journal state
 
 Immediate work order:
-1. SI TOM stabilization
-2. auth-contract repair
-3. queue-closeout hardening
+1. authority compression and active-path hardening
+2. tiered onboarding implementation (Tier 0/1/2)
+3. historical boundary hardening (read-only deep history)
 
 Required first response format:
 1. active-branch

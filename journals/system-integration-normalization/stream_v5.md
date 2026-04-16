@@ -1,5 +1,7 @@
 # STREAM — system_integration_normalization
 
+Historical status: this file is historical/read-only and must not receive new entries. Active SI stream truth is `stream_v6.md`.
+
 Status note: this v5 file supersedes `stream_v4.md` as the current SI/N stream because the governed Git release-tagging rule materially changed the release-management model after the truthfulness alignment.
 
 ## Entries

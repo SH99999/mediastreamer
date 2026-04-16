@@ -59,45 +59,51 @@ The system-integration stream operates as the control-plane function set for the
 - guard deploy/rollback operating rules (including target-slot exclusivity)
 - route blockers transparently instead of claiming partial or fabricated completion
 
-## Read order
-1. `contracts/repo/system_integration_governance_index_v7.md`
-2. `AGENTS.md`
-3. `contracts/repo/branch_strategy_v2.md`
-4. `contracts/repo/component_artifact_model_v1.md`
-5. `contracts/repo/naming_and_release_numbering_standard_v1.md`
-6. `contracts/repo/release_intake_and_delivery_status_v2.md`
-7. `contracts/repo/status_taxonomy_contract_v1.md`
-8. `contracts/repo/status_packet_reporting_contract_v1.md`
-9. `contracts/repo/governance_source_registry_standard_v1.md`
-10. `contracts/repo/si_branch_scope_guard_standard_v1.md`
-11. `contracts/repo/component_journal_policy_v2.md`
-12. `contracts/repo/new_component_intake_standard_v2.md`
-13. `contracts/repo/issue_governance_routing_standard_v1.md`
-14. `contracts/repo/autonomous_execution_and_chat_intake_standard_v1.md`
-15. `contracts/repo/system_integration_escalation_contract_v1.md`
-16. `contracts/repo/protected_main_truth_maintenance_operating_model_v1.md`
-17. `contracts/repo/deploy_target_exclusivity_standard_v1.md`
-18. `contracts/repo/deploy_process_standard_v1.md`
-19. `contracts/repo/ui_gui_governance_standard_v1.md`
-20. `contracts/repo/truthful_execution_and_negative_answer_standard_v1.md`
-21. `contracts/repo/git_release_tagging_standard_v1.md`
-22. `contracts/repo/governance_unification_delivery_plan_v1.md`
-23. `docs/agents/agent_git_bootstrap_v1.md`
-24. `contracts/repo/ui_ux_stage_b_autonomous_loop_standard_v1.md`
-25. `contracts/repo/deployment_test_strategy_standard_v1.md`
-26. `contracts/repo/owner_decision_click_automation_standard_v1.md`
-27. `contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md`
-28. `docs/agents/status_prompt_reports_v1.md`
-29. `docs/agents/chatgpt_governed_intake_prompt_v1.md`
-30. `tools/governance/scale_radio_governance_delivery_views_v1.md`
-31. `docs/agents/owner_operational_reference_v1.md`
-32. `docs/agents/si_merge_request_executive_summary_v1.md`
-33. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-34. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-35. `journals/system-integration-normalization/stream_v6.md`
-36. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-37. `journals/scale-radio-bridge/current_state_v1.md`
-38. `journals/scale-radio-tuner/current_state_v2.md`
+## Tiered onboarding model (derived from one authority chain)
+Do not treat tiers as parallel truth trees. They are compressed views of the same canonical sources.
+
+### Tier 0 — safe-start (`target < 5 minutes`)
+Read in this exact order:
+1. `AGENTS.md`
+2. `contracts/repo/system_integration_governance_index_v7.md`
+3. `docs/agents/si_target_operating_model_v1.md`
+4. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+5. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+6. `journals/system-integration-normalization/stream_v6.md`
+
+Tier-0 output before mutation:
+- confirm branch is `si/<topic>` (never `main`, never `work`)
+- confirm remote `git` points to canonical repository URL
+- confirm bootstrap `base sync` and `push auth` status
+- state exact first governed package action
+
+### Tier 1 — working context (`target < 15 minutes`)
+Read only what is needed to execute SI package work after Tier 0:
+- `docs/agents/agent_git_bootstrap_v1.md`
+- `docs/agents/role_bootstrap_reference_map_v1.md`
+- `contracts/repo/issue_governance_routing_standard_v1.md`
+- `contracts/repo/autonomous_execution_and_chat_intake_standard_v1.md`
+- `contracts/repo/system_integration_escalation_contract_v1.md`
+- `contracts/repo/protected_main_truth_maintenance_operating_model_v1.md`
+- `contracts/repo/component_journal_policy_v2.md`
+- `docs/agents/si_merge_request_executive_summary_v1.md`
+
+### Tier 2 — deep history (read-only reference only)
+Use only for forensic or historical interpretation:
+- older SI stream generations `journals/system-integration-normalization/stream_v1.md` through `stream_v5.md`
+- prior SI decision/status generations (non-current versions)
+- superseded governance docs indexed in `contracts/repo/superseded_documents_index_v1.md`
+
+Active startup/onboarding paths must not require Tier-2 documents.
+
+## Meta-freeze rule for onboarding surfaces
+Do not add new dashboards/prompts/boards/summaries/exchange artifacts unless replacing an existing canonical artifact in the same PR.
+
+## Acceptance criteria for onboarding hardening packages
+- Tier 0 safe-start target: `< 5 minutes`
+- Tier 1 working-context target: `< 15 minutes`
+- active read path is materially reduced vs legacy long-chain startup
+- active-path ambiguity between current truth and history is removed
 
 
 ## Locked operating rules
