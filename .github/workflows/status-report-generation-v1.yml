@@ -1,0 +1,28 @@
+name: status-report-generation-v1
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'journals/**'
+      - 'reports/status/**'
+      - 'tools/governance/generate_status_reports_v1.py'
+      - 'docs/agents/status_prompt_reports_v1.md'
+
+permissions:
+  contents: read
+
+jobs:
+  generate_status_reports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate status reports
+        shell: bash
+        run: |
+          python3 tools/governance/generate_status_reports_v1.py --repo-root . --out-dir reports/status
+      - name: Upload status-report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: status-reports-v1
+          path: reports/status/

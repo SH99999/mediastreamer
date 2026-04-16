@@ -80,15 +80,16 @@ The system-integration stream operates as the control-plane function set for the
 18. `contracts/repo/governance_unification_delivery_plan_v1.md`
 19. `docs/agents/agent_git_bootstrap_v1.md`
 20. `contracts/repo/ui_ux_stage_b_autonomous_loop_standard_v1.md`
-21. `docs/agents/chatgpt_governed_intake_prompt_v1.md`
-22. `tools/governance/scale_radio_governance_delivery_views_v1.md`
-23. `docs/agents/owner_operational_reference_v1.md`
-24. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-25. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-26. `journals/system-integration-normalization/stream_v6.md`
-27. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-28. `journals/scale-radio-bridge/current_state_v1.md`
-29. `journals/scale-radio-tuner/current_state_v2.md`
+21. `docs/agents/status_prompt_reports_v1.md`
+22. `docs/agents/chatgpt_governed_intake_prompt_v1.md`
+23. `tools/governance/scale_radio_governance_delivery_views_v1.md`
+24. `docs/agents/owner_operational_reference_v1.md`
+25. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+26. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+27. `journals/system-integration-normalization/stream_v6.md`
+28. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+29. `journals/scale-radio-bridge/current_state_v1.md`
+30. `journals/scale-radio-tuner/current_state_v2.md`
 
 ## Locked operating rules
 - `main` is the protected truth branch and final owner acceptance gate

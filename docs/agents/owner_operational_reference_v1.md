@@ -79,6 +79,7 @@ Interpretation:
 - [Container startup setup](./container_startup_setup_v1.md)
 - [Chat-to-Git delivery process](./chat_to_git_delivery_process_v1.md)
 - [Connector-blocked fallback manual](./fallback_connector_blocked_manual_v1.md)
+- [Status prompt/report automation guide](./status_prompt_reports_v1.md)
 
 ### Intake and governance automation
 - [Governed demand intake template](../../.github/ISSUE_TEMPLATE/governed-demand-intake.yml)
@@ -93,6 +94,23 @@ Interpretation:
 - [Project views table rendering](../../tools/governance/scale_radio_governance_delivery_views_table_v1.md)
 - [Project views kanban rendering](../../tools/governance/scale_radio_governance_delivery_views_kanban_v1.md)
 
+## Prompt-ready status pages
+Use these prompt aliases in ChatGPT/Codex:
+- `status tuner`
+- `status governance`
+- `status ui`
+- `status bridge`
+- `status decisions`
+- `status blocker`
+
+Generated pages:
+- [Status index](../../reports/status/index.md)
+- [Status tuner](../../reports/status/tuner.md)
+- [Status governance](../../reports/status/governance.md)
+- [Status ui](../../reports/status/ui.md)
+- [Status bridge](../../reports/status/bridge.md)
+- [Status decisions](../../reports/status/decisions.md)
+- [Status blocker](../../reports/status/blocker.md)
 ## Current recurring setup topics to monitor
 - runtime token injection drift (`GH_TOKEN` / `GITHUB_TOKEN` not visible in active runtime session)
 - branch discipline drift (agent starts on `work` instead of `dev/*` or `si/*`)

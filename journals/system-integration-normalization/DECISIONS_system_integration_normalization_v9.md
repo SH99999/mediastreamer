@@ -166,5 +166,13 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it explicitly does NOT affect: the still-open need to normalize the separate `radio_scale_source` artifact as part of the governed tuner component contract.
 - Follow-up needed: normalize the remaining source-artifact gap without disabling the validated overlay/runtime/service lane.
 
+### DEC-system_integration_normalization-32
+- Status: locked
+- Decision: prompt-ready status reporting is generated from repo truth into clickable markdown pages (`reports/status/*.md`) with concise summaries and Mermaid visuals for tuner, governance, UI, bridge, decisions, and blockers.
+- Date context: status-report automation phase
+- Why this was chosen: owner and chats need one-prompt status outputs without manual reconstruction from multiple files.
+- What it affects: status communication format, report generation tooling, and owner click-path speed.
+- What it explicitly does NOT affect: protected-main approval authority or runtime deployment contracts.
+- Follow-up needed: keep report generator aligned with journal/status schemas and run report generation after material status changes.
 ## Superseded Decisions
 - The earlier v8 truthfulness addendum remains historical; this v9 file is the current release-tagging addendum plus tuner autonomy promotion update.

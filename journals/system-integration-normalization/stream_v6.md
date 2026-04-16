@@ -209,3 +209,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - converted owner-relevant document and workflow lists to markdown links so the page is directly clickable in GitHub
 - added direct project board link (`https://github.com/users/SH99999/projects/1`) and daily owner click-path guidance
 - purpose: ensure owner can review and decide from one page with minimal navigation friction
+### 2026-04-16 / si/status-report-automation-v1 / prompt-ready status pages with visuals and clickable links
+- added `tools/governance/generate_status_reports_v1.py` to build prompt-ready status pages from repo truth for tuner, governance, UI, bridge, decisions, and blockers
+- generated and committed `reports/status/index.md` plus six status pages with concise bullets, clickable source links, and Mermaid visuals
+- added `docs/agents/status_prompt_reports_v1.md` and `status-report-generation-v1.yml` so report generation can run consistently and expose artifacts
+- updated owner operational reference and SI read chains to include status prompt/report automation paths
+- locked SI decisions/status entries for this operating model (`DEC-system_integration_normalization-32`, `DEC-SIN-25`)
+- purpose: allow simple prompts like `status tuner` to return short, visual, link-backed outputs from Git-truth data
