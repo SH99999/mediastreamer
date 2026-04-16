@@ -14,6 +14,7 @@
     "next_owner_click",
     "decision_scoring",
     "rollback_action",
+    "claim_classes",
     "timestamp",
     "source_commit"
   ],
@@ -127,6 +128,94 @@
         }
       }
     },
+    "claim_classes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "governance_docs",
+        "runtime_validation",
+        "autonomy_eligibility"
+      ],
+      "properties": {
+        "governance_docs": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "pending"
+          ]
+        },
+        "runtime_validation": {
+          "type": "string",
+          "enum": [
+            "not_claimed",
+            "validated"
+          ]
+        },
+        "autonomy_eligibility": {
+          "type": "string",
+          "enum": [
+            "not_claimed",
+            "eligible"
+          ]
+        }
+      }
+    },
+    "runtime_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_path",
+        "tested_scope",
+        "source_ref",
+        "rollback_verification"
+      ],
+      "properties": {
+        "evidence_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tested_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rollback_verification": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "autonomy_claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_path",
+        "tested_scope",
+        "source_ref",
+        "rollback_path"
+      ],
+      "properties": {
+        "evidence_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tested_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rollback_path": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
     "timestamp": {
       "type": "string",
       "format": "date-time"
@@ -135,5 +224,49 @@
       "type": "string",
       "pattern": "^[0-9a-f]{40}$"
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "claim_classes": {
+            "properties": {
+              "runtime_validation": {
+                "const": "validated"
+              }
+            },
+            "required": [
+              "runtime_validation"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "runtime_claim"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "claim_classes": {
+            "properties": {
+              "autonomy_eligibility": {
+                "const": "eligible"
+              }
+            },
+            "required": [
+              "autonomy_eligibility"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "autonomy_claim"
+        ]
+      }
+    }
+  ]
 }

@@ -1,17 +1,17 @@
 # One-Click Ecosystem Integration Check v1
 
-_Generated: 2026-04-16T15:15:13.382320+00:00_
+_Generated: 2026-04-16T22:38:08.249562+00:00_
 
 ## Summary
 - checks_total: 5
 - checks_passed: 5
 - checks_failed: 0
-- avg_check_runtime_seconds: 0.482
+- avg_check_runtime_seconds: 0.325
 
 ## Results
 ### ✅ python3
 - command: `python3 tools/governance/generate_status_reports_v1.py --repo-root . --out-dir reports/status --generated-at 2026-04-16T00:00:00+00:00`
-- elapsed_seconds: `0.144`
+- elapsed_seconds: `0.114`
 - output:
 ```text
 generated_reports=6
@@ -20,7 +20,7 @@ output=/workspace/mediastreamer/reports/status
 
 ### ✅ python3
 - command: `python3 tools/governance/status_next_owner_click_enforcement_v1.py`
-- elapsed_seconds: `0.077`
+- elapsed_seconds: `0.057`
 - output:
 ```text
 status_next_owner_click_enforcement=ok
@@ -28,7 +28,7 @@ status_next_owner_click_enforcement=ok
 
 ### ✅ python3
 - command: `python3 tools/governance/governance_source_registry_lint_v1.py`
-- elapsed_seconds: `0.087`
+- elapsed_seconds: `0.058`
 - output:
 ```text
 governance_source_registry_lint=ok
@@ -36,7 +36,7 @@ governance_source_registry_lint=ok
 
 ### ✅ bash
 - command: `bash -lc "printf 'contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md\n' > /tmp/changed_files_guard.txt && python3 tools/governance/si_branch_scope_guard_v1.py --branch si/governance-integration-check-v1 --changed-files /tmp/changed_files_guard.txt --enforce true"`
-- elapsed_seconds: `2.103`
+- elapsed_seconds: `1.398`
 - output:
 ```text
 si_branch_scope_guard=ok
@@ -45,7 +45,7 @@ governed_changes=1
 
 ### ✅ one_click_presence
 - command: `inline check`
-- elapsed_seconds: `0.001`
+- elapsed_seconds: `0.000`
 - output:
 ```text
 one_click_contract_missing=0

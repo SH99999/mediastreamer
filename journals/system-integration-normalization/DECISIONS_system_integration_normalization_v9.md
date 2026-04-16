@@ -203,3 +203,12 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: SI role prompts, bootstrap reference mapping, onboarding guidance, and historical-stream labeling discipline.
 - What it explicitly does NOT affect: preservation of historical materials for forensic/audit use.
 - Follow-up needed: keep active startup references pointed at current truth and enforce deep-history boundaries when new stream generations are added.
+
+### DEC-system_integration_normalization-35
+- Status: locked
+- Decision: one-click owner/status packet outputs must split claims into `governance/docs accepted`, `runtime validated`, and `autonomy eligible`, and only runtime/deploy/rollback/autonomy classes are evidence-gated.
+- Date context: evidence-gated one-click hardening phase
+- Why this was chosen: previous one-click packets could be misread as broader runtime/autonomy validation, especially on governance/docs-only packages.
+- What it affects: status packet schema, report generators, enforcement checks, and owner packet wording.
+- What it explicitly does NOT affect: lightweight handling for governance/docs-only/control-plane packages that do not claim runtime/deploy/autonomy impact.
+- Follow-up needed: keep packet/report contract and enforcement checks aligned when claim fields evolve.

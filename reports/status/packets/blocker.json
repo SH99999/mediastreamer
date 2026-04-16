@@ -85,6 +85,11 @@
       "confirm owner action contract fields still render"
     ]
   },
+  "claim_classes": {
+    "governance_docs": "accepted",
+    "runtime_validation": "not_claimed",
+    "autonomy_eligibility": "not_claimed"
+  },
   "timestamp": "2026-04-16T00:00:00+00:00",
-  "source_commit": "44307cda45834d82763007c121982c4d2e7c78a4"
+  "source_commit": "a4aff91747304e3717a74839406b6fc8ac7f93b3"
 }

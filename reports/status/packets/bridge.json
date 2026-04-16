@@ -28,6 +28,23 @@
       "confirm owner action contract fields still render"
     ]
   },
+  "claim_classes": {
+    "governance_docs": "accepted",
+    "runtime_validation": "validated",
+    "autonomy_eligibility": "eligible"
+  },
   "timestamp": "2026-04-16T00:00:00+00:00",
-  "source_commit": "44307cda45834d82763007c121982c4d2e7c78a4"
+  "source_commit": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
+  "runtime_claim": {
+    "evidence_path": "/workspace/mediastreamer/journals/scale-radio-bridge/current_state_v1.md",
+    "tested_scope": "manual deploy/rollback validation on target Pi lane",
+    "source_ref": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
+    "rollback_verification": "rollback lane validated on target Pi"
+  },
+  "autonomy_claim": {
+    "evidence_path": "tools/governance/autonomous_delivery_matrix_v3.json",
+    "tested_scope": "bridge component matrix eligibility and validated target-Pi runtime lane",
+    "source_ref": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
+    "rollback_path": "git revert <merge_commit_for_bridge>"
+  }
 }

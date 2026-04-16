@@ -16,6 +16,7 @@ Define a canonical machine-readable status handoff payload for SI/governance and
 - `next_owner_click`
 - `decision_scoring`
 - `rollback_action`
+- `claim_classes`
 - `timestamp`
 - `source_commit`
 
@@ -41,6 +42,31 @@ Define a canonical machine-readable status handoff payload for SI/governance and
 - `rollback_action.enabled`: boolean
 - `rollback_action.command`: exact revert or rollback command
 - `rollback_action.verification`: non-empty list of post-rollback checks
+
+## Claim-class contract (mandatory separation)
+Status packets and markdown views must keep these classes explicitly separate:
+- `claim_classes.governance_docs`: `accepted | pending`
+- `claim_classes.runtime_validation`: `not_claimed | validated`
+- `claim_classes.autonomy_eligibility`: `not_claimed | eligible`
+
+Evidence-gating scope rule:
+- strict evidence requirements apply only to runtime/deploy/rollback/autonomy claims
+- governance/docs-only packages may remain lightweight if they do not claim runtime/deploy/autonomy effects
+
+Runtime/autonomy evidence requirements:
+- if `claim_classes.runtime_validation=validated`, packet must include:
+  - `runtime_claim.evidence_path`
+  - `runtime_claim.tested_scope`
+  - `runtime_claim.source_ref` (commit or packet path)
+  - `runtime_claim.rollback_verification`
+- if `claim_classes.autonomy_eligibility=eligible`, packet must include:
+  - `autonomy_claim.evidence_path`
+  - `autonomy_claim.tested_scope`
+  - `autonomy_claim.source_ref` (commit or packet path)
+  - `autonomy_claim.rollback_path`
+
+Truthful degradation rule:
+- if runtime/autonomy evidence is missing, packet/report output must degrade to `not_claimed` and must not present fully validated or eligible claims.
 
 ## Canonical-status alignment
 `canonical_status` must follow `contracts/repo/status_taxonomy_contract_v1.md` and must not invent new lifecycle labels.
