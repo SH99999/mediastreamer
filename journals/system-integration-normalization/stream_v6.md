@@ -244,3 +244,11 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - recorded that any broader governance mutation must follow a second approved integration package after owner decision
 - purpose: enforce review -> proposal -> owner approval -> governed integration sequence without accidental governance drift
 
+
+### 2026-04-16 / si/governance-model-optimization / governance gap and one-click ownership optimization package
+- added `docs/agents/governance_model_gap_and_one_click_ownership_optimization_v1.md` with two structured proposal sets:
+  1) governance-model problem analysis and hardening actions
+  2) one-click ownership and ChatGPT multi-agent status reporting optimization actions
+- identified high-priority gaps: governance duplication drift, inconsistent status taxonomy, long read-chain execution overhead, and weak deterministic owner-next-click encoding across status outputs
+- provided implementation sequence and acceptance checkpoints to reduce risk while increasing automation quality
+- purpose: enable one packaged SI proposal for governance consistency and low-click owner decision flow improvements
