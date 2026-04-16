@@ -285,3 +285,11 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - documented post-merge cleanup rule: remove merged short-lived `si/*` branches locally/remotely unless a retention exception is explicitly recorded
 - clarified rollback safety: standard rollback remains on `main` via revert path and does not require keeping merged topic branches
 - purpose: reduce owner clicks while preserving deterministic decision context and safe rollback posture
+
+### 2026-04-16 / si/governance-model-optimization / P2 status_packet_v1 schema and report adapter
+- added `tools/governance/schemas/status_packet_v1.schema.json` as canonical cross-agent status packet schema with required fields: component, canonical_status, evidence links, blockers, recommended owner action, next owner click, timestamp, source commit
+- added `contracts/repo/status_packet_reporting_contract_v1.md` to govern packet semantics, owner-action routing enums, adapter behavior, and rollback toggle path (`STATUS_PACKET_V1_ENABLED=false`)
+- upgraded `tools/governance/generate_status_reports_v1.py` to emit packet JSON artifacts under `reports/status/packets/` and render owner action contract fields in markdown reports
+- updated status report workflow trigger set and status reporting docs to include packet schema/contract files and packet artifact outputs
+- updated SI governance/onboarding read orders to include the new status packet reporting contract
+- purpose: execute PR-P2 by introducing deterministic machine-readable status handoff plus markdown adapter compatibility

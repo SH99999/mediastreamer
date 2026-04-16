@@ -24,6 +24,7 @@ Generated files:
 - `reports/status/bridge.md`
 - `reports/status/decisions.md`
 - `reports/status/blocker.md`
+- `reports/status/packets/*.json`
 
 ## Prompt aliases
 - `status tuner`
@@ -42,3 +43,10 @@ Each report must provide:
 
 ## Source-of-truth rule
 Reports are generated from repo truth files so prompts can be handled without hidden external state.
+
+
+## status_packet_v1 contract
+- canonical schema: `tools/governance/schemas/status_packet_v1.schema.json`
+- governance contract: `contracts/repo/status_packet_reporting_contract_v1.md`
+- generated markdown reports must include owner action contract fields (`recommended_owner_action`, `next_owner_click`, `source_commit`)
+- generated JSON packets under `reports/status/packets/` are the cross-agent handoff payload

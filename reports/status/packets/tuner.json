@@ -1,0 +1,19 @@
+{
+  "schema": "status_packet_v1",
+  "component": "tuner",
+  "canonical_status": "functional_acceptance_pending",
+  "evidence_links": [
+    "/workspace/mediastreamer/journals/scale-radio-tuner/current_state_v2.md",
+    "/workspace/mediastreamer/journals/scale-radio-tuner/stream_v2.md"
+  ],
+  "blockers": [
+    "the currently normalized deploy lane intentionally covers the overlay and resident renderer service only",
+    "`radio_scale_source` remains out of deploy-lane scope until full integration and is currently governed by hardware controls (encoder short/long press)",
+    "first-show pointer sweep after boot remains unresolved",
+    "exit white flashes remain unresolved"
+  ],
+  "recommended_owner_action": "changes-requested",
+  "next_owner_click": "request_changes",
+  "timestamp": "2026-04-16T00:00:00+00:00",
+  "source_commit": "459699674939505afd6dbb6f31250ebe8836eb36"
+}

@@ -7,6 +7,8 @@ on:
       - 'journals/**'
       - 'reports/status/**'
       - 'tools/governance/generate_status_reports_v1.py'
+      - 'tools/governance/schemas/status_packet_v1.schema.json'
+      - 'contracts/repo/status_packet_reporting_contract_v1.md'
       - 'docs/agents/status_prompt_reports_v1.md'
 
 permissions:

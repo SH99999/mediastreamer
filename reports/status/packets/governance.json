@@ -1,0 +1,15 @@
+{
+  "schema": "status_packet_v1",
+  "component": "governance",
+  "canonical_status": "functional_acceptance_pending",
+  "evidence_links": [
+    "/workspace/mediastreamer/journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md"
+  ],
+  "blockers": [
+    "unsupported components still cannot use autonomous delivery and must still escalate or no-op safely"
+  ],
+  "recommended_owner_action": "changes-requested",
+  "next_owner_click": "request_changes",
+  "timestamp": "2026-04-16T00:00:00+00:00",
+  "source_commit": "459699674939505afd6dbb6f31250ebe8836eb36"
+}

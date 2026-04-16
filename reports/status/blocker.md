@@ -1,6 +1,6 @@
 # Status Blocker
 
-_Generated: 2026-04-16T07:01:14.957359+00:00_
+_Generated: 2026-04-16T00:00:00+00:00_
 
 ## Active broken points
 - unsupported components still cannot use autonomous delivery and must still escalate or no-op safely
@@ -57,20 +57,29 @@ _Generated: 2026-04-16T07:01:14.957359+00:00_
 - decision: status prompts are fulfilled via generated repo pages under `reports/status/` with clickable source links and compact visual summaries.
 - rationale: reduces owner and agent overhead for recurring status requests and keeps outputs anchored to Git truth.
 - impact: status handling for `status tuner|governance|ui|bridge|decisions|blocker` now maps to generated markdown artifacts.
+- decision: owner decision handling is click-first via project custom fields with structured PR-comment fallback (`<!-- owner-decision-v1 -->`) and label sync automation.
+- rationale: reduces repetitive owner comment overhead while preserving auditable and deterministic state transitions.
+- impact: PR decision flow, state-label synchronization, and owner approval queue handling.
 
 ## Open decision blockers
 - when additional components beyond bridge, tuner, and fun-line become delivery-capable in the autonomous support matrix
 - whether the repository should later move to private visibility if the cost/risk tradeoff changes
 - whether low-risk PR classes should later auto-merge once the current packaged-review model has matured further
 - whether project view creation for `Scale Radio Governance & Delivery` should be executed by API automation or owner one-time manual apply from the canonical blueprint
+- whether PR #85 faceplate bootstrap is accepted as Phase A suggestion scope before any broader governance integration package
 
 ## Source
 - [SI status](/workspace/mediastreamer/journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md)
+
+## Owner action contract
+- recommended owner action: `run_workflow`
+- next_owner_click: `run_workflow`
+- source_commit: `459699674939505afd6dbb6f31250ebe8836eb36`
 
 ## Visual snapshot
 ```mermaid
 pie
     title Blocker buckets
-    "broken" : 54
-    "open decisions" : 4
+    "broken" : 57
+    "open decisions" : 5
 ```

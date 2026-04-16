@@ -1,6 +1,6 @@
 # Status UI
 
-_Generated: 2026-04-16T07:01:14.957359+00:00_
+_Generated: 2026-04-16T00:00:00+00:00_
 
 ## Recent governance entries
 - 2026-04-15: Rule recorded that UI/GUI governance entries here must be mirrored by component journals when runtime/deploy behavior changes in a component.
@@ -12,6 +12,11 @@ _Generated: 2026-04-16T07:01:14.957359+00:00_
 
 ## Source
 - [UI/GUI stream](/workspace/mediastreamer/journals/system-integration-normalization/ui_gui_stream_v1.md)
+
+## Owner action contract
+- recommended owner action: `accept`
+- next_owner_click: `approve_pr`
+- source_commit: `459699674939505afd6dbb6f31250ebe8836eb36`
 
 ## Visual snapshot
 ```mermaid

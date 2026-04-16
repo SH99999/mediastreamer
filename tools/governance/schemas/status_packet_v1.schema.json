@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SH99999/mediastreamer/tools/governance/schemas/status_packet_v1.schema.json",
+  "title": "status_packet_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "component",
+    "canonical_status",
+    "evidence_links",
+    "blockers",
+    "recommended_owner_action",
+    "next_owner_click",
+    "timestamp",
+    "source_commit"
+  ],
+  "properties": {
+    "schema": {
+      "const": "status_packet_v1"
+    },
+    "component": {
+      "type": "string",
+      "minLength": 1
+    },
+    "canonical_status": {
+      "type": "string",
+      "enum": [
+        "placeholder",
+        "payload_present",
+        "deploy_candidate_started",
+        "functional_acceptance_pending"
+      ]
+    },
+    "evidence_links": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommended_owner_action": {
+      "type": "string",
+      "enum": [
+        "accept",
+        "changes-requested",
+        "defer",
+        "run_workflow"
+      ]
+    },
+    "next_owner_click": {
+      "type": "string",
+      "enum": [
+        "approve_pr",
+        "request_changes",
+        "run_workflow",
+        "defer"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    }
+  }
+}

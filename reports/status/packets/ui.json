@@ -1,0 +1,13 @@
+{
+  "schema": "status_packet_v1",
+  "component": "ui",
+  "canonical_status": "deploy_candidate_started",
+  "evidence_links": [
+    "/workspace/mediastreamer/journals/system-integration-normalization/ui_gui_stream_v1.md"
+  ],
+  "blockers": [],
+  "recommended_owner_action": "accept",
+  "next_owner_click": "approve_pr",
+  "timestamp": "2026-04-16T00:00:00+00:00",
+  "source_commit": "459699674939505afd6dbb6f31250ebe8836eb36"
+}

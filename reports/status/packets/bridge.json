@@ -1,0 +1,19 @@
+{
+  "schema": "status_packet_v1",
+  "component": "bridge",
+  "canonical_status": "functional_acceptance_pending",
+  "evidence_links": [
+    "/workspace/mediastreamer/journals/scale-radio-bridge/current_state_v1.md",
+    "/workspace/mediastreamer/journals/scale-radio-bridge/stream_v1.md"
+  ],
+  "blockers": [
+    "lyrics sync quality is still the main unresolved functional weakness",
+    "long-run validation of `bridge_cache.sqlite` and cache reuse is still pending",
+    "broader Spotify redesign remains intentionally frozen pending credential/API-key clarification",
+    "current branch remains a dev lane and is not yet promoted as the accepted `main` artifact truth"
+  ],
+  "recommended_owner_action": "changes-requested",
+  "next_owner_click": "request_changes",
+  "timestamp": "2026-04-16T00:00:00+00:00",
+  "source_commit": "459699674939505afd6dbb6f31250ebe8836eb36"
+}

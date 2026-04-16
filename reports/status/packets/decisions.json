@@ -1,0 +1,13 @@
+{
+  "schema": "status_packet_v1",
+  "component": "decisions",
+  "canonical_status": "payload_present",
+  "evidence_links": [
+    "/workspace/mediastreamer/journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md"
+  ],
+  "blockers": [],
+  "recommended_owner_action": "defer",
+  "next_owner_click": "defer",
+  "timestamp": "2026-04-16T00:00:00+00:00",
+  "source_commit": "459699674939505afd6dbb6f31250ebe8836eb36"
+}
