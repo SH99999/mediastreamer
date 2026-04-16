@@ -409,3 +409,11 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated `reports/status/index.md` to expose owner audit-start report alias
 - updated playbook + no-shell bundle generator to v3 prompt and regenerated `exchange/chatgpt/bundles/current_context_bundle_v1.md`
 - purpose: give owner a clear report-area reference for audit start and a stronger ChatGPT startup contract
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / idea channel with two-round ChatGPT↔Codex alignment
+- added `exchange/chatgpt/ideas/` channel (`README`, `TEMPLATE__idea_seed_v1.md`, `TEMPLATE__round2_alignment_v1.md`) for non-audit idea intake
+- added `docs/agents/chatgpt_start_prompt_idea_channel_v1.md` for idea-to-implementation startup flow
+- added owner-facing report `reports/status/owner_idea_channel_start.md` and index alias `owner idea-start`
+- updated protocol/playbook/bundle to include idea-channel two-round flow and owner decision packet target
+- regenerated `exchange/chatgpt/bundles/current_context_bundle_v1.md`
+- purpose: support structured idea intake (design to full GUI) through governed two-round alignment and one-click owner decision path

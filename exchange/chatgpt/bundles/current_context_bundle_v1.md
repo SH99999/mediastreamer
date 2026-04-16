@@ -1,6 +1,6 @@
 # ChatGPT Context Bundle v1
 
-_Generated: 2026-04-16T19:27:59.542639+00:00_
+_Generated: 2026-04-16T19:37:59.449690+00:00_
 
 ## Usage
 - Upload this single file in ChatGPT GUI to avoid multi-file permission prompts.
@@ -97,6 +97,13 @@ Every stream entry must include:
 - actor (`chatgpt` or `codex`)
 - source file
 - resulting status
+
+
+## Idea channel (two-round alignment)
+1. ChatGPT creates `exchange/chatgpt/ideas/<topic>__idea_seed_v1.md` and sets `status: ready-for-codex`.
+2. Codex returns round-1 implementation/governance proposal.
+3. ChatGPT returns round-2 alignment (`*__round2_alignment_v1.md`) with agreement score.
+4. Codex emits owner decision packet and governed implementation plan.
 ```
 
 ---
@@ -332,4 +339,98 @@ actor: codex
 
 ## owner next click
 - accept | changes-requested | reject
+```
+
+---
+
+## File: `docs/agents/chatgpt_start_prompt_idea_channel_v1.md`
+
+```md
+# CHATGPT START PROMPT — IDEA CHANNEL V1
+
+```text
+Role:
+You are ChatGPT collaborating with Codex in the SH99999/mediastreamer idea channel.
+
+Goal:
+Convert new ideas (design to full Volumio GUI implementation) into governed implementation proposals with two alignment rounds.
+
+Branch policy:
+- read-only on all branches except `si/chatgpt-git-exchange-v1`
+- never request direct edits on `main`
+- propose branch/deploy plans only; Codex executes
+
+Required sequence:
+1) Start from `exchange/chatgpt/ideas/<topic>__idea_seed_v1.md`
+2) Set `status: ready-for-codex`
+3) Wait for Codex round-1 proposal
+4) Return round-2 alignment in `*__round2_alignment_v1.md`
+5) Keep internal exchange compact; owner output must be human-readable
+
+Owner output target:
+- `exchange/chatgpt/outbox/<topic>__owner_decision_packet_v1.md`
+- include recommendation, risk, rollback, next owner click
+
+Response contract:
+1) ask summary (max 5 bullets)
+2) proposal feedback
+3) ranked implementation path
+4) governance + component impact
+5) agreement_score_chatgpt (0..100)
+6) owner decision suggestion (accept|changes-requested|reject)
+```
+```
+
+---
+
+## File: `exchange/chatgpt/ideas/TEMPLATE__idea_seed_v1.md`
+
+```md
+# <topic> idea seed v1
+
+status: draft
+actor: chatgpt
+
+## idea summary
+-
+
+## target scope
+- component(s):
+- expected user impact:
+
+## constraints
+- architecture:
+- timeline:
+- rollback expectations:
+
+## requested codex output
+- governance fit check
+- implementation options (ranked)
+- branch/deploy path
+
+## handover
+- set `status: ready-for-codex` when complete
+```
+
+---
+
+## File: `exchange/chatgpt/ideas/TEMPLATE__round2_alignment_v1.md`
+
+```md
+# <topic> round2 alignment v1
+
+status: draft
+actor: chatgpt
+
+## codex proposal feedback
+- accepted points:
+- change requests:
+- risk concerns:
+
+## agreement
+- agreement_score_chatgpt: <0..100>
+- suggested owner decision: accept | changes-requested | reject
+
+## handover
+- set `status: ready-for-codex` when complete
 ```
