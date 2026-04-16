@@ -1,0 +1,25 @@
+name: governance-source-registry-lint-v1
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    paths:
+      - 'contracts/repo/**'
+      - 'docs/agents/**'
+      - 'tools/governance/governance_source_registry_v1.json'
+      - 'tools/governance/governance_source_registry_lint_v1.py'
+      - '.github/workflows/governance-source-registry-lint-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source_registry_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run governance source registry lint
+        shell: bash
+        run: |
+          python3 tools/governance/governance_source_registry_lint_v1.py

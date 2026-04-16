@@ -22,7 +22,7 @@ _Generated: 2026-04-16T00:00:00+00:00_
 ## Owner action contract
 - recommended owner action: `defer`
 - next_owner_click: `defer`
-- source_commit: `459699674939505afd6dbb6f31250ebe8836eb36`
+- source_commit: `14a62c22c97e1c9e685dafc025b4f0243ce6a989`
 
 ## Visual snapshot
 ```mermaid

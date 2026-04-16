@@ -50,3 +50,9 @@ Reports are generated from repo truth files so prompts can be handled without hi
 - governance contract: `contracts/repo/status_packet_reporting_contract_v1.md`
 - generated markdown reports must include owner action contract fields (`recommended_owner_action`, `next_owner_click`, `source_commit`)
 - generated JSON packets under `reports/status/packets/` are the cross-agent handoff payload
+
+
+## Enforcement checks
+- next-owner-click enforcement script: `tools/governance/status_next_owner_click_enforcement_v1.py`
+- source-registry lint script: `tools/governance/governance_source_registry_lint_v1.py`
+- both should pass in CI for report/governance mutations

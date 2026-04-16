@@ -1,0 +1,26 @@
+{
+  "version": "v1",
+  "domains": [
+    {
+      "id": "status_taxonomy",
+      "authority_file": "contracts/repo/status_taxonomy_contract_v1.md",
+      "duplicate_forbidden_patterns": [
+        "^## Canonical statuses \\(ordered\\)$"
+      ]
+    },
+    {
+      "id": "owner_decision_click",
+      "authority_file": "contracts/repo/owner_decision_click_automation_standard_v1.md",
+      "duplicate_forbidden_patterns": [
+        "^## One-click ownership operating contract \\(mandatory\\)$"
+      ]
+    },
+    {
+      "id": "status_packet_reporting",
+      "authority_file": "contracts/repo/status_packet_reporting_contract_v1.md",
+      "duplicate_forbidden_patterns": [
+        "^## Required fields$"
+      ]
+    }
+  ]
+}

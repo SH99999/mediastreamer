@@ -1,0 +1,29 @@
+name: status-next-owner-click-enforcement-v1
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    paths:
+      - 'reports/status/**'
+      - 'tools/governance/generate_status_reports_v1.py'
+      - 'tools/governance/status_next_owner_click_enforcement_v1.py'
+      - 'tools/governance/schemas/status_packet_v1.schema.json'
+      - 'contracts/repo/status_packet_reporting_contract_v1.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  enforce_next_owner_click:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate status reports
+        shell: bash
+        run: |
+          python3 tools/governance/generate_status_reports_v1.py --repo-root . --out-dir reports/status
+      - name: Enforce next_owner_click contract
+        shell: bash
+        run: |
+          python3 tools/governance/status_next_owner_click_enforcement_v1.py
