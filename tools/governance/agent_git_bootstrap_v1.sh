@@ -6,7 +6,100 @@ REMOTE_URL="${CANONICAL_REMOTE_URL:-https://github.com/SH99999/mediastreamer.git
 CANONICAL_OWNER_REPO="${CANONICAL_OWNER_REPO:-SH99999/mediastreamer}"
 BASE_BRANCH="${CANONICAL_BASE_BRANCH:-main}"
 AUTO_SYNC_MAIN="${AUTO_SYNC_MAIN:-true}"
-REQUESTED_BRANCH="${1:-${REQUESTED_BRANCH:-}}"
+REQUESTED_BRANCH="${REQUESTED_BRANCH:-}"
+ROLE_HINT="${ROLE_HINT:-generic}"
+CONTEXT_MODE="${BOOTSTRAP_CONTEXT_MODE:-classic}"
+
+print_usage() {
+  cat <<'EOF'
+Usage:
+  bash tools/governance/agent_git_bootstrap_v1.sh [branch]
+  bash tools/governance/agent_git_bootstrap_v1.sh --branch <si/*|dev/*|integration/*> [--role <role>] [--mode <classic|mode-b>]
+
+Options:
+  --branch <name>   Explicit branch prep target.
+  --role <name>     Role profile hint (tuner | bridge | si | governance | generic).
+  --mode <name>     Context mode:
+                    - classic (existing behavior)
+                    - mode-b  (need-to-know startup + deferred references)
+  --help            Show this help.
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --help|-h)
+      print_usage
+      exit 0
+      ;;
+    --branch)
+      REQUESTED_BRANCH="${2:-}"
+      shift 2
+      ;;
+    --role)
+      ROLE_HINT="${2:-generic}"
+      shift 2
+      ;;
+    --mode)
+      CONTEXT_MODE="${2:-classic}"
+      shift 2
+      ;;
+    --*)
+      echo "error: unknown option: $1"
+      print_usage
+      exit 1
+      ;;
+    *)
+      if [[ -z "${REQUESTED_BRANCH}" ]]; then
+        REQUESTED_BRANCH="$1"
+      else
+        echo "error: unexpected positional argument: $1"
+        print_usage
+        exit 1
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ "${CONTEXT_MODE}" != "classic" && "${CONTEXT_MODE}" != "mode-b" ]]; then
+  echo "error: --mode must be classic or mode-b"
+  exit 1
+fi
+
+role_bootstrap_lines() {
+  local role="$1"
+  local mode="$2"
+  case "${role}" in
+    tuner)
+      echo "- role profile: tuner"
+      echo "- branch hint: dev/tuner"
+      echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-tuner/current_state_v2.md"
+      ;;
+    bridge)
+      echo "- role profile: bridge"
+      echo "- branch hint: dev/bridge"
+      echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-bridge/current_state_v1.md"
+      ;;
+    si|system-integration|governance)
+      echo "- role profile: system-integration"
+      echo "- branch hint: si/<topic>"
+      echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; contracts/repo/system_integration_governance_index_v7.md"
+      ;;
+    *)
+      echo "- role profile: generic"
+      echo "- branch hint: si/<topic> or dev/<component>"
+      echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md"
+      ;;
+  esac
+
+  if [[ "${mode}" == "mode-b" ]]; then
+    echo "- context mode: mode-b (need-to-know first, deferred full read-order)"
+    echo "- deferred packet: docs/agents/role_bootstrap_profiles_v1.md (role pack + escalation triggers)"
+  else
+    echo "- context mode: classic (full standard read-order expected)"
+  fi
+}
 
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   echo "error: not inside a git repository"
@@ -147,6 +240,7 @@ echo "- remote(${REMOTE_NAME}): ${REMOTE_STATUS}"
 echo "- branch prep: ${BRANCH_PREP_STATUS} (${BRANCH_PREP_DETAIL})"
 echo "- base sync: ${BASE_SYNC_STATUS} (${BASE_SYNC_DETAIL})"
 echo "- push auth: ${PUSH_AUTH_STATUS} (${PUSH_AUTH_DETAIL})"
+role_bootstrap_lines "${ROLE_HINT}" "${CONTEXT_MODE}"
 
 if [[ "${PUSH_AUTH_STATUS}" == "ok" ]]; then
   echo "- ready now: create/update dedicated branch, commit, push, and open PR to main"

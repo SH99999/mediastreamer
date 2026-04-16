@@ -329,3 +329,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - generated `reports/governance/onboarding_journal_revision_audit_v1.md` with overlap metrics, onboarding time estimates, and journal revision findings
 - updated status prompt/report guide with onboarding+journal audit command path
 - purpose: provide repeatable proof for onboarding optimization tracking and stream/journal revisioning integrity
+
+### 2026-04-16 / si/bootstrap-role-mode-b-v1 / role-optimized bootstrap mode-B implementation
+- updated `tools/governance/agent_git_bootstrap_v1.sh` with `--role` and `--mode` options and role-aware startup/deferred packet output
+- added `docs/agents/role_bootstrap_profiles_v1.md` as canonical role-pack mapping with explicit escalation triggers
+- updated `docs/agents/agent_git_bootstrap_v1.md` with mode-B usage and environment controls
+- purpose: reduce onboarding read-time while preserving no-loss governance coverage via deferred packet + escalation contract

@@ -21,17 +21,27 @@ Optional branch-target mode (recommended when you know the lane up front):
 bash tools/governance/agent_git_bootstrap_v1.sh dev/bridge
 ```
 
+Role-optimized mode-B startup (need-to-know first, full context deferred):
+
+```bash
+bash tools/governance/agent_git_bootstrap_v1.sh --branch dev/tuner --role tuner --mode mode-b
+```
+
 Behavior:
 - if `dev/bridge` exists on remote, it is checked out locally
 - if missing, it is created from `git/main`
 - invalid branch names (not `si/*`, `dev/*`, `integration/*`) are rejected
 - if `GH_TOKEN`/`GITHUB_TOKEN` exists and plain push auth fails, bootstrap configures a local repo credential helper for `https://github.com` and re-probes push auth
+- role hint output provides branch hint + startup packet lines for faster onboarding (`--role tuner|bridge|si|governance|generic`)
+- mode-B output keeps startup to need-to-know lines and emits a deferred packet pointer (`docs/agents/role_bootstrap_profiles_v1.md`) to avoid information loss while reducing initial read time
 
 Optional environment overrides:
 - `CANONICAL_REMOTE_NAME` (default: `git`)
 - `CANONICAL_REMOTE_URL` (default: `https://github.com/SH99999/mediastreamer.git`)
 - `CANONICAL_BASE_BRANCH` (default: `main`)
 - `AUTO_SYNC_MAIN` (default: `true`) to auto-fetch/rebase `si/*`, `dev/*`, and `integration/*` branches onto latest `git/main`
+- `ROLE_HINT` (default: `generic`) role profile hint used for startup/deferred packet output
+- `BOOTSTRAP_CONTEXT_MODE` (default: `classic`) one of `classic` or `mode-b`
 
 ## Required first reply contract (agent -> owner)
 Immediately after bootstrap, the agent must report:
