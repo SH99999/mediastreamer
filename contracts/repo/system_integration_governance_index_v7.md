@@ -35,11 +35,12 @@ This file is the current entrypoint for system integration governance, recovery,
 23. `docs/agents/status_prompt_reports_v1.md`
 24. `docs/agents/system_integration_recovery_onboarding_v7.md`
 25. `docs/agents/owner_operational_reference_v1.md`
-26. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-27. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-28. `journals/system-integration-normalization/stream_v6.md`
-29. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-30. `tools/governance/scale_radio_governance_delivery_views_v1.md`
+26. `docs/agents/si_merge_request_executive_summary_v1.md`
+27. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+28. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+29. `journals/system-integration-normalization/stream_v6.md`
+30. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+31. `tools/governance/scale_radio_governance_delivery_views_v1.md`
 
 
 ## Locked operating model
@@ -49,8 +50,10 @@ This file is the current entrypoint for system integration governance, recovery,
 - SI/governance changes must use a dedicated `si/<topic>` branch (not generic branch names), then push that branch and open/update a PR to `main`
 - PR lifecycle execution (create/update/rebase/respond) is owned by agents/chats/Codex lanes; owner role is decision/acceptance, not PR authoring
 - delivery expectation is `local -> github.com branch -> PR to main` prepared by agents/chats/Codex so owner can use one-click decision flow
+- SI handoff must include a prepared merge-request executive summary comment with executive summary + risk level + rollback command + next owner click
 - owner remains the only merge authority for protected `main` after governance validation gates pass
 - after each merge to `main`, all active `si/*`, `dev/*`, and `integration/*` branches must be rebased/refreshed and agents/chats must run bootstrap refresh before further mutations
+- merged short-lived `si/*` branches should be deleted after merge unless an explicit retention exception is documented (rollback remains available via `main` revert path)
 - deploy/test happens from those branches
 - accepted work merges to `main` only after packaged review, owner coordination, and owner acceptance
 - journals, decisions, and streams remain mandatory repo truth

@@ -277,3 +277,11 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated `contracts/repo/release_intake_and_delivery_status_v2.md` to reference the canonical taxonomy contract and removed conflicting duplicate status lists
 - updated SI governance index and SI onboarding read order to include `status_taxonomy_contract_v1.md` in the mandatory chain
 - purpose: execute PR-P1 from the governance optimization plan and remove status taxonomy drift risk before schema/report enforcement packages
+
+
+### 2026-04-16 / si/governance-model-optimization / merge-request packet + risk + branch cleanup hardening
+- added `docs/agents/si_merge_request_executive_summary_v1.md` as the canonical prepared SI merge-request packet contract with mandatory executive summary, risk level, rollback command, and next-owner-click fields
+- updated owner-decision automation, SI governance index, owner operational reference, and SI onboarding rules to require the prepared SI packet in owner-facing handoff
+- documented post-merge cleanup rule: remove merged short-lived `si/*` branches locally/remotely unless a retention exception is explicitly recorded
+- clarified rollback safety: standard rollback remains on `main` via revert path and does not require keeping merged topic branches
+- purpose: reduce owner clicks while preserving deterministic decision context and safe rollback posture

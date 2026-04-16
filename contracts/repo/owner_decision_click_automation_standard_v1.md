@@ -34,6 +34,28 @@ Optional fields:
 1. Project custom fields on the owner queue item (preferred click-path).
 2. Structured PR comment block with marker `<!-- owner-decision-v1 -->` (fallback when project-field API bridge is unavailable).
 
+## SI merge-request packet requirement
+For SI/governance changes, agents/chats/Codex must provide a prepared **SI Merge Request executive summary** packet with:
+- direct PR link
+- files-changed/compare link
+- concise executive summary
+- explicit risk level (`low|medium|high`)
+- rollback command
+- explicit `owner decision needed`
+- explicit `next_owner_click`
+- SI comment-ready block the owner can use without extra navigation
+
+Contract source:
+- `docs/agents/si_merge_request_executive_summary_v1.md`
+
+
+## Post-merge temporary branch cleanup
+After owner merge to `main`, agents/chats/Codex should delete merged short-lived topic branches (`si/<topic>` and temporary hotfix branches) locally and on `github.com` unless an explicit hold is documented.
+
+Rollback safety note:
+- branch deletion does not remove rollback capability because rollback is performed from `main` history (revert commit path)
+- if a branch must be retained for legal/audit reasons, record the exception in SI stream with retention owner
+
 ## Label synchronization contract
 Owner decision synchronization should maintain exactly one active state label:
 - `accept + merge_authorization=yes + docs_journals_complete=yes` -> `state:awaiting-owner`

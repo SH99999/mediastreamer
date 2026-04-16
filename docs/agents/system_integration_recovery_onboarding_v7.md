@@ -87,24 +87,26 @@ The system-integration stream operates as the control-plane function set for the
 25. `docs/agents/chatgpt_governed_intake_prompt_v1.md`
 26. `tools/governance/scale_radio_governance_delivery_views_v1.md`
 27. `docs/agents/owner_operational_reference_v1.md`
-28. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-29. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-30. `journals/system-integration-normalization/stream_v6.md`
-31. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-32. `journals/scale-radio-bridge/current_state_v1.md`
-33. `journals/scale-radio-tuner/current_state_v2.md`
+28. `docs/agents/si_merge_request_executive_summary_v1.md`
+29. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+30. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+31. `journals/system-integration-normalization/stream_v6.md`
+32. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+33. `journals/scale-radio-bridge/current_state_v1.md`
+34. `journals/scale-radio-tuner/current_state_v2.md`
 
 
 ## Locked operating rules
 - `main` is the protected truth branch and final owner acceptance gate
 - agents and chats work on non-`main` branches
 - SI/governance lanes must use a dedicated `si/<topic>` branch for each packaged change set; do not use generic branch names for SI truth updates
-- SI branch flow is mandatory: chat line -> local implementation on `si/<topic>` -> push same branch -> deploy/test from branch -> manual verification -> fix on same branch if needed -> PR `si/<topic>` to `main` -> owner approval
+- SI branch flow is mandatory: chat line -> local implementation on `si/<topic>` -> push same branch -> deploy/test from branch -> manual verification -> fix on same branch if needed -> PR `si/<topic>` to `main` -> prepared SI merge-request executive summary comment -> owner approval
 - branch name `work` is not valid for SI-governance truth mutations; if detected, switch to a dedicated `si/<topic>` branch before continuing
 - remote preflight is mandatory before push/PR handoff: ensure remote `git` exists and targets `https://github.com/SH99999/mediastreamer.git`
 - deploy/test happens from the working branch
 - accepted work merges to `main` only after packaged review, owner coordination, and owner acceptance
 - system integration uses short-lived repo-control-plane branches to `main` by default
+- merged short-lived `si/*` branches should be removed (local + remote) after merge unless a documented retention exception exists
 - `integration/staging` is exception-only for temporary integration-owned staging work
 - journals, decisions, and streams are mandatory repo truth and must not be treated as optional paperwork
 - if tooling, connector, access, or execution problems prevent safe completion, escalate and inform instead of improvising, faking completion, or silently mutating partial truth
