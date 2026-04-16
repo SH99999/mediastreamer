@@ -33,6 +33,17 @@ python3 tools/governance/chatgpt_exchange_watch_v1.py
 Codex reviews/evaluates when any watched artifact contains:
 - `status: ready-for-codex`
 
+## Round-2 consensus + owner decision derivation
+1. initialize round request (`*__request_v1.md`) with Codex proposal set
+2. collect ChatGPT response with `agreement_score_chatgpt`
+3. set Codex score and derive owner decision:
+
+```bash
+python3 tools/governance/chatgpt_consensus_decision_v1.py --chatgpt-score <0..100> --codex-score <0..100>
+```
+
+4. store final block in `exchange/chatgpt/outbox/<topic>__consensus_owner_decision_v1.md`
+
 ## Response package contract (essential only)
 Every `outbox/*response*` file should include:
 - summary of ask (max 5 bullets)

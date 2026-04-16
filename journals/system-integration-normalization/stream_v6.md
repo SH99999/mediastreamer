@@ -364,6 +364,14 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated cycle/bootstrap/no-shell docs and regenerated context bundle with protocol+template set
 - purpose: make exchange triggers explicit, remove stale branch artifacts, and keep a living actor-traceable collaboration loop
 
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / round2 review bootstrap + consensus rating path
+- initialized `round2-implementation-review` cycle artifacts in inbox/outbox and updated stream status to `waiting-for-chatgpt`
+- updated round2 request with Codex proposal set and expected output including agreement score + owner decision suggestion
+- added `tools/governance/chatgpt_consensus_decision_v1.py` to derive owner decision suggestion from ChatGPT/Codex agreement scores
+- added `exchange/chatgpt/outbox/TEMPLATE__consensus_owner_decision_v1.md` for owner-ready consensus output block
+- updated playbook/protocol/no-shell bundle to include round2 and consensus derivation path
+- purpose: run one additional ChatGPT<->Codex challenge round and produce scored consensus + decision-ready owner proposal
+
 ### 2026-04-16 / si/bootstrap-role-mode-b-v1 / role-optimized bootstrap mode-B implementation
 - updated `tools/governance/agent_git_bootstrap_v1.sh` with `--role` and `--mode` options and role-aware startup/deferred packet output
 - added `docs/agents/role_bootstrap_profiles_v1.md` as canonical role-pack mapping with explicit escalation triggers

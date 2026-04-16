@@ -18,6 +18,7 @@ Each active file must contain one status marker line:
 2. ChatGPT sets `status: ready-for-codex`
 3. Codex reviews/evaluates and writes next request/response artifact if needed
 4. Codex updates stream with actor and status transition
+5. for decision rounds, both sides provide agreement scores and Codex derives owner decision draft
 
 ## Stream entry requirement
 Every stream entry must include:

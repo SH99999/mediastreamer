@@ -1,6 +1,6 @@
 # ChatGPT Context Bundle v1
 
-_Generated: 2026-04-16T18:53:22.909916+00:00_
+_Generated: 2026-04-16T19:07:36.676512+00:00_
 
 ## Usage
 - Upload this single file in ChatGPT GUI to avoid multi-file permission prompts.
@@ -83,6 +83,7 @@ Each active file must contain one status marker line:
 2. ChatGPT sets `status: ready-for-codex`
 3. Codex reviews/evaluates and writes next request/response artifact if needed
 4. Codex updates stream with actor and status transition
+5. for decision rounds, both sides provide agreement scores and Codex derives owner decision draft
 
 ## Stream entry requirement
 Every stream entry must include:
@@ -132,6 +133,14 @@ actor: chatgpt
 - source file: `exchange/chatgpt/audit_basis/current_audit_basis_v1.md`
 - action: cleared legacy round1 inbox/outbox artifacts and reset basis to ChatGPT-first workflow
 - status: `waiting-for-chatgpt`
+
+### 2026-04-16 / cycle 20260416-190510 / round2-implementation-review
+- actor: `codex`
+- request: `exchange/chatgpt/inbox/round2-implementation-review__request_v1.md`
+- response: `exchange/chatgpt/outbox/round2-implementation-review__response_v1.md`
+- branch plan: `si/chatgpt-git-exchange-v1`
+- owner decision needed: `accept | changes-requested | reject`
+- status: `waiting-for-chatgpt`
 ```
 
 ---
@@ -160,6 +169,38 @@ actor: chatgpt
 
 ---
 
+## File: `exchange/chatgpt/inbox/round2-implementation-review__request_v1.md`
+
+```md
+<!-- cycle_id: 20260416-190510 -->
+# round2-implementation-review request v1
+
+status: ready-for-chatgpt
+actor: codex
+
+## context
+- source chat/session: owner request for one additional ChatGPT<->Codex review round before owner decision
+- goal: challenge and refine Codex implementation proposals, then derive owner-ready decision
+
+## findings / request
+1. Proposal A (P1): hard-separate active vs historical governance chain and add CI guard against references to superseded onboarding/index generations.
+2. Proposal B (P1): run per-component deploy-process gap checks and update support matrix only with evidence-linked journal/decision updates.
+3. Proposal C (P2): formalize one-click split terms (`owner-governance` vs `component-delivery`) across docs and status views.
+4. Proposal D (P2): keep mode-B onboarding as default and enforce escalation triggers for full-chain reads.
+
+## constraints
+- governance: keep `main` protected; execution remains on SI/dev branches; no direct `main` edits
+- timeline: this round should produce consensus rating + owner decision suggestion
+
+## requested output
+- ranked proposal adjustments (accept/modify/reject each proposal)
+- agreement rating with Codex proposals (0..100)
+- top risks/unknowns
+- owner decision suggestion (`accept | changes-requested | reject`)
+```
+
+---
+
 ## File: `exchange/chatgpt/outbox/TEMPLATE__response_v1.md`
 
 ```md
@@ -182,4 +223,69 @@ actor: chatgpt
 
 ## owner decision needed
 - accept | changes-requested | reject
+```
+
+---
+
+## File: `exchange/chatgpt/outbox/round2-implementation-review__response_v1.md`
+
+```md
+<!-- cycle_id: 20260416-190510 -->
+# round2-implementation-review response v1
+
+status: draft
+actor: chatgpt
+
+## ask summary
+-
+
+## blockers / missing inputs
+-
+
+## implementation proposals (ranked)
+1.
+2.
+3.
+
+## agreement with codex proposals
+- agreement_score_chatgpt:
+- proposal_a: accept|modify|reject
+- proposal_b: accept|modify|reject
+- proposal_c: accept|modify|reject
+- proposal_d: accept|modify|reject
+
+## risks / unknowns
+-
+
+## branch + execution path
+- si/round2-implementation-review
+- optional dev/<component>
+
+## owner decision needed
+- accept | changes-requested | reject
+```
+
+---
+
+## File: `exchange/chatgpt/outbox/TEMPLATE__consensus_owner_decision_v1.md`
+
+```md
+# <topic> consensus owner decision v1
+
+status: draft
+actor: codex
+
+## inputs
+- agreement_score_chatgpt:
+- agreement_score_codex:
+- major_disagreement_topics:
+
+## consensus rating
+- consensus_band: high | medium | low
+- rationale (essential):
+
+## owner-ready decision derivation
+- recommended_owner_decision: accept | changes-requested | reject
+- mandatory_follow_up:
+- merge_authorization_hint: yes | no
 ```

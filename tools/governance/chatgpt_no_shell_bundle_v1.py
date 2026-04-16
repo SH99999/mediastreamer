@@ -17,7 +17,10 @@ FILES = [
     "exchange/chatgpt/audit_basis/current_audit_basis_v1.md",
     "exchange/chatgpt/streams/stream_v1.md",
     "exchange/chatgpt/inbox/TEMPLATE__request_v1.md",
+    "exchange/chatgpt/inbox/round2-implementation-review__request_v1.md",
     "exchange/chatgpt/outbox/TEMPLATE__response_v1.md",
+    "exchange/chatgpt/outbox/round2-implementation-review__response_v1.md",
+    "exchange/chatgpt/outbox/TEMPLATE__consensus_owner_decision_v1.md",
 ]
 
 
