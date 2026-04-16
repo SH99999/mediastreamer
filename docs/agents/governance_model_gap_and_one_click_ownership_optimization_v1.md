@@ -167,6 +167,48 @@ Provide a focused assessment of current governance-model risks and two actionabl
 5. branch enforcement automation for SI files
 6. decision-quality scoring and rollback one-click contract extensions
 
+## PR packaging plan and mandatory rollback contract
+All proposed changes should ship in small, reversible PR packages.
+
+### Package matrix
+1. **PR-P1: status taxonomy contract + migration map**
+   - scope: add canonical enum contract and journal/report mapping
+   - rollback: revert PR; restore previous enum readers; regenerate reports from previous commit
+   - owner decision gate: required
+
+2. **PR-P2: `status_packet_v1` schema + report adapter**
+   - scope: add JSON schema and markdown transformer compatibility layer
+   - rollback: set workflow toggle `STATUS_PACKET_V1_ENABLED=false` and revert adapter commit
+   - owner decision gate: required
+
+3. **PR-P3: `next_owner_click` enforcement**
+   - scope: require deterministic owner action in generated status pages
+   - rollback: disable enforcement with `OWNER_NEXT_CLICK_REQUIRED=false`
+   - owner decision gate: required
+
+4. **PR-P4: governance source registry + duplication lint checks**
+   - scope: introduce single-source registry and CI duplicate-rule checks
+   - rollback: disable lint workflow file and revert registry references
+   - owner decision gate: required
+
+5. **PR-P5: SI branch-scope guard for governance files**
+   - scope: block SI-governance file mutations outside `si/*` branches in CI
+   - rollback: set guard mode to warn-only (`SI_BRANCH_GUARD_ENFORCE=false`)
+   - owner decision gate: required
+
+6. **PR-P6: owner decision scoring + rollback one-click action contract**
+   - scope: add scoring fields and rollback contract fields to decision packets/views
+   - rollback: feature-flag field validation (`OWNER_DECISION_SCORING_ENABLED=false`)
+   - owner decision gate: required
+
+### Rollback operating rules (applies to all packages)
+- every PR must include:
+  - exact rollback command block (`git revert <merge_commit>` or `git revert <commit_range>`)
+  - impacted workflows/files list
+  - post-rollback verification checklist and links
+- no package is allowed to remove the existing manual owner decision fallback path
+- if automation degrades, rollback must be possible in one revert PR without data-loss migration
+
 ## Acceptance checkpoints
 - No duplicate contradictory status enums in active governance contracts.
 - Every generated status report contains `next_owner_click` and source commit.

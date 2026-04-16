@@ -252,3 +252,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - identified high-priority gaps: governance duplication drift, inconsistent status taxonomy, long read-chain execution overhead, and weak deterministic owner-next-click encoding across status outputs
 - provided implementation sequence and acceptance checkpoints to reduce risk while increasing automation quality
 - purpose: enable one packaged SI proposal for governance consistency and low-click owner decision flow improvements
+
+### 2026-04-16 / si/governance-model-optimization / rollback-first PR packaging refinement
+- refined `docs/agents/governance_model_gap_and_one_click_ownership_optimization_v1.md` with a mandatory PR package matrix (P1-P6) so each improvement ships as a separate owner-decision PR
+- added explicit rollback controls per package (feature flags or revert path) and global rollback operating rules requiring command-level revert instructions plus post-rollback verification checklist
+- confirmed that manual owner fallback path must remain available for all packages to preserve safe recovery under automation degradation
+- purpose: enforce full rollback capability while still allowing incremental governance and one-click ownership improvements
