@@ -42,6 +42,22 @@ def source_commit(repo_root: Path) -> str:
     return subprocess.check_output(["git", "-C", str(repo_root), "rev-parse", "HEAD"], text=True).strip()
 
 
+def component_matrix_key(component: str) -> str:
+    mapping = {
+        "tuner": "tuner",
+        "bridge": "bridge",
+    }
+    return mapping.get(component.lower(), component.lower())
+
+
+def autonomy_supported(repo_root: Path, component: str) -> bool:
+    matrix_path = repo_root / "tools/governance/autonomous_delivery_matrix_v3.json"
+    matrix = json.loads(matrix_path.read_text(encoding="utf-8"))
+    key = component_matrix_key(component)
+    component_data = matrix.get("components", {}).get(key, {})
+    return bool(component_data.get("auto_delivery_supported") is True)
+
+
 def status_packet(
     component: str,
     canonical_status: str,
@@ -51,10 +67,13 @@ def status_packet(
     next_owner_click: str,
     decision_scoring: dict,
     rollback_action: dict,
+    claim_classes: dict,
+    runtime_claim: dict | None,
+    autonomy_claim: dict | None,
     generated_at: str,
     source_commit_id: str,
 ) -> dict:
-    return {
+    packet = {
         "schema": "status_packet_v1",
         "component": component,
         "canonical_status": canonical_status,
@@ -64,9 +83,15 @@ def status_packet(
         "next_owner_click": next_owner_click,
         "decision_scoring": decision_scoring,
         "rollback_action": rollback_action,
+        "claim_classes": claim_classes,
         "timestamp": generated_at,
         "source_commit": source_commit_id,
     }
+    if runtime_claim is not None:
+        packet["runtime_claim"] = runtime_claim
+    if autonomy_claim is not None:
+        packet["autonomy_claim"] = autonomy_claim
+    return packet
 
 
 def default_decision_scoring(blockers: list[str]) -> dict:
@@ -97,10 +122,23 @@ def default_rollback_action(component: str) -> dict:
 
 
 def owner_contract_block(packet: dict) -> list[str]:
+    runtime_claim = packet.get("runtime_claim")
+    autonomy_claim = packet.get("autonomy_claim")
+    runtime_evidence = runtime_claim["evidence_path"] if isinstance(runtime_claim, dict) else "n/a"
+    runtime_scope = runtime_claim["tested_scope"] if isinstance(runtime_claim, dict) else "n/a"
+    autonomy_evidence = autonomy_claim["evidence_path"] if isinstance(autonomy_claim, dict) else "n/a"
+    autonomy_scope = autonomy_claim["tested_scope"] if isinstance(autonomy_claim, dict) else "n/a"
     return [
         "## Owner action contract",
         f"- recommended owner action: `{packet['recommended_owner_action']}`",
         f"- next_owner_click: `{packet['next_owner_click']}`",
+        f"- claim_classes.governance_docs: `{packet['claim_classes']['governance_docs']}`",
+        f"- claim_classes.runtime_validation: `{packet['claim_classes']['runtime_validation']}`",
+        f"- claim_classes.autonomy_eligibility: `{packet['claim_classes']['autonomy_eligibility']}`",
+        f"- runtime_claim.evidence_path: `{runtime_evidence}`",
+        f"- runtime_claim.tested_scope: `{runtime_scope}`",
+        f"- autonomy_claim.evidence_path: `{autonomy_evidence}`",
+        f"- autonomy_claim.tested_scope: `{autonomy_scope}`",
         f"- decision_scoring.evidence_quality: `{packet['decision_scoring']['evidence_quality']}`",
         f"- decision_scoring.rollback_readiness: `{packet['decision_scoring']['rollback_readiness']}`",
         f"- decision_scoring.blast_radius: `{packet['decision_scoring']['blast_radius']}`",
@@ -111,11 +149,34 @@ def owner_contract_block(packet: dict) -> list[str]:
     ]
 
 
-def status_from_component(component: str, current_state_path: Path, stream_path: Path, generated_at: str, source_commit_id: str) -> Report:
+def status_from_component(component: str, current_state_path: Path, stream_path: Path, generated_at: str, source_commit_id: str, repo_root: Path) -> Report:
     cs = read(current_state_path)
     lifecycle = section_bullets(cs, "Lifecycle status")[:6]
     gaps = section_bullets(cs, "Current gaps")[:4]
     next_actions = section_bullets(cs, "Repo-normalized next action")[:3]
+
+    lifecycle_text = "\n".join(lifecycle).lower()
+    runtime_validated = any(
+        marker in lifecycle_text
+        for marker in ["validated_on_pi", "deploy_validated_on_pi", "rollback_validated_on_pi", "tested_on_pi"]
+    )
+    runtime_claim = None
+    if runtime_validated:
+        runtime_claim = {
+            "evidence_path": current_state_path.as_posix(),
+            "tested_scope": "manual deploy/rollback validation on target Pi lane",
+            "source_ref": source_commit_id,
+            "rollback_verification": "rollback lane validated on target Pi",
+        }
+    is_autonomy_eligible = runtime_validated and autonomy_supported(repo_root, component)
+    autonomy_claim = None
+    if is_autonomy_eligible:
+        autonomy_claim = {
+            "evidence_path": "tools/governance/autonomous_delivery_matrix_v3.json",
+            "tested_scope": f"{component.lower()} component matrix eligibility and validated target-Pi runtime lane",
+            "source_ref": source_commit_id,
+            "rollback_path": f"git revert <merge_commit_for_{component.lower()}>",
+        }
 
     packet = status_packet(
         component=component.lower(),
@@ -126,6 +187,13 @@ def status_from_component(component: str, current_state_path: Path, stream_path:
         next_owner_click="request_changes" if gaps else "approve_pr",
         decision_scoring=default_decision_scoring(gaps),
         rollback_action=default_rollback_action(component.lower()),
+        claim_classes={
+            "governance_docs": "accepted",
+            "runtime_validation": "validated" if runtime_validated else "not_claimed",
+            "autonomy_eligibility": "eligible" if is_autonomy_eligible else "not_claimed",
+        },
+        runtime_claim=runtime_claim,
+        autonomy_claim=autonomy_claim,
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -199,6 +267,13 @@ def governance_status_report(si_status_path: Path, generated_at: str, source_com
         next_owner_click="request_changes" if broken else "approve_pr",
         decision_scoring=default_decision_scoring(broken),
         rollback_action=default_rollback_action("governance"),
+        claim_classes={
+            "governance_docs": "accepted",
+            "runtime_validation": "not_claimed",
+            "autonomy_eligibility": "not_claimed",
+        },
+        runtime_claim=None,
+        autonomy_claim=None,
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -248,6 +323,13 @@ def ui_status_report(ui_stream_path: Path, generated_at: str, source_commit_id: 
         next_owner_click="approve_pr",
         decision_scoring=default_decision_scoring([]),
         rollback_action=default_rollback_action("ui"),
+        claim_classes={
+            "governance_docs": "accepted",
+            "runtime_validation": "not_claimed",
+            "autonomy_eligibility": "not_claimed",
+        },
+        runtime_claim=None,
+        autonomy_claim=None,
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -290,6 +372,13 @@ def decisions_report(decisions_path: Path, generated_at: str, source_commit_id: 
         next_owner_click="defer",
         decision_scoring=default_decision_scoring([]),
         rollback_action=default_rollback_action("decisions"),
+        claim_classes={
+            "governance_docs": "accepted",
+            "runtime_validation": "not_claimed",
+            "autonomy_eligibility": "not_claimed",
+        },
+        runtime_claim=None,
+        autonomy_claim=None,
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -352,6 +441,13 @@ def blocker_report(si_status_path: Path, generated_at: str, source_commit_id: st
         next_owner_click="run_workflow" if broken or open_decisions else "defer",
         decision_scoring=default_decision_scoring(broken + open_decisions),
         rollback_action=default_rollback_action("blocker"),
+        claim_classes={
+            "governance_docs": "accepted",
+            "runtime_validation": "not_claimed",
+            "autonomy_eligibility": "not_claimed",
+        },
+        runtime_claim=None,
+        autonomy_claim=None,
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -417,6 +513,7 @@ def main():
             root / "journals/scale-radio-tuner/stream_v2.md",
             generated_at,
             source_commit_id,
+            root,
         ),
         governance_status_report(root / "journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md", generated_at, source_commit_id),
         ui_status_report(root / "journals/system-integration-normalization/ui_gui_stream_v1.md", generated_at, source_commit_id),
@@ -426,6 +523,7 @@ def main():
             root / "journals/scale-radio-bridge/stream_v1.md",
             generated_at,
             source_commit_id,
+            root,
         ),
         decisions_report(root / "journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md", generated_at, source_commit_id),
         blocker_report(root / "journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md", generated_at, source_commit_id),

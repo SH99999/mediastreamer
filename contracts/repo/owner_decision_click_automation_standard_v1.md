@@ -51,6 +51,16 @@ For SI/governance changes, agents/chats/Codex must provide a prepared **SI Merge
 - explicit `next_owner_click`
 - SI comment-ready block the owner can use without extra navigation
 
+## Claim-class split in owner packets (mandatory)
+Owner packets and generated decision/status views must split claim classes explicitly:
+- governance/docs accepted
+- runtime validated
+- autonomy eligible
+
+Scope rule:
+- governance/docs-only packages remain lightweight and must not be blocked by runtime-evidence checks unless they explicitly claim deploy/runtime/autonomy effects
+- runtime/deploy/rollback/autonomy claims must be evidence-gated before they are shown as validated/eligible
+
 Contract source:
 - `docs/agents/si_merge_request_executive_summary_v1.md`
 

@@ -74,12 +74,19 @@ _Generated: 2026-04-16T00:00:00+00:00_
 ## Owner action contract
 - recommended owner action: `run_workflow`
 - next_owner_click: `run_workflow`
+- claim_classes.governance_docs: `accepted`
+- claim_classes.runtime_validation: `not_claimed`
+- claim_classes.autonomy_eligibility: `not_claimed`
+- runtime_claim.evidence_path: `n/a`
+- runtime_claim.tested_scope: `n/a`
+- autonomy_claim.evidence_path: `n/a`
+- autonomy_claim.tested_scope: `n/a`
 - decision_scoring.evidence_quality: `2`
 - decision_scoring.rollback_readiness: `2`
 - decision_scoring.blast_radius: `medium`
 - decision_scoring.confidence: `68`
 - rollback_action.command: `git revert <merge_commit_for_blocker>`
-- source_commit: `44307cda45834d82763007c121982c4d2e7c78a4`
+- source_commit: `a4aff91747304e3717a74839406b6fc8ac7f93b3`
 
 ## Visual snapshot
 ```mermaid

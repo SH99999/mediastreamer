@@ -15,6 +15,7 @@ REQUIRED_PACKET_KEYS = {
     "next_owner_click",
     "decision_scoring",
     "rollback_action",
+    "claim_classes",
     "timestamp",
     "source_commit",
 }
@@ -43,6 +44,8 @@ def main() -> int:
             failures.append(f"missing_next_owner_click_in_report:{report_path.relative_to(root)}")
         if "decision_scoring.evidence_quality:" not in report_text:
             failures.append(f"missing_decision_scoring_in_report:{report_path.relative_to(root)}")
+        if "claim_classes.governance_docs:" not in report_text:
+            failures.append(f"missing_claim_classes_in_report:{report_path.relative_to(root)}")
         if "rollback_action.command:" not in report_text:
             failures.append(f"missing_rollback_action_in_report:{report_path.relative_to(root)}")
         if "source_commit:" not in report_text:
@@ -87,6 +90,44 @@ def main() -> int:
         verification = rollback_action.get("verification")
         if not isinstance(verification, list) or not verification or not all(isinstance(item, str) and item.strip() for item in verification):
             failures.append(f"invalid_rollback_verification:{packet_path.relative_to(root)}")
+
+        claim_classes = packet.get("claim_classes", {})
+        if not isinstance(claim_classes, dict):
+            failures.append(f"invalid_claim_classes_type:{packet_path.relative_to(root)}")
+            claim_classes = {}
+        governance_docs = claim_classes.get("governance_docs")
+        runtime_validation = claim_classes.get("runtime_validation")
+        autonomy_eligibility = claim_classes.get("autonomy_eligibility")
+        if governance_docs not in {"accepted", "pending"}:
+            failures.append(f"invalid_claim_governance_docs:{packet_path.relative_to(root)}:{governance_docs}")
+        if runtime_validation not in {"not_claimed", "validated"}:
+            failures.append(f"invalid_claim_runtime_validation:{packet_path.relative_to(root)}:{runtime_validation}")
+        if autonomy_eligibility not in {"not_claimed", "eligible"}:
+            failures.append(f"invalid_claim_autonomy_eligibility:{packet_path.relative_to(root)}:{autonomy_eligibility}")
+
+        runtime_claim = packet.get("runtime_claim")
+        if runtime_validation == "validated":
+            if not isinstance(runtime_claim, dict):
+                failures.append(f"missing_runtime_claim_for_validated_status:{packet_path.relative_to(root)}")
+            else:
+                for key in ("evidence_path", "tested_scope", "source_ref", "rollback_verification"):
+                    value = runtime_claim.get(key)
+                    if not isinstance(value, str) or not value.strip():
+                        failures.append(f"invalid_runtime_claim_{key}:{packet_path.relative_to(root)}")
+        elif runtime_claim is not None:
+            failures.append(f"runtime_claim_present_without_validated_status:{packet_path.relative_to(root)}")
+
+        autonomy_claim = packet.get("autonomy_claim")
+        if autonomy_eligibility == "eligible":
+            if not isinstance(autonomy_claim, dict):
+                failures.append(f"missing_autonomy_claim_for_eligible_status:{packet_path.relative_to(root)}")
+            else:
+                for key in ("evidence_path", "tested_scope", "source_ref", "rollback_path"):
+                    value = autonomy_claim.get(key)
+                    if not isinstance(value, str) or not value.strip():
+                        failures.append(f"invalid_autonomy_claim_{key}:{packet_path.relative_to(root)}")
+        elif autonomy_claim is not None:
+            failures.append(f"autonomy_claim_present_without_eligible_status:{packet_path.relative_to(root)}")
 
     if failures:
         print("status_next_owner_click_enforcement=fail")

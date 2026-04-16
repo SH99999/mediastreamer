@@ -29,6 +29,7 @@ def one_click_presence(root: Path) -> CheckResult:
     reports = ["tuner", "governance", "ui", "bridge", "decisions", "blocker"]
     required = [
         "next_owner_click:",
+        "claim_classes.governance_docs:",
         "decision_scoring.evidence_quality:",
         "rollback_action.command:",
         "source_commit:",

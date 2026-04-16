@@ -4,11 +4,11 @@ _Generated: 2026-04-16T00:00:00+00:00_
 
 ## Quick summary
 - governance, issue-routing, and reporting workflows exist on `main`
+- governance closeout now applies evidence-gated state transitions so referenced governance issues move to `state:done` only when a merged source PR exists and governance/journal/docs truth paths were updated in the merged PR
+- SI onboarding is now tiered (`Tier 0` safe-start, `Tier 1` working context, `Tier 2` deep history) and active startup truth is explicitly anchored to AGENTS + SI index + SI TOM + current SI status/decisions/stream
+- status/owner packet claim classes now separate `governance/docs accepted`, `runtime validated`, and `autonomy eligible`, with evidence-gated runtime/autonomy assertions and truthful degradation when evidence is missing
 - one-click branch rebase exists for all current and future `dev/*` and `integration/*` branches
 - weekly governance report issues are generated from repo truth
-- open decisions, branch drift, and journal freshness can become governance-routed issues automatically
-- PR governance review and governance closeout workflows are active
-- new governed components can be bootstrapped via workflow
 
 ## Partial
 - autonomous delivery remains support-matrix gated, now including Bridge, Tuner, and Fun Line while other components remain unsupported
@@ -24,18 +24,25 @@ _Generated: 2026-04-16T00:00:00+00:00_
 ## Owner action contract
 - recommended owner action: `changes-requested`
 - next_owner_click: `request_changes`
+- claim_classes.governance_docs: `accepted`
+- claim_classes.runtime_validation: `not_claimed`
+- claim_classes.autonomy_eligibility: `not_claimed`
+- runtime_claim.evidence_path: `n/a`
+- runtime_claim.tested_scope: `n/a`
+- autonomy_claim.evidence_path: `n/a`
+- autonomy_claim.tested_scope: `n/a`
 - decision_scoring.evidence_quality: `2`
 - decision_scoring.rollback_readiness: `2`
 - decision_scoring.blast_radius: `medium`
 - decision_scoring.confidence: `68`
 - rollback_action.command: `git revert <merge_commit_for_governance>`
-- source_commit: `44307cda45834d82763007c121982c4d2e7c78a4`
+- source_commit: `a4aff91747304e3717a74839406b6fc8ac7f93b3`
 
 ## Visual snapshot
 ```mermaid
 xychart-beta
     title "Governance health buckets"
     x-axis ["works", "partial", "broken"]
-    y-axis "Count" 0 --> 17
-    bar [13, 3, 1]
+    y-axis "Count" 0 --> 20
+    bar [16, 3, 1]
 ```

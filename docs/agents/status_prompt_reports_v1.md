@@ -50,6 +50,8 @@ Reports are generated from repo truth files so prompts can be handled without hi
 - governance contract: `contracts/repo/status_packet_reporting_contract_v1.md`
 - generated markdown reports must include owner action contract fields (`recommended_owner_action`, `next_owner_click`, `source_commit`)
 - generated markdown reports must include decision scoring and rollback one-click fields (`decision_scoring.*`, `rollback_action.command`)
+- generated markdown reports must include explicit claim classes (`claim_classes.governance_docs`, `claim_classes.runtime_validation`, `claim_classes.autonomy_eligibility`)
+- runtime/autonomy claims must only render as validated/eligible when evidence fields are present (`runtime_claim.*`, `autonomy_claim.*`)
 - generated JSON packets under `reports/status/packets/` are the cross-agent handoff payload
 
 

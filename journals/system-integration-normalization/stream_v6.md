@@ -3,6 +3,12 @@
 Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream because tuner now has a real repo-driven manual deploy/rollback lane after Bridge proved the lock-aware runtime path on the Pi.
 
 ## Entries
+### 2026-04-16 / si/evidence-gated-one-click-v1 / evidence-gated claim-class hardening
+- tightened one-click/status packet truth model with explicit claim classes: `governance/docs accepted`, `runtime validated`, `autonomy eligible`
+- updated status packet schema + report generator so runtime/autonomy validated states require structured evidence fields (evidence path, tested scope, source ref, rollback data)
+- updated enforcement checks to fail invalid runtime/autonomy claims without evidence while keeping governance/docs-only packages lightweight when no runtime/autonomy claim is made
+- purpose: keep owner one-click flow fast but prevent overstatement of deploy/runtime/autonomy truth
+
 ### 2026-04-12 / main / PR #26 merged
 - governance v2 docs landed on `main`
 - the first repo-native SI/N status and decision files were added
