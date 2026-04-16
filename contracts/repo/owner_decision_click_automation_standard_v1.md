@@ -1,0 +1,55 @@
+# OWNER DECISION CLICK AUTOMATION STANDARD V1
+
+## Purpose
+This standard reduces owner comment overhead by introducing a structured click/selection decision path for PR governance outcomes.
+
+## Core model
+Owner decisions should be captured through structured fields (Project custom fields or fallback structured comment) and synchronized into governed PR labels.
+
+## Decision fields
+Minimum required fields:
+- `decision`: `accept | changes-requested | reject`
+- `merge_authorization`: `yes | no`
+- `docs_journals_complete`: `yes | no`
+
+Optional fields:
+- `scope`
+- `followup_note`
+
+## Click-path precedence
+1. Project custom fields on the owner queue item (preferred click-path).
+2. Structured PR comment block with marker `<!-- owner-decision-v1 -->` (fallback when project-field API bridge is unavailable).
+
+## Label synchronization contract
+Owner decision synchronization should maintain exactly one active state label:
+- `accept + merge_authorization=yes + docs_journals_complete=yes` -> `state:awaiting-owner`
+- `accept + merge_authorization=yes + docs_journals_complete=no` -> `state:docs-update-required`
+- `changes-requested` -> `state:ready-for-agent`
+- `reject` -> `state:done`
+
+## Rollback model (mandatory)
+Automation must be reversible without history loss:
+- feature-flag gate: `OWNER_DECISION_AUTOMATION_ENABLED`
+- rollback action: disable flag and revert to manual owner comments/labels
+- no destructive mutation of journals or decision logs during rollback
+- synchronization comments remain as evidence trail
+
+## Satellite processes that must stay aligned
+- owner operational reference
+- project view blueprint and field definitions
+- PR governance review workflow
+- governance closeout workflow
+- SI status/decision/stream logs
+
+## Robustness double-check
+Before enabling on `main`, run governance-model robustness checks to verify:
+- required docs/workflows/scripts exist
+- owner decision field contract is present
+- rollback flag path is documented
+- structured fallback marker path is available
+
+## Safety rule
+If parsing fails or fields are incomplete:
+- do not apply destructive label changes
+- emit explicit blocker comment with required owner action
+- prefer truthful negative status over assumed decision

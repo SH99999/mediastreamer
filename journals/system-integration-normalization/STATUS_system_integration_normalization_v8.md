@@ -111,6 +111,12 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 - decision: status prompts are fulfilled via generated repo pages under `reports/status/` with clickable source links and compact visual summaries.
 - rationale: reduces owner and agent overhead for recurring status requests and keeps outputs anchored to Git truth.
 - impact: status handling for `status tuner|governance|ui|bridge|decisions|blocker` now maps to generated markdown artifacts.
+
+### DEC-SIN-24
+- decision: owner decision handling is click-first via project custom fields with structured PR-comment fallback (`<!-- owner-decision-v1 -->`) and label sync automation.
+- rationale: reduces repetitive owner comment overhead while preserving auditable and deterministic state transitions.
+- impact: PR decision flow, state-label synchronization, and owner approval queue handling.
+
 ## 5. Open Decisions
 - when additional components beyond bridge, tuner, and fun-line become delivery-capable in the autonomous support matrix
 - whether the repository should later move to private visibility if the cost/risk tradeoff changes

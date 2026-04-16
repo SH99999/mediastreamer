@@ -1,0 +1,24 @@
+name: governance-model-robustness-check-v1
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    paths:
+      - 'contracts/repo/**'
+      - 'docs/agents/**'
+      - '.github/workflows/**'
+      - 'tools/governance/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  robustness_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run governance model robustness check
+        shell: bash
+        run: |
+          python3 tools/governance/governance_model_robustness_check_v1.py

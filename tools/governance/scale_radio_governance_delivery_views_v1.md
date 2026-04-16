@@ -89,3 +89,15 @@ Companion renderings:
 
 ## Minimum operational expectation
 If direct API setup for project views is blocked in the execution environment, keep this blueprint in repo truth and apply once with owner credentials.
+
+
+## Custom fields for click-based owner decisions
+Create these project custom fields:
+- `Owner Decision` (single-select): `accept`, `changes-requested`, `reject`
+- `Merge Authorization` (single-select): `yes`, `no`
+- `Docs/Journals Complete` (single-select): `yes`, `no`
+
+Operational rule:
+- if project-field automation API is unavailable in the active lane, use the structured PR comment fallback (`<!-- owner-decision-v1 -->`) and let workflow sync labels.
+- rollback path: disable decision sync with repository variable `OWNER_DECISION_AUTOMATION_ENABLED=false`.
+

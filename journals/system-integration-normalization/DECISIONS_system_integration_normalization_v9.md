@@ -176,3 +176,12 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - Follow-up needed: keep report generator aligned with journal/status schemas and run report generation after material status changes.
 ## Superseded Decisions
 - The earlier v8 truthfulness addendum remains historical; this v9 file is the current release-tagging addendum plus tuner autonomy promotion update.
+
+### DEC-system_integration_normalization-31
+- Status: locked
+- Decision: owner decision handling uses a click-first structured model with project custom fields and a governed fallback structured PR comment (`<!-- owner-decision-v1 -->`) synchronized by workflow.
+- Date context: owner decision friction reduction phase
+- Why this was chosen: repeated free-text PR comments increase owner overhead and reduce deterministic automation.
+- What it affects: owner PR decision flow, state-label synchronization, governance closeout readiness, and review click-path.
+- What it explicitly does NOT affect: protected-`main` merge approval authority or the requirement for docs/journal truth updates.
+- Follow-up needed: keep rollback switch and robustness checks active; disable automation quickly through `OWNER_DECISION_AUTOMATION_ENABLED=false` if behavior degrades.

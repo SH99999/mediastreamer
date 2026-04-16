@@ -229,3 +229,12 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - migrated the two recent tuner stream entries (deploy-scope revalidation and pointer/overlay tuning update) into `stream_v2.md` to preserve chronology in the active stream
 - updated `contracts/repo/component_journal_policy_v2.md` with an explicit versioned-journal rule: write new entries only to the latest generation and keep older generations historical
 - purpose: prevent governance drift from writing to deprecated journal paths and keep component truth chronologically consistent
+
+### 2026-04-16 / si/owner-decision-click-automation-v1 / click-first owner decision automation with rollback
+- added `contracts/repo/owner_decision_click_automation_standard_v1.md` defining click-first decision fields, fallback structured comment path, label-sync contract, rollback switch, and required satellite-process alignment
+- added `.github/workflows/owner-decision-click-sync.yml` to synchronize structured owner decisions into governed PR state labels, with explicit blocker comments on invalid payloads
+- added `tools/governance/governance_model_robustness_check_v1.py` and `.github/workflows/governance-model-robustness-check-v1.yml` as double-check controls before and during governance changes
+- updated owner operational reference and project-view blueprint with custom-field definitions, fallback marker, and rollback flag (`OWNER_DECISION_AUTOMATION_ENABLED=false`)
+- updated SI governance read chains and SI decision/status logs to lock this operating model
+- purpose: reduce owner PR-comment friction while preserving full rollback capability and governance robustness checks
+
