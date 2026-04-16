@@ -417,3 +417,8 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated protocol/playbook/bundle to include idea-channel two-round flow and owner decision packet target
 - regenerated `exchange/chatgpt/bundles/current_context_bundle_v1.md`
 - purpose: support structured idea intake (design to full GUI) through governed two-round alignment and one-click owner decision path
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / owner html dashboard for reports and links
+- added `reports/owner/owner_dashboard_v1.html` as a single owner entrypoint for status visuals, exchange starts, proof reports, and packet links
+- updated `reports/status/index.md` with alias `owner dashboard` linking to the new HTML dashboard
+- purpose: keep all relevant owner links and visual/report entrypoints available in one place

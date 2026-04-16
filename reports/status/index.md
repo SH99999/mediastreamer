@@ -11,6 +11,7 @@ Prompt aliases:
 - `status blocker` -> [Status Blocker](./blocker.md)
 - `owner audit-start` -> [Owner Audit Start ChatGPT Exchange](./owner_audit_start_chatgpt_exchange.md)
 - `owner idea-start` -> [Owner Idea Channel Start](./owner_idea_channel_start.md)
+- `owner dashboard` -> [Owner Dashboard HTML](../owner/owner_dashboard_v1.html)
 
 Status packet JSON artifacts:
 - [tuner](./packets/tuner.json)

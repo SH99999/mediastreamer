@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Owner Dashboard v1 — MediaStreamer Governance</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #151d35;
+      --text: #e7ecff;
+      --muted: #a9b5de;
+      --accent: #6ea8fe;
+      --ok: #36c275;
+      --warn: #ffb347;
+    }
+    body { margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; background: var(--bg); color: var(--text); }
+    .wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .sub { color: var(--muted); margin-bottom: 20px; }
+    .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .card { background: var(--card); border: 1px solid #243055; border-radius: 12px; padding: 14px; }
+    .card h2 { margin: 0 0 8px; font-size: 16px; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin: 6px 0; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .pill { display: inline-block; border-radius: 999px; padding: 4px 10px; font-size: 12px; margin-right: 6px; }
+    .ok { background: rgba(54,194,117,.2); color: var(--ok); }
+    .warn { background: rgba(255,179,71,.2); color: var(--warn); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Owner Dashboard v1</h1>
+    <div class="sub">Single owner entrypoint for governance status, visual reports, decision packets, and ChatGPT/Codex exchange lanes.</div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Status Reports (with visuals)</h2>
+        <span class="pill ok">Owner-ready</span>
+        <ul>
+          <li><a href="../status/index.md">Status Index</a></li>
+          <li><a href="../status/governance.md">Governance Status</a> (includes Mermaid snapshot)</li>
+          <li><a href="../status/tuner.md">Tuner Status</a></li>
+          <li><a href="../status/ui.md">UI Status</a></li>
+          <li><a href="../status/bridge.md">Bridge Status</a></li>
+          <li><a href="../status/decisions.md">Decisions Status</a></li>
+          <li><a href="../status/blocker.md">Blockers Status</a></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Owner Exchange Starts</h2>
+        <span class="pill ok">One-click flow</span>
+        <ul>
+          <li><a href="../status/owner_audit_start_chatgpt_exchange.md">Owner Audit Start</a></li>
+          <li><a href="../status/owner_idea_channel_start.md">Owner Idea Channel Start</a></li>
+          <li><a href="../../docs/agents/chatgpt_start_prompt_git_exchange_v3.md">ChatGPT Audit Prompt</a></li>
+          <li><a href="../../docs/agents/chatgpt_start_prompt_idea_channel_v1.md">ChatGPT Idea Prompt</a></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Integrity & Governance Proofs</h2>
+        <span class="pill warn">Verification</span>
+        <ul>
+          <li><a href="../governance/integration_check_one_click_v1.md">One-Click Integration Check</a></li>
+          <li><a href="../governance/onboarding_journal_revision_audit_v1.md">Onboarding + Journal Audit</a></li>
+          <li><a href="../../journals/system-integration-normalization/stream_v6.md">SI Stream (truth log)</a></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Decision Packets (JSON)</h2>
+        <span class="pill ok">Machine + Owner bridge</span>
+        <ul>
+          <li><a href="../status/packets/governance.json">Governance Packet</a></li>
+          <li><a href="../status/packets/tuner.json">Tuner Packet</a></li>
+          <li><a href="../status/packets/ui.json">UI Packet</a></li>
+          <li><a href="../status/packets/bridge.json">Bridge Packet</a></li>
+          <li><a href="../status/packets/decisions.json">Decisions Packet</a></li>
+          <li><a href="../status/packets/blocker.json">Blocker Packet</a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
