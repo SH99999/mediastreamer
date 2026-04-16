@@ -1,16 +1,20 @@
 [
   {
-    "title": "Decide browser_container support in container baseline",
     "type": "decision",
+    "title": "Browser container support baseline",
     "needed_from_owner": "accept | changes-requested",
-    "details": "Approve adding browser/screenshot tool support as a governed container requirement for UI/testing sessions.",
-    "source": "owner feedback in chat"
+    "details": "Decide if browser_container screenshot capability must be part of the standard container baseline for UI tests.",
+    "action_url": "https://github.com/SH99999/mediastreamer/issues/new",
+    "where_to_act": "Create/approve governance issue for container baseline",
+    "source": "owner_feedback"
   },
   {
-    "title": "Provide exact GitHub Project view URLs",
     "type": "input",
-    "needed_from_owner": "links",
-    "details": "Share the single project view URLs so dashboard links point directly to live decision/task views.",
-    "source": "owner dashboard refinement"
+    "title": "GitHub Project view URLs",
+    "needed_from_owner": "provide links",
+    "details": "Provide the exact single-project view URLs so dashboard links can jump directly to live decision/task views.",
+    "action_url": "https://github.com/SH99999/mediastreamer/projects",
+    "where_to_act": "Open project and copy view URLs",
+    "source": "owner_dashboard_refinement"
   }
 ]

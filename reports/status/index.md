@@ -3,6 +3,10 @@
 _Generated: 2026-04-16T00:00:00+00:00_
 
 Prompt aliases:
+- `agent role prompts` -> [Agent Role Start Prompts](../../docs/agents/agent_role_start_prompts_v1.md)
+- `owner decision-board` -> [Owner Decision Board HTML](../owner/owner_decision_board_v1.html)
+- `owner action-board` -> [Owner Action Board HTML](../owner/owner_action_board_v1.html)
+- `owner dashboard` -> [Owner Dashboard HTML](../owner/owner_dashboard_v1.html)
 - `status tuner` -> [Status Tuner](./tuner.md)
 - `status governance` -> [Status Governance](./governance.md)
 - `status ui` -> [Status UI](./ui.md)

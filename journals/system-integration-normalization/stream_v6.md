@@ -444,3 +444,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated dashboard and status index with `owner action-board` quick access links
 - extended dashboard policy: loose chat outcomes must be formalized into repo artifacts and linked
 - purpose: one-glance owner list of what the system needs to continue (decision/input/task/feedback)
+### 2026-04-16 / si/owner-dashboard-action-normalization / owner board normalization and role prompt pack
+- added `tools/governance/generate_owner_boards_v1.py` to generate both `owner_action_board_v1.html` and `owner_decision_board_v1.html`
+- normalized owner board wording (titles/details/action labels) and added explicit "where & what to do" links for each row
+- added `reports/owner/owner_manual_tasks_v1.json` for explicit owner-needed inputs/decisions
+- added `docs/agents/agent_role_start_prompts_v1.md` with role prompts for SI, Dev Tuner, Dev Bridge, and Generic developer
+- added `reports/owner/owner_dashboard_v1.html` and updated `reports/status/index.md` aliases for dashboard/action/decision boards and role prompts
+- purpose: one-glance owner operation panel with clear clickable actions and fast role-based startup prompts
