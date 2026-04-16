@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Governance Summary v1</title>
+  <style>
+    body { font-family: Inter, Segoe UI, Arial, sans-serif; margin: 20px; background:#0b1020; color:#e7ecff; }
+    .card { background:#151d35; border:1px solid #243055; border-radius:10px; padding:14px; margin-bottom:12px; }
+    .bar { height: 22px; background:#1d2a4a; border-radius:6px; overflow:hidden; margin:8px 0; }
+    .seg-ok { height:100%; width:76%; background:#36c275; float:left; }
+    .seg-part { height:100%; width:18%; background:#ffb347; float:left; }
+    .seg-bad { height:100%; width:6%; background:#ff6b6b; float:left; }
+    a { color:#6ea8fe; }
+  </style>
+</head>
+<body>
+  <h1>Governance Summary v1</h1>
+  <div class="card">
+    <strong>Quick summary</strong>
+    <ul>
+      <li>Governance, issue-routing, and reporting workflows exist on <code>main</code>.</li>
+      <li>Owner action currently: <code>changes-requested</code>.</li>
+      <li>Autonomous delivery remains support-matrix gated.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <strong>Health buckets</strong>
+    <div class="bar"><div class="seg-ok"></div><div class="seg-part"></div><div class="seg-bad"></div></div>
+    <div>works: 13 | partial: 3 | broken: 1</div>
+  </div>
+  <div class="card">
+    Source: <a href="https://github.com/SH99999/mediastreamer/blob/si/chatgpt-git-exchange-v1/reports/status/governance.md">reports/status/governance.md</a>
+  </div>
+</body>
+</html>
