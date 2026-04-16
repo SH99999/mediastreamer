@@ -41,6 +41,37 @@ This standard governs:
 3. If repo mutation is required, Codex executes on dedicated SI/dev branches and opens/updates PR(s).
 4. Owner receives one decision-ready summary and approves/rejects.
 
+## Living exchange stream (mandatory)
+- active stream file: `exchange/chatgpt/streams/stream_v1.md`
+- every new exchange cycle must append one entry with:
+  - actor (`chatgpt|codex`)
+  - cycle id
+  - source request file
+  - response file
+  - proposed implementation branch(es)
+  - owner decision needed
+
+## Autonomous cycle bootstrap
+- script: `tools/governance/chatgpt_exchange_cycle_v1.py`
+- intent:
+  1. generate new inbox/outbox files from templates
+  2. append cycle entry to `exchange/chatgpt/streams/stream_v1.md`
+  3. keep repeatable no-memory exchange flow
+
+## Review/evaluation trigger detection
+- watcher script: `tools/governance/chatgpt_exchange_watch_v1.py`
+- rule: Codex evaluates when status marker `ready-for-codex` is present in basis/request artifacts
+
+## ChatGPT start prompt artifact
+- canonical prompt file: `docs/agents/chatgpt_start_prompt_git_exchange_v1.md`
+- branch rule inside prompt:
+  - read-only on all branches except the supervised exchange branch
+
+## GUI/no-shell compatibility artifact
+- bundle generator: `tools/governance/chatgpt_no_shell_bundle_v1.py`
+- output: `exchange/chatgpt/bundles/current_context_bundle_v1.md`
+- intent: one-file upload path for ChatGPT GUI sessions with restrictive file-access prompts
+
 ## Demand intake extension
 Demands produced in ChatGPT should be captured under:
 - `exchange/chatgpt/demands/<demand-id>__intake_v1.md`
@@ -55,3 +86,4 @@ and then routed into governed issue/branch flows.
 - ChatGPT exchange is reproducible from Git history alone
 - owner can follow and decide with minimal additional steps
 - implementation suggestions are explicit, ranked, and branchable
+- exchange cycles can be initialized automatically through the cycle bootstrap script

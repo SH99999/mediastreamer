@@ -42,11 +42,12 @@ This file is the current entrypoint for system integration governance, recovery,
 30. `docs/agents/owner_operational_reference_v1.md`
 31. `docs/agents/si_merge_request_executive_summary_v1.md`
 32. `docs/agents/chatgpt_git_exchange_playbook_v1.md`
-33. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-34. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-35. `journals/system-integration-normalization/stream_v6.md`
-36. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-37. `tools/governance/scale_radio_governance_delivery_views_v1.md`
+33. `docs/agents/chatgpt_start_prompt_git_exchange_v1.md`
+34. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+35. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+36. `journals/system-integration-normalization/stream_v6.md`
+37. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+38. `tools/governance/scale_radio_governance_delivery_views_v1.md`
 
 
 ## Locked operating model

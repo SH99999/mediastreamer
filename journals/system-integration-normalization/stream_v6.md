@@ -337,6 +337,41 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated SI governance index read-order and locked model notes to include the new ChatGPT Git exchange standard/playbook
 - purpose: enable low-friction, repeatable ChatGPT<->Codex collaboration in Git with autonomous preparation and minimal owner intervention
 
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / living exchange automation + start prompt
+- added `tools/governance/chatgpt_exchange_cycle_v1.py` to initialize request/response cycle artifacts and append `exchange/chatgpt/streams/stream_v1.md`
+- added `docs/agents/chatgpt_start_prompt_git_exchange_v1.md` as canonical start prompt with branch read-only rule outside supervised exchange branch
+- initialized first cycle artifacts: `exchange/chatgpt/inbox/audit-findings-round1__request_v1.md` and `exchange/chatgpt/outbox/audit-findings-round1__response_v1.md`
+- updated exchange standard/playbook/read-order references to include automation and prompt path
+- purpose: establish a living, low-owner-touch ChatGPT<->Codex exchange loop with repeatable cycle bootstrapping
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / GUI no-shell bundle mode for ChatGPT file-access friction
+- added `tools/governance/chatgpt_no_shell_bundle_v1.py` to generate a one-file context bundle for GUI-only ChatGPT sessions
+- generated `exchange/chatgpt/bundles/current_context_bundle_v1.md` and added bundle README
+- updated exchange standard/playbook/root README to include bundle-based no-shell operation path
+- purpose: reduce repeated file-authorization friction when ChatGPT has no terminal/shell access
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / prompt hardening for exact ChatGPT<->Codex entry protocol
+- updated `docs/agents/chatgpt_start_prompt_git_exchange_v1.md` with explicit step-by-step loop entry (`read order -> template response -> branch plan -> owner decision`)
+- clarified branch usage rules and branch purpose scope in the prompt itself
+- regenerated `exchange/chatgpt/bundles/current_context_bundle_v1.md` so GUI/no-shell sessions receive the hardened prompt in single-file form
+- purpose: ensure ChatGPT receives unambiguous instructions for joining the exchange loop with Codex
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / actor-aware stream + audit-basis-first reset + codex review trigger
+- added `exchange/chatgpt/PROTOCOL_v1.md` with status markers, actor model, and handshake order (`audit basis first`)
+- reset `exchange/chatgpt/audit_basis/current_audit_basis_v1.md` to ChatGPT-first template and removed legacy round1 request/response artifacts
+- updated `exchange/chatgpt/streams/stream_v1.md` to include actor field and reset state (`waiting-for-chatgpt`)
+- added `tools/governance/chatgpt_exchange_watch_v1.py` so Codex knows when to evaluate (`status: ready-for-codex`)
+- updated cycle/bootstrap/no-shell docs and regenerated context bundle with protocol+template set
+- purpose: make exchange triggers explicit, remove stale branch artifacts, and keep a living actor-traceable collaboration loop
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / round2 review bootstrap + consensus rating path
+- initialized `round2-implementation-review` cycle artifacts in inbox/outbox and updated stream status to `waiting-for-chatgpt`
+- updated round2 request with Codex proposal set and expected output including agreement score + owner decision suggestion
+- added `tools/governance/chatgpt_consensus_decision_v1.py` to derive owner decision suggestion from ChatGPT/Codex agreement scores
+- added `exchange/chatgpt/outbox/TEMPLATE__consensus_owner_decision_v1.md` for owner-ready consensus output block
+- updated playbook/protocol/no-shell bundle to include round2 and consensus derivation path
+- purpose: run one additional ChatGPT<->Codex challenge round and produce scored consensus + decision-ready owner proposal
+
 ### 2026-04-16 / si/bootstrap-role-mode-b-v1 / role-optimized bootstrap mode-B implementation
 - updated `tools/governance/agent_git_bootstrap_v1.sh` with `--role` and `--mode` options and role-aware startup/deferred packet output
 - added `docs/agents/role_bootstrap_profiles_v1.md` as canonical role-pack mapping with explicit escalation triggers
@@ -352,3 +387,18 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 ### 2026-04-16 / si/bootstrap-role-mode-b-v1 / compact audit-response chain for low-read owner handoff
 - added `docs/agents/audit_response_compact_chain_v1.md` with essential-only, ranked issues, phase outcomes, hard rules, and copy/paste handoff blocks
 - purpose: provide low-read structured responses for ChatGPT roundtrips without narrative overhead
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / opaque internal channel + human-readable owner packet hardening
+- updated `exchange/chatgpt/PROTOCOL_v1.md` to require channel separation: internal exchange can be machine-oriented, owner packet must be human-readable
+- added `exchange/chatgpt/outbox/TEMPLATE__owner_decision_packet_v1.md` as decision-ready owner handoff template
+- added `tools/governance/chatgpt_owner_decision_packet_v1.py` to generate owner decision packet from round scores and exchange artifacts
+- updated ChatGPT prompt and playbook with explicit owner-packet requirement and generator command
+- regenerated `exchange/chatgpt/bundles/current_context_bundle_v1.md` for no-shell GUI use
+- purpose: maximize exchange speed while preserving clean owner decision readability
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / start prompt v2 + bundle alignment
+- added `docs/agents/chatgpt_start_prompt_git_exchange_v2.md` with strict read-order, status handshake, score output, and branch policy
+- updated `docs/agents/chatgpt_git_exchange_playbook_v1.md` to reference v2 start prompt
+- updated `tools/governance/chatgpt_no_shell_bundle_v1.py` to embed v2 prompt and owner decision packet template
+- regenerated `exchange/chatgpt/bundles/current_context_bundle_v1.md`
+- purpose: provide one copy/paste start prompt for ChatGPT and keep no-shell bundle aligned with current exchange rules

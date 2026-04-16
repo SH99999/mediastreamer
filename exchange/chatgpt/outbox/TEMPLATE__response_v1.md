@@ -1,10 +1,10 @@
 # <topic> response v1
 
 ## ask summary
-- 
+-
 
 ## blockers / missing inputs
-- 
+-
 
 ## implementation proposals (ranked)
 1.
