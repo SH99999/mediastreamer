@@ -57,3 +57,14 @@ Reports are generated from repo truth files so prompts can be handled without hi
 - next-owner-click enforcement script: `tools/governance/status_next_owner_click_enforcement_v1.py`
 - source-registry lint script: `tools/governance/governance_source_registry_lint_v1.py`
 - both should pass in CI for report/governance mutations
+
+
+## Integration proof check
+Run:
+
+```bash
+python3 tools/governance/run_integration_check_one_click_v1.py
+```
+
+Output:
+- `reports/governance/integration_check_one_click_v1.md`

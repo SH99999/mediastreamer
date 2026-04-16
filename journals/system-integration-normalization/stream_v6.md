@@ -315,3 +315,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - extended `tools/governance/status_next_owner_click_enforcement_v1.py` and enforcement workflow triggers to validate scoring + rollback fields
 - updated SI governance index/onboarding + SI merge-request executive summary contract to include scoring and rollback one-click expectations
 - purpose: execute PR-P6 with deterministic decision-quality scoring and rollback-ready owner action contract while preserving feature-flag fallback
+
+### 2026-04-16 / si/governance-integration-check-v1 / one-click ecosystem integration proof
+- added `tools/governance/run_integration_check_one_click_v1.py` to execute end-to-end integrity/correctness/speed checks for one-click governance flow
+- added workflow `.github/workflows/integration-check-one-click-v1.yml` to run and publish integration proof report artifact
+- generated `reports/governance/integration_check_one_click_v1.md` as proof artifact with timings and check outcomes
+- updated status-report guide with integration proof command path
+- purpose: provide deterministic, repeatable integration evidence for one-click governance integrity and performance

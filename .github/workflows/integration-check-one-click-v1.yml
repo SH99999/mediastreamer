@@ -1,0 +1,33 @@
+name: integration-check-one-click-v1
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tools/governance/run_integration_check_one_click_v1.py'
+      - 'tools/governance/generate_status_reports_v1.py'
+      - 'tools/governance/status_next_owner_click_enforcement_v1.py'
+      - 'tools/governance/governance_source_registry_lint_v1.py'
+      - 'tools/governance/si_branch_scope_guard_v1.py'
+      - 'tools/governance/schemas/status_packet_v1.schema.json'
+      - 'contracts/repo/**'
+      - 'docs/agents/**'
+      - 'reports/status/**'
+
+permissions:
+  contents: read
+
+jobs:
+  integration_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run one-click integration check
+        shell: bash
+        run: |
+          python3 tools/governance/run_integration_check_one_click_v1.py
+      - name: Upload integration report
+        uses: actions/upload-artifact@v4
+        with:
+          name: one-click-integration-check-v1
+          path: reports/governance/integration_check_one_click_v1.md
