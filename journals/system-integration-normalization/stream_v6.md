@@ -430,3 +430,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated `reports/status/index.md` aliases for dashboard, policy, and audit-round2 prompt
 - updated bundle generator to include round2 prompt and regenerated `exchange/chatgpt/bundles/current_context_bundle_v1.md`
 - purpose: ensure owner has one visual page with immediate access to all critical starts, boards, and decision artifacts
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / rendered-view hardening for owner dashboard and summaries
+- added `reports/owner/governance_summary_v1.html` as lightweight HTML summary alternative to markdown graphics rendering
+- updated `reports/owner/owner_dashboard_v1.html` links to GitHub-rendered markdown (blob URLs) and htmlpreview-rendered HTML links
+- updated project links to decision-centric queue views (governance-labeled issues, open PR view) for current single-project operation
+- updated `reports/status/index.md` with rendered dashboard alias and governance summary alias
+- purpose: reduce markdown/raw rendering friction and keep owner navigation fast without heavy tooling
