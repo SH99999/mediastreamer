@@ -35,16 +35,18 @@ This file is the current entrypoint for system integration governance, recovery,
 23. `contracts/repo/deployment_test_strategy_standard_v1.md`
 24. `contracts/repo/owner_decision_click_automation_standard_v1.md`
 25. `contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md`
-26. `docs/agents/agent_git_bootstrap_v1.md`
-27. `docs/agents/status_prompt_reports_v1.md`
-28. `docs/agents/system_integration_recovery_onboarding_v7.md`
-29. `docs/agents/owner_operational_reference_v1.md`
-30. `docs/agents/si_merge_request_executive_summary_v1.md`
-31. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-32. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-33. `journals/system-integration-normalization/stream_v6.md`
-34. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-35. `tools/governance/scale_radio_governance_delivery_views_v1.md`
+26. `contracts/repo/chatgpt_git_exchange_operating_standard_v1.md`
+27. `docs/agents/agent_git_bootstrap_v1.md`
+28. `docs/agents/status_prompt_reports_v1.md`
+29. `docs/agents/system_integration_recovery_onboarding_v7.md`
+30. `docs/agents/owner_operational_reference_v1.md`
+31. `docs/agents/si_merge_request_executive_summary_v1.md`
+32. `docs/agents/chatgpt_git_exchange_playbook_v1.md`
+33. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+34. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+35. `journals/system-integration-normalization/stream_v6.md`
+36. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+37. `tools/governance/scale_radio_governance_delivery_views_v1.md`
 
 
 ## Locked operating model
@@ -55,6 +57,7 @@ This file is the current entrypoint for system integration governance, recovery,
 - PR lifecycle execution (create/update/rebase/respond) is owned by agents/chats/Codex lanes; owner role is decision/acceptance, not PR authoring
 - delivery expectation is `local -> github.com branch -> PR to main` prepared by agents/chats/Codex so owner can use one-click decision flow
 - SI handoff must include a prepared merge-request executive summary comment with executive summary + risk level + rollback command + next owner click
+- ChatGPT exchange for audit/demand loops should use the governed exchange root `exchange/chatgpt/` with inbox/outbox artifact flow
 - agent status reporting should emit `status_packet_v1` payloads and render markdown from packet data for owner-facing views
 - `next_owner_click` should be present in all generated status views and validated by enforcement checks
 - decision scoring fields and rollback one-click action contract should be present in decision/status packets (`evidence_quality`, `rollback_readiness`, `blast_radius`, `confidence`, `rollback_action`)

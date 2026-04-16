@@ -330,6 +330,13 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated status prompt/report guide with onboarding+journal audit command path
 - purpose: provide repeatable proof for onboarding optimization tracking and stream/journal revisioning integrity
 
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / governed Git exchange lane for ChatGPT collaboration
+- added `contracts/repo/chatgpt_git_exchange_operating_standard_v1.md` defining canonical branch/path model, required exchange artifacts, and minimal owner path
+- added `docs/agents/chatgpt_git_exchange_playbook_v1.md` with short execution loop and response contract for ranked implementation proposals
+- added `exchange/chatgpt/` root with `audit_basis`, `inbox`, `outbox`, `demands`, and request/response templates to support reusable topic exchange cycles
+- updated SI governance index read-order and locked model notes to include the new ChatGPT Git exchange standard/playbook
+- purpose: enable low-friction, repeatable ChatGPT<->Codex collaboration in Git with autonomous preparation and minimal owner intervention
+
 ### 2026-04-16 / si/bootstrap-role-mode-b-v1 / role-optimized bootstrap mode-B implementation
 - updated `tools/governance/agent_git_bootstrap_v1.sh` with `--role` and `--mode` options and role-aware startup/deferred packet output
 - added `docs/agents/role_bootstrap_profiles_v1.md` as canonical role-pack mapping with explicit escalation triggers
