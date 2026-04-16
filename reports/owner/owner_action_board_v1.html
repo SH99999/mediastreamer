@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/>
+<title>Owner Action Board v1</title>
+<style>
+body { font-family: Inter, Arial, sans-serif; margin:20px; background:#0b1020; color:#e7ecff; }
+table { width:100%; border-collapse: collapse; background:#151d35; }
+th,td { border:1px solid #243055; padding:8px; text-align:left; vertical-align:top; }
+code { color:#6ea8fe; }
+</style></head><body>
+<h1>Owner Action Board v1</h1>
+<p>Single list of open owner needs (decisions, inputs, tasks, feedback).</p>
+<table>
+<thead><tr><th>Type</th><th>Title</th><th>Needed from owner</th><th>Details</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>decision</td><td>Review status packet: blocker</td><td><code>run_workflow</code></td><td>recommended_owner_action=run_workflow</td><td>reports/status/packets/blocker.json</td></tr>
+<tr><td>decision</td><td>Review status packet: bridge</td><td><code>request_changes</code></td><td>recommended_owner_action=changes-requested</td><td>reports/status/packets/bridge.json</td></tr>
+<tr><td>decision</td><td>Review status packet: decisions</td><td><code>defer</code></td><td>recommended_owner_action=defer</td><td>reports/status/packets/decisions.json</td></tr>
+<tr><td>decision</td><td>Review status packet: governance</td><td><code>request_changes</code></td><td>recommended_owner_action=changes-requested</td><td>reports/status/packets/governance.json</td></tr>
+<tr><td>decision</td><td>Review status packet: tuner</td><td><code>request_changes</code></td><td>recommended_owner_action=changes-requested</td><td>reports/status/packets/tuner.json</td></tr>
+<tr><td>decision</td><td>Review status packet: ui</td><td><code>approve_pr</code></td><td>recommended_owner_action=accept</td><td>reports/status/packets/ui.json</td></tr>
+<tr><td>decision</td><td>Decide browser_container support in container baseline</td><td><code>accept | changes-requested</code></td><td>Approve adding browser/screenshot tool support as a governed container requirement for UI/testing sessions.</td><td>owner feedback in chat</td></tr>
+<tr><td>input</td><td>Provide exact GitHub Project view URLs</td><td><code>links</code></td><td>Share the single project view URLs so dashboard links point directly to live decision/task views.</td><td>owner dashboard refinement</td></tr>
+</tbody></table>
+</body></html>

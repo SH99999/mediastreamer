@@ -16,6 +16,7 @@ Prompt aliases:
 - `owner audit-round2 prompt` -> [ChatGPT Audit Round2 Prompt](../../docs/agents/chatgpt_start_prompt_audit_answer_round2_v1.md)
 - `owner dashboard policy` -> [Owner Dashboard Quick Link Policy](../owner/owner_dashboard_quick_link_policy_v1.md)
 - `owner governance summary` -> [Governance Summary HTML](../owner/governance_summary_v1.html)
+- `owner action-board` -> [Owner Action Board HTML](../owner/owner_action_board_v1.html)
 
 Status packet JSON artifacts:
 - [tuner](./packets/tuner.json)

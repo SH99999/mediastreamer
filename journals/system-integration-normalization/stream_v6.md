@@ -437,3 +437,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated project links to decision-centric queue views (governance-labeled issues, open PR view) for current single-project operation
 - updated `reports/status/index.md` with rendered dashboard alias and governance summary alias
 - purpose: reduce markdown/raw rendering friction and keep owner navigation fast without heavy tooling
+
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / owner action board for open decisions and tasks
+- added `tools/governance/generate_owner_action_board_v1.py` and generated `reports/owner/owner_action_board_v1.html`
+- added `reports/owner/owner_manual_tasks_v1.json` for explicit owner-needed inputs/decisions
+- updated dashboard and status index with `owner action-board` quick access links
+- extended dashboard policy: loose chat outcomes must be formalized into repo artifacts and linked
+- purpose: one-glance owner list of what the system needs to continue (decision/input/task/feedback)
