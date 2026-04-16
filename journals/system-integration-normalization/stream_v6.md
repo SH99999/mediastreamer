@@ -258,3 +258,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - added explicit rollback controls per package (feature flags or revert path) and global rollback operating rules requiring command-level revert instructions plus post-rollback verification checklist
 - confirmed that manual owner fallback path must remain available for all packages to preserve safe recovery under automation degradation
 - purpose: enforce full rollback capability while still allowing incremental governance and one-click ownership improvements
+
+### 2026-04-16 / si/governance-model-optimization / owner-role clarification for PR execution
+- updated `contracts/repo/owner_decision_click_automation_standard_v1.md` with explicit mandatory role split: owner decides, agent/chat/Codex lanes create and maintain PRs
+- updated `contracts/repo/system_integration_governance_index_v7.md` locked operating model to state PR lifecycle execution is agent-lane responsibility, not owner PR authoring
+- updated `docs/agents/owner_operational_reference_v1.md` to make owner role boundary explicit and confirm daily click-path assumes agent-prepared PRs
+- purpose: remove ambiguity so owner only decides accept/change/reject while execution lanes handle branch/PR mechanics

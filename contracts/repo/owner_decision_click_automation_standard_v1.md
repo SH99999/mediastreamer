@@ -5,6 +5,13 @@ This standard reduces owner comment overhead by introducing a structured click/s
 
 ## Core model
 Owner decisions should be captured through structured fields (Project custom fields or fallback structured comment) and synchronized into governed PR labels.
+PR creation and PR updates are execution responsibilities of agents/chats/Codex lanes, not the owner.
+
+## Role split (mandatory)
+- **Owner:** decision authority only (`accept | changes-requested | reject`) and merge authorization (`yes | no`).
+- **Agent/Chat/Codex lane:** create/update branch, push branch, create/update PR, apply requested changes, and keep docs/journals in sync.
+- **Never require owner PR authoring** as a normal operating path.
+- **Exception only:** if connector/auth is blocked, agent must provide one explicit fallback handoff and mark delivered status truthfully.
 
 ## Decision fields
 Minimum required fields:
