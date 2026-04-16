@@ -12,3 +12,6 @@ Any newly created owner-critical document MUST be linked from `reports/owner/own
 
 ## Enforcement rule (process)
 - PR is not ready for merge if an owner-critical document was added but dashboard link was not added.
+
+## Loose chat outcomes -> formalization
+- Codex must convert owner-relevant loose chat outcomes into explicit repo artifacts (decision, contract, runbook, or task) and add the link to dashboard/action-board in the same PR.

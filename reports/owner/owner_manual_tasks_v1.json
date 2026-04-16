@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Decide browser_container support in container baseline",
+    "type": "decision",
+    "needed_from_owner": "accept | changes-requested",
+    "details": "Approve adding browser/screenshot tool support as a governed container requirement for UI/testing sessions.",
+    "source": "owner feedback in chat"
+  },
+  {
+    "title": "Provide exact GitHub Project view URLs",
+    "type": "input",
+    "needed_from_owner": "links",
+    "details": "Share the single project view URLs so dashboard links point directly to live decision/task views.",
+    "source": "owner dashboard refinement"
+  }
+]
