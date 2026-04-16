@@ -31,3 +31,10 @@ Every stream entry must include:
 - actor (`chatgpt` or `codex`)
 - source file
 - resulting status
+
+
+## Idea channel (two-round alignment)
+1. ChatGPT creates `exchange/chatgpt/ideas/<topic>__idea_seed_v1.md` and sets `status: ready-for-codex`.
+2. Codex returns round-1 implementation/governance proposal.
+3. ChatGPT returns round-2 alignment (`*__round2_alignment_v1.md`) with agreement score.
+4. Codex emits owner decision packet and governed implementation plan.

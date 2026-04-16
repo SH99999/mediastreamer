@@ -86,6 +86,14 @@ Every `outbox/*response*` file should include:
 - accept | changes-requested | reject
 ```
 
+
+## Idea channel quickstart
+1. ChatGPT starts with `exchange/chatgpt/ideas/<topic>__idea_seed_v1.md`.
+2. ChatGPT sets `status: ready-for-codex`.
+3. Codex delivers round-1 proposal (gov fit + ranked implementation options).
+4. ChatGPT returns round-2 alignment (`*__round2_alignment_v1.md`).
+5. Codex publishes owner decision packet and implementation lane (`si/<topic>` + optional `dev/<component>`).
+
 ## Demand intake extension
 If ChatGPT produced a demand:
 1. save to `exchange/chatgpt/demands/<demand-id>__intake_v1.md`
@@ -98,7 +106,8 @@ Prefer short, structured artifacts over narrative text blocks.
 ## ChatGPT start prompt
 Use:
 - `docs/agents/chatgpt_start_prompt_git_exchange_v3.md`
-- This prompt now includes explicit "how to enter the chat with Codex loop" steps and branch-use rules.
+- `docs/agents/chatgpt_start_prompt_idea_channel_v1.md`
+- These prompts cover audit-start and idea-channel flows with branch-use rules.
 
 ## No-shell / GUI-only mode (single-file handoff)
 If ChatGPT cannot use terminal/shell or requires repeated file permission prompts:

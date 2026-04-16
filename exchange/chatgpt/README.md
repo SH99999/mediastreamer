@@ -18,3 +18,5 @@ Protocol:
 - requests: `<topic>__request_vN.md`
 - responses: `<topic>__response_vN.md`
 - demand intake: `<demand-id>__intake_vN.md`
+
+- `ideas/` = idea channel intake + two-round alignment artifacts
