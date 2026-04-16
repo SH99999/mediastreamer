@@ -344,6 +344,12 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated exchange standard/playbook/read-order references to include automation and prompt path
 - purpose: establish a living, low-owner-touch ChatGPT<->Codex exchange loop with repeatable cycle bootstrapping
 
+### 2026-04-16 / si/chatgpt-git-exchange-v1 / GUI no-shell bundle mode for ChatGPT file-access friction
+- added `tools/governance/chatgpt_no_shell_bundle_v1.py` to generate a one-file context bundle for GUI-only ChatGPT sessions
+- generated `exchange/chatgpt/bundles/current_context_bundle_v1.md` and added bundle README
+- updated exchange standard/playbook/root README to include bundle-based no-shell operation path
+- purpose: reduce repeated file-authorization friction when ChatGPT has no terminal/shell access
+
 ### 2026-04-16 / si/bootstrap-role-mode-b-v1 / role-optimized bootstrap mode-B implementation
 - updated `tools/governance/agent_git_bootstrap_v1.sh` with `--role` and `--mode` options and role-aware startup/deferred packet output
 - added `docs/agents/role_bootstrap_profiles_v1.md` as canonical role-pack mapping with explicit escalation triggers

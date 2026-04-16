@@ -62,6 +62,11 @@ This standard governs:
 - branch rule inside prompt:
   - read-only on all branches except the supervised exchange branch
 
+## GUI/no-shell compatibility artifact
+- bundle generator: `tools/governance/chatgpt_no_shell_bundle_v1.py`
+- output: `exchange/chatgpt/bundles/current_context_bundle_v1.md`
+- intent: one-file upload path for ChatGPT GUI sessions with restrictive file-access prompts
+
 ## Demand intake extension
 Demands produced in ChatGPT should be captured under:
 - `exchange/chatgpt/demands/<demand-id>__intake_v1.md`

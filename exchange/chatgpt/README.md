@@ -9,6 +9,7 @@ Git-native exchange area for ChatGPT <-> Codex collaboration artifacts.
 - `outbox/` Codex responses + implementation proposals
 - `demands/` demand intakes extracted from ChatGPT sessions
 - `streams/` living exchange stream entries
+- `bundles/` single-file context bundles for GUI/no-shell ChatGPT sessions
 
 ## Naming convention
 - requests: `<topic>__request_vN.md`

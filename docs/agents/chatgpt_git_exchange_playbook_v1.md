@@ -66,3 +66,13 @@ Prefer short, structured artifacts over narrative text blocks.
 ## ChatGPT start prompt
 Use:
 - `docs/agents/chatgpt_start_prompt_git_exchange_v1.md`
+
+## No-shell / GUI-only mode (single-file handoff)
+If ChatGPT cannot use terminal/shell or requires repeated file permission prompts:
+
+```bash
+python3 tools/governance/chatgpt_no_shell_bundle_v1.py
+```
+
+Then upload only:
+- `exchange/chatgpt/bundles/current_context_bundle_v1.md`
