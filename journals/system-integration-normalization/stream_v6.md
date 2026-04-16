@@ -322,3 +322,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - generated `reports/governance/integration_check_one_click_v1.md` as proof artifact with timings and check outcomes
 - updated status-report guide with integration proof command path
 - purpose: provide deterministic, repeatable integration evidence for one-click governance integrity and performance
+
+### 2026-04-16 / si/onboarding-journal-audit-v1 / onboarding unification and journal revision audit
+- added `tools/governance/onboarding_journal_revision_audit_v1.py` to evaluate onboarding read-order unification, estimate onboarding time windows, and audit stream revision discipline
+- added workflow `.github/workflows/onboarding-journal-revision-audit-v1.yml` to run and publish the audit report artifact
+- generated `reports/governance/onboarding_journal_revision_audit_v1.md` with overlap metrics, onboarding time estimates, and journal revision findings
+- updated status prompt/report guide with onboarding+journal audit command path
+- purpose: provide repeatable proof for onboarding optimization tracking and stream/journal revisioning integrity

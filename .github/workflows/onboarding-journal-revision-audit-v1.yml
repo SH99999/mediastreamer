@@ -1,0 +1,29 @@
+name: onboarding-journal-revision-audit-v1
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'contracts/repo/system_integration_governance_index_v7.md'
+      - 'docs/agents/system_integration_recovery_onboarding_v7.md'
+      - 'contracts/repo/component_journal_policy_v2.md'
+      - 'journals/**/stream_v*.md'
+      - 'tools/governance/onboarding_journal_revision_audit_v1.py'
+
+permissions:
+  contents: read
+
+jobs:
+  onboarding_journal_audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run onboarding + journal revision audit
+        shell: bash
+        run: |
+          python3 tools/governance/onboarding_journal_revision_audit_v1.py
+      - name: Upload onboarding/journal audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: onboarding-journal-revision-audit-v1
+          path: reports/governance/onboarding_journal_revision_audit_v1.md

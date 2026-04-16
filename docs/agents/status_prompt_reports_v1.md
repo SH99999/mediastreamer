@@ -68,3 +68,14 @@ python3 tools/governance/run_integration_check_one_click_v1.py
 
 Output:
 - `reports/governance/integration_check_one_click_v1.md`
+
+
+## Onboarding + journal revision audit
+Run:
+
+```bash
+python3 tools/governance/onboarding_journal_revision_audit_v1.py
+```
+
+Output:
+- `reports/governance/onboarding_journal_revision_audit_v1.md`
