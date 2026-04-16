@@ -8,6 +8,7 @@ PACKETS = ROOT / 'reports' / 'status' / 'packets'
 MANUAL = ROOT / 'reports' / 'owner' / 'owner_manual_tasks_v1.json'
 ACTION_OUT = ROOT / 'reports' / 'owner' / 'owner_action_board_v1.html'
 DECISION_OUT = ROOT / 'reports' / 'owner' / 'owner_decision_board_v1.html'
+OUTBOX = ROOT / 'exchange' / 'chatgpt' / 'outbox'
 
 
 def branch() -> str:
@@ -56,6 +57,28 @@ def load_packet_items(br: str) -> list[dict]:
     return items
 
 
+
+
+def load_owner_packets(br: str) -> list[dict]:
+    items = []
+    for p in sorted(OUTBOX.glob('*__owner_decision_packet_v1.md')):
+        rel = str(p.relative_to(ROOT))
+        recommendation = 'review'
+        for line in p.read_text(encoding='utf-8').splitlines():
+            if line.strip().startswith('- recommendation:'):
+                recommendation = line.split(':',1)[1].strip()
+                break
+        items.append({
+            'type': 'decision-packet',
+            'title': p.name.replace('__owner_decision_packet_v1.md', '').replace('-', ' '),
+            'needed_from_owner': human_rec(recommendation),
+            'details': f'Owner decision packet recommendation: {human_rec(recommendation)}',
+            'action_url': blob_url(rel, br),
+            'where_to_act': 'Open packet and apply owner decision',
+            'source': rel,
+        })
+    return items
+
 def load_manual() -> list[dict]:
     if not MANUAL.exists():
         return []
@@ -87,10 +110,11 @@ a{{color:#6ea8fe;}} code{{color:#8ac5ff;}}
 def main() -> int:
     br = branch()
     packet_items = load_packet_items(br)
+    owner_packets = load_owner_packets(br)
     manual = load_manual()
     ACTION_OUT.parent.mkdir(parents=True, exist_ok=True)
-    ACTION_OUT.write_text(render('Owner Action Board v1','Open owner needs (decision/input/task/feedback).', packet_items + manual), encoding='utf-8')
-    DECISION_OUT.write_text(render('Owner Decision Board v1','Decision-focused view from status packets.', packet_items), encoding='utf-8')
+    ACTION_OUT.write_text(render('Owner Action Board v1','Open owner needs (decision/input/task/feedback).', owner_packets + packet_items + manual), encoding='utf-8')
+    DECISION_OUT.write_text(render('Owner Decision Board v1','Decision-focused view from status packets and owner packets.', owner_packets + packet_items), encoding='utf-8')
     print(ACTION_OUT.relative_to(ROOT))
     print(DECISION_OUT.relative_to(ROOT))
     return 0

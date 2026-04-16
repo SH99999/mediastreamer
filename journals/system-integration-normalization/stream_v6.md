@@ -451,3 +451,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - added `docs/agents/agent_role_start_prompts_v1.md` with role prompts for SI, Dev Tuner, Dev Bridge, and Generic developer
 - added `reports/owner/owner_dashboard_v1.html` and updated `reports/status/index.md` aliases for dashboard/action/decision boards and role prompts
 - purpose: one-glance owner operation panel with clear clickable actions and fast role-based startup prompts
+
+### 2026-04-16 / si/owner-dashboard-action-normalization / audit next round packet + decision board inclusion
+- generated `exchange/chatgpt/outbox/repo-governance-audit__owner_decision_packet_v1.md` for the current audit round
+- updated `tools/governance/generate_owner_boards_v1.py` to include owner decision packets in action/decision boards
+- regenerated `reports/owner/owner_action_board_v1.html` and `reports/owner/owner_decision_board_v1.html`
+- purpose: ensure owner sees round decision packets directly in decision board with one-click open path
