@@ -7,4 +7,4 @@
 - response: `exchange/chatgpt/outbox/audit-findings-round1__response_v1.md`
 - branch plan: `si/chatgpt-git-exchange-v1`
 - owner decision needed: `accept | changes-requested | reject`
-- status: `initialized`
+- status: `response-written-awaiting-owner-decision`
