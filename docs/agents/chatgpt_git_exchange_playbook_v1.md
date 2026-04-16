@@ -66,6 +66,7 @@ Prefer short, structured artifacts over narrative text blocks.
 ## ChatGPT start prompt
 Use:
 - `docs/agents/chatgpt_start_prompt_git_exchange_v1.md`
+- This prompt now includes explicit "how to enter the chat with Codex loop" steps and branch-use rules.
 
 ## No-shell / GUI-only mode (single-file handoff)
 If ChatGPT cannot use terminal/shell or requires repeated file permission prompts:
