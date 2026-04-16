@@ -122,6 +122,7 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 - whether the repository should later move to private visibility if the cost/risk tradeoff changes
 - whether low-risk PR classes should later auto-merge once the current packaged-review model has matured further
 - whether project view creation for `Scale Radio Governance & Delivery` should be executed by API automation or owner one-time manual apply from the canonical blueprint
+- whether PR #85 faceplate bootstrap is accepted as Phase A suggestion scope before any broader governance integration package
 
 ## 6. Runtime / Deployment Notes
 - current validated deploy/rollback reference components:

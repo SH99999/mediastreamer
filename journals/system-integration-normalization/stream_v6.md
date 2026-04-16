@@ -238,3 +238,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated SI governance read chains and SI decision/status logs to lock this operating model
 - purpose: reduce owner PR-comment friction while preserving full rollback capability and governance robustness checks
 
+### 2026-04-16 / si/faceplate-intake-v1 / PR #85 normalized to suggestion-first intake
+- reviewed PR #85 as a suggestion package and removed broad governance/workflow replacements from the integration scope
+- kept faceplate component/journal bootstrap artifacts and added explicit integration proposal plus owner decision options
+- recorded that any broader governance mutation must follow a second approved integration package after owner decision
+- purpose: enforce review -> proposal -> owner approval -> governed integration sequence without accidental governance drift
+
