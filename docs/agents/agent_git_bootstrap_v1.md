@@ -33,7 +33,7 @@ Behavior:
 - invalid branch names (not `si/*`, `dev/*`, `integration/*`) are rejected
 - if `GH_TOKEN`/`GITHUB_TOKEN` exists and plain push auth fails, bootstrap configures a local repo credential helper for `https://github.com` and re-probes push auth
 - role hint output provides branch hint + startup packet lines for faster onboarding (`--role tuner|bridge|si|governance|generic`)
-- mode-B output keeps startup to need-to-know lines and emits a deferred packet pointer (`docs/agents/role_bootstrap_profiles_v1.md`) to avoid information loss while reducing initial read time
+- mode-B output keeps startup to need-to-know lines and emits one deferred packet pointer map (`docs/agents/role_bootstrap_reference_map_v1.md`) plus role profile source (`docs/agents/role_bootstrap_profiles_v1.md`) to avoid information loss while reducing initial read time
 
 Optional environment overrides:
 - `CANONICAL_REMOTE_NAME` (default: `git`)

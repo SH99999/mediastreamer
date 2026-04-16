@@ -2,6 +2,7 @@
 
 ## Purpose
 Provide role-oriented startup packs for bootstrap mode-B so onboarding becomes faster without losing governance-critical information.
+Canonical pointer map: `docs/agents/role_bootstrap_reference_map_v1.md`.
 
 ## Mode model
 - `classic`: full standard read-order expectation
@@ -21,8 +22,7 @@ Mode-B is optimization only. It does not relax branch doctrine, protected-`main`
   - `journals/scale-radio-tuner/current_state_v2.md`
 - deferred packet:
   - `journals/scale-radio-tuner/stream_v2.md`
-  - `docs/agents/status_prompt_reports_v1.md`
-  - `contracts/repo/release_intake_and_delivery_status_v2.md`
+  - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`
 
 ### bridge
 - branch hint: `dev/bridge`
@@ -30,8 +30,7 @@ Mode-B is optimization only. It does not relax branch doctrine, protected-`main`
   - `journals/scale-radio-bridge/current_state_v1.md`
 - deferred packet:
   - `journals/scale-radio-bridge/stream_v1.md`
-  - `docs/agents/status_prompt_reports_v1.md`
-  - `contracts/repo/release_intake_and_delivery_status_v2.md`
+  - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`
 
 ### system-integration / governance
 - branch hint: `si/<topic>`
@@ -46,8 +45,8 @@ Mode-B is optimization only. It does not relax branch doctrine, protected-`main`
 - branch hint: `si/<topic>` or `dev/<component>`
 - startup add-on: none
 - deferred packet:
+  - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`
   - `contracts/repo/system_integration_governance_index_v7.md`
-  - `docs/agents/status_prompt_reports_v1.md`
 
 ## Escalation triggers (mode-B -> full read-order)
 Escalate to full read-order immediately if one of the following is true:

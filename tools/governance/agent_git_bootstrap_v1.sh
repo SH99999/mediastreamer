@@ -95,7 +95,8 @@ role_bootstrap_lines() {
 
   if [[ "${mode}" == "mode-b" ]]; then
     echo "- context mode: mode-b (need-to-know first, deferred full read-order)"
-    echo "- deferred packet: docs/agents/role_bootstrap_profiles_v1.md (role pack + escalation triggers)"
+    echo "- deferred packet: docs/agents/role_bootstrap_reference_map_v1.md (single-source deferred links)"
+    echo "- deferred profile source: docs/agents/role_bootstrap_profiles_v1.md (role pack + escalation triggers)"
   else
     echo "- context mode: classic (full standard read-order expected)"
   fi

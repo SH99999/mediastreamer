@@ -335,3 +335,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - added `docs/agents/role_bootstrap_profiles_v1.md` as canonical role-pack mapping with explicit escalation triggers
 - updated `docs/agents/agent_git_bootstrap_v1.md` with mode-B usage and environment controls
 - purpose: reduce onboarding read-time while preserving no-loss governance coverage via deferred packet + escalation contract
+
+### 2026-04-16 / si/bootstrap-role-mode-b-v1 / reference-map hardening for lower cross-reference maintenance
+- added `docs/agents/role_bootstrap_reference_map_v1.md` as a single-source deferred reference map for mode-B bootstrap
+- updated bootstrap output to point first to the reference map and second to role profiles
+- updated role profiles to consume shared deferred references via reference map, reducing repeated cross-links in each role section
+- purpose: keep mode-B fast while reducing documentation maintenance overhead and preserving deterministic escalation paths
