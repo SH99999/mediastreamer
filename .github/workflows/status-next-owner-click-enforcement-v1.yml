@@ -9,6 +9,7 @@ on:
       - 'tools/governance/status_next_owner_click_enforcement_v1.py'
       - 'tools/governance/schemas/status_packet_v1.schema.json'
       - 'contracts/repo/status_packet_reporting_contract_v1.md'
+      - 'contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md'
   workflow_dispatch:
 
 permissions:

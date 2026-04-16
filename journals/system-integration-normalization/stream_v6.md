@@ -307,3 +307,11 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - added workflow `.github/workflows/si-branch-scope-guard-v1.yml` to run branch-scope validation on governance/system-integration PRs
 - updated SI governance index and SI recovery onboarding to include branch-scope guard standard in read order and locked operating rules
 - purpose: execute PR-P5 by preventing SI/governance truth mutations from non-`si/*` branches while preserving warn-only rollback mode
+
+### 2026-04-16 / si/governance-model-optimization-p6 / P6 owner decision scoring and rollback one-click contract
+- added `contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md` to lock scoring fields (`evidence_quality`, `rollback_readiness`, `blast_radius`, `confidence`) and rollback one-click action fields
+- extended `contracts/repo/status_packet_reporting_contract_v1.md`, `contracts/repo/owner_decision_click_automation_standard_v1.md`, and packet schema `tools/governance/schemas/status_packet_v1.schema.json` with mandatory decision scoring + rollback action structures
+- updated `tools/governance/generate_status_reports_v1.py` to emit decision scoring and rollback action fields in packet JSON and owner-action markdown sections
+- extended `tools/governance/status_next_owner_click_enforcement_v1.py` and enforcement workflow triggers to validate scoring + rollback fields
+- updated SI governance index/onboarding + SI merge-request executive summary contract to include scoring and rollback one-click expectations
+- purpose: execute PR-P6 with deterministic decision-quality scoring and rollback-ready owner action contract while preserving feature-flag fallback

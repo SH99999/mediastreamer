@@ -49,6 +49,7 @@ Reports are generated from repo truth files so prompts can be handled without hi
 - canonical schema: `tools/governance/schemas/status_packet_v1.schema.json`
 - governance contract: `contracts/repo/status_packet_reporting_contract_v1.md`
 - generated markdown reports must include owner action contract fields (`recommended_owner_action`, `next_owner_click`, `source_commit`)
+- generated markdown reports must include decision scoring and rollback one-click fields (`decision_scoring.*`, `rollback_action.command`)
 - generated JSON packets under `reports/status/packets/` are the cross-agent handoff payload
 
 

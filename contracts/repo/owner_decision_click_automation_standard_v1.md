@@ -30,6 +30,12 @@ Optional fields:
 - `scope`
 - `followup_note`
 
+Decision scoring fields (mandatory for decision packets/views):
+- `evidence_quality`: `0..3`
+- `rollback_readiness`: `0..3`
+- `blast_radius`: `low | medium | high`
+- `confidence`: `0..100`
+
 ## Click-path precedence
 1. Project custom fields on the owner queue item (preferred click-path).
 2. Structured PR comment block with marker `<!-- owner-decision-v1 -->` (fallback when project-field API bridge is unavailable).
@@ -66,9 +72,16 @@ Owner decision synchronization should maintain exactly one active state label:
 ## Rollback model (mandatory)
 Automation must be reversible without history loss:
 - feature-flag gate: `OWNER_DECISION_AUTOMATION_ENABLED`
+- scoring toggle: `OWNER_DECISION_SCORING_ENABLED`
 - rollback action: disable flag and revert to manual owner comments/labels
 - no destructive mutation of journals or decision logs during rollback
 - synchronization comments remain as evidence trail
+
+### Rollback one-click action contract
+Decision-ready packets must include:
+- exact rollback command
+- explicit post-rollback verification checklist
+- owner-click-ready action marker for rollback execution path (`run_workflow` or explicit revert command path)
 
 ## Satellite processes that must stay aligned
 - owner operational reference

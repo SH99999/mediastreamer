@@ -12,6 +12,8 @@
     "blockers",
     "recommended_owner_action",
     "next_owner_click",
+    "decision_scoring",
+    "rollback_action",
     "timestamp",
     "source_commit"
   ],
@@ -63,6 +65,67 @@
         "run_workflow",
         "defer"
       ]
+    },
+    "decision_scoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_quality",
+        "rollback_readiness",
+        "blast_radius",
+        "confidence"
+      ],
+      "properties": {
+        "evidence_quality": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "rollback_readiness": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "blast_radius": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "confidence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "rollback_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "command",
+        "verification"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verification": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
     },
     "timestamp": {
       "type": "string",

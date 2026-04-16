@@ -24,7 +24,12 @@ _Generated: 2026-04-16T00:00:00+00:00_
 ## Owner action contract
 - recommended owner action: `changes-requested`
 - next_owner_click: `request_changes`
-- source_commit: `14a62c22c97e1c9e685dafc025b4f0243ce6a989`
+- decision_scoring.evidence_quality: `2`
+- decision_scoring.rollback_readiness: `2`
+- decision_scoring.blast_radius: `medium`
+- decision_scoring.confidence: `68`
+- rollback_action.command: `git revert <merge_commit_for_bridge>`
+- source_commit: `44307cda45834d82763007c121982c4d2e7c78a4`
 
 ## Visual snapshot
 ```mermaid

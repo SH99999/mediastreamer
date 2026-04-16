@@ -15,6 +15,8 @@ Provide a one-click owner review packet so the owner can decide and merge with m
 5. `rollback_plan` (exact revert command + post-check)
 6. `risk_level` (`low | medium | high`)
 7. `next_owner_click` (`approve_pr | request_changes | defer`)
+8. `decision_scoring` (`evidence_quality`, `rollback_readiness`, `blast_radius`, `confidence`)
+9. `rollback_one_click` (exact rollback command + verification checks)
 
 ## Standard owner-facing output block
 ```text
@@ -26,6 +28,7 @@ SI Merge Request (Prepared)
   - <bullet 2>
   - <bullet 3>
 - Risk level: <low|medium|high>
+- Decision scoring: evidence_quality=<0-3>, rollback_readiness=<0-3>, blast_radius=<low|medium|high>, confidence=<0-100>
 - Rollback: <exact revert command>
 - Owner decision needed: <accept|changes-requested|reject>
 - Next owner click: <approve_pr|request_changes|defer>

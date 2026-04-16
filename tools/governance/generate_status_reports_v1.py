@@ -49,6 +49,8 @@ def status_packet(
     blockers: list[str],
     recommended_owner_action: str,
     next_owner_click: str,
+    decision_scoring: dict,
+    rollback_action: dict,
     generated_at: str,
     source_commit_id: str,
 ) -> dict:
@@ -60,8 +62,37 @@ def status_packet(
         "blockers": blockers,
         "recommended_owner_action": recommended_owner_action,
         "next_owner_click": next_owner_click,
+        "decision_scoring": decision_scoring,
+        "rollback_action": rollback_action,
         "timestamp": generated_at,
         "source_commit": source_commit_id,
+    }
+
+
+def default_decision_scoring(blockers: list[str]) -> dict:
+    if blockers:
+        return {
+            "evidence_quality": 2,
+            "rollback_readiness": 2,
+            "blast_radius": "medium",
+            "confidence": 68,
+        }
+    return {
+        "evidence_quality": 3,
+        "rollback_readiness": 3,
+        "blast_radius": "low",
+        "confidence": 85,
+    }
+
+
+def default_rollback_action(component: str) -> dict:
+    return {
+        "enabled": True,
+        "command": f"git revert <merge_commit_for_{component}>",
+        "verification": [
+            "rerun governance/report checks",
+            "confirm owner action contract fields still render",
+        ],
     }
 
 
@@ -70,6 +101,11 @@ def owner_contract_block(packet: dict) -> list[str]:
         "## Owner action contract",
         f"- recommended owner action: `{packet['recommended_owner_action']}`",
         f"- next_owner_click: `{packet['next_owner_click']}`",
+        f"- decision_scoring.evidence_quality: `{packet['decision_scoring']['evidence_quality']}`",
+        f"- decision_scoring.rollback_readiness: `{packet['decision_scoring']['rollback_readiness']}`",
+        f"- decision_scoring.blast_radius: `{packet['decision_scoring']['blast_radius']}`",
+        f"- decision_scoring.confidence: `{packet['decision_scoring']['confidence']}`",
+        f"- rollback_action.command: `{packet['rollback_action']['command']}`",
         f"- source_commit: `{packet['source_commit']}`",
         "",
     ]
@@ -88,6 +124,8 @@ def status_from_component(component: str, current_state_path: Path, stream_path:
         blockers=gaps,
         recommended_owner_action="changes-requested" if gaps else "accept",
         next_owner_click="request_changes" if gaps else "approve_pr",
+        decision_scoring=default_decision_scoring(gaps),
+        rollback_action=default_rollback_action(component.lower()),
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -159,6 +197,8 @@ def governance_status_report(si_status_path: Path, generated_at: str, source_com
         blockers=broken,
         recommended_owner_action="changes-requested" if broken else "accept",
         next_owner_click="request_changes" if broken else "approve_pr",
+        decision_scoring=default_decision_scoring(broken),
+        rollback_action=default_rollback_action("governance"),
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -206,6 +246,8 @@ def ui_status_report(ui_stream_path: Path, generated_at: str, source_commit_id: 
         blockers=[],
         recommended_owner_action="accept",
         next_owner_click="approve_pr",
+        decision_scoring=default_decision_scoring([]),
+        rollback_action=default_rollback_action("ui"),
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -246,6 +288,8 @@ def decisions_report(decisions_path: Path, generated_at: str, source_commit_id: 
         blockers=[],
         recommended_owner_action="defer",
         next_owner_click="defer",
+        decision_scoring=default_decision_scoring([]),
+        rollback_action=default_rollback_action("decisions"),
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )
@@ -306,6 +350,8 @@ def blocker_report(si_status_path: Path, generated_at: str, source_commit_id: st
         blockers=broken + open_decisions,
         recommended_owner_action="run_workflow" if broken or open_decisions else "defer",
         next_owner_click="run_workflow" if broken or open_decisions else "defer",
+        decision_scoring=default_decision_scoring(broken + open_decisions),
+        rollback_action=default_rollback_action("blocker"),
         generated_at=generated_at,
         source_commit_id=source_commit_id,
     )

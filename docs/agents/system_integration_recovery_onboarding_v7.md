@@ -86,17 +86,18 @@ The system-integration stream operates as the control-plane function set for the
 24. `contracts/repo/ui_ux_stage_b_autonomous_loop_standard_v1.md`
 25. `contracts/repo/deployment_test_strategy_standard_v1.md`
 26. `contracts/repo/owner_decision_click_automation_standard_v1.md`
-27. `docs/agents/status_prompt_reports_v1.md`
-28. `docs/agents/chatgpt_governed_intake_prompt_v1.md`
-29. `tools/governance/scale_radio_governance_delivery_views_v1.md`
-30. `docs/agents/owner_operational_reference_v1.md`
-31. `docs/agents/si_merge_request_executive_summary_v1.md`
-32. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-33. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-34. `journals/system-integration-normalization/stream_v6.md`
-35. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-36. `journals/scale-radio-bridge/current_state_v1.md`
-37. `journals/scale-radio-tuner/current_state_v2.md`
+27. `contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md`
+28. `docs/agents/status_prompt_reports_v1.md`
+29. `docs/agents/chatgpt_governed_intake_prompt_v1.md`
+30. `tools/governance/scale_radio_governance_delivery_views_v1.md`
+31. `docs/agents/owner_operational_reference_v1.md`
+32. `docs/agents/si_merge_request_executive_summary_v1.md`
+33. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+34. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+35. `journals/system-integration-normalization/stream_v6.md`
+36. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+37. `journals/scale-radio-bridge/current_state_v1.md`
+38. `journals/scale-radio-tuner/current_state_v2.md`
 
 
 ## Locked operating rules
@@ -111,6 +112,7 @@ The system-integration stream operates as the control-plane function set for the
 - system integration uses short-lived repo-control-plane branches to `main` by default
 - merged short-lived `si/*` branches should be removed (local + remote) after merge unless a documented retention exception exists
 - `next_owner_click` should be present in generated status pages and enforced by automation checks
+- decision scoring and rollback one-click action fields should be present in generated packets/views and enforced by automation checks
 - governance source registry lint should stay active to prevent duplicated authority rules
 - SI branch-scope guard should block governed file mutations from non-`si/*` branches (warn-only mode allowed with `SI_BRANCH_GUARD_ENFORCE=false`)
 - `integration/staging` is exception-only for temporary integration-owned staging work

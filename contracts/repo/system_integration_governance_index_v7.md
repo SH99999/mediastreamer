@@ -34,16 +34,17 @@ This file is the current entrypoint for system integration governance, recovery,
 22. `contracts/repo/ui_ux_stage_b_autonomous_loop_standard_v1.md`
 23. `contracts/repo/deployment_test_strategy_standard_v1.md`
 24. `contracts/repo/owner_decision_click_automation_standard_v1.md`
-25. `docs/agents/agent_git_bootstrap_v1.md`
-26. `docs/agents/status_prompt_reports_v1.md`
-27. `docs/agents/system_integration_recovery_onboarding_v7.md`
-28. `docs/agents/owner_operational_reference_v1.md`
-29. `docs/agents/si_merge_request_executive_summary_v1.md`
-30. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
-31. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
-32. `journals/system-integration-normalization/stream_v6.md`
-33. `journals/system-integration-normalization/ui_gui_stream_v1.md`
-34. `tools/governance/scale_radio_governance_delivery_views_v1.md`
+25. `contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md`
+26. `docs/agents/agent_git_bootstrap_v1.md`
+27. `docs/agents/status_prompt_reports_v1.md`
+28. `docs/agents/system_integration_recovery_onboarding_v7.md`
+29. `docs/agents/owner_operational_reference_v1.md`
+30. `docs/agents/si_merge_request_executive_summary_v1.md`
+31. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+32. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+33. `journals/system-integration-normalization/stream_v6.md`
+34. `journals/system-integration-normalization/ui_gui_stream_v1.md`
+35. `tools/governance/scale_radio_governance_delivery_views_v1.md`
 
 
 ## Locked operating model
@@ -56,6 +57,7 @@ This file is the current entrypoint for system integration governance, recovery,
 - SI handoff must include a prepared merge-request executive summary comment with executive summary + risk level + rollback command + next owner click
 - agent status reporting should emit `status_packet_v1` payloads and render markdown from packet data for owner-facing views
 - `next_owner_click` should be present in all generated status views and validated by enforcement checks
+- decision scoring fields and rollback one-click action contract should be present in decision/status packets (`evidence_quality`, `rollback_readiness`, `blast_radius`, `confidence`, `rollback_action`)
 - governance source registry should stay authoritative and duplicate-authority lint checks should remain active
 - SI branch-scope guard should block governed file mutations from non-`si/*` branches (warn-only mode allowed with `SI_BRANCH_GUARD_ENFORCE=false`)
 - owner remains the only merge authority for protected `main` after governance validation gates pass
