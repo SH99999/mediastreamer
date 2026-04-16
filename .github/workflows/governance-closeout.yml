@@ -84,6 +84,20 @@ jobs:
             pattern = re.compile(r'(?i)\b(?:close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+#(\d+)')
             return sorted(set(int(x) for x in pattern.findall(text or '')))
 
+          def pr_is_merged(number):
+            try:
+              pr = req('GET', f'/pulls/{number}')
+            except urllib.error.HTTPError:
+              return False
+            return bool(pr and pr.get('merged_at'))
+
+          def issue_has_merged_source_pr(issue):
+            text = '\n'.join([issue.get('title') or '', issue.get('body') or ''])
+            refs = extract_refs(text)
+            if not refs:
+              return False
+            return any(pr_is_merged(n) for n in refs)
+
           def is_governance_issue(label_names):
             prefixes = ('component:', 'impact:', 'type:', 'agent:', 'state:', 'source:')
             if 'governance' in label_names or 'weekly-governance-report' in label_names:
@@ -92,6 +106,13 @@ jobs:
 
           ensure_labels()
           pr = req('GET', f'/pulls/{pr_number}')
+          pr_files = paginated(f'/pulls/{pr_number}/files')
+          changed_paths = [f.get('filename', '') for f in pr_files]
+          governance_truth_touched = any(
+            path.startswith(prefix)
+            for path in changed_paths
+            for prefix in ('contracts/repo/', 'journals/', 'docs/agents/', 'tools/governance/')
+          )
           pr_text = '\n'.join([pr.get('title') or '', pr.get('body') or ''])
           referenced = extract_refs(pr_text)
           closing = set(extract_closing_refs(pr_text))
@@ -109,9 +130,15 @@ jobs:
               continue
 
             retained = [name for name in label_names if not name.startswith('state:')]
-            final_labels = sorted(set(retained + ['state:done']))
-
-            desired_state = 'closed' if issue_number in closing else issue.get('state', 'open')
+            has_merged_source = issue_has_merged_source_pr(issue)
+            can_transition_done = governance_truth_touched and has_merged_source
+            if can_transition_done:
+              transition_label = 'state:done'
+              desired_state = 'closed' if issue_number in closing else issue.get('state', 'open')
+            else:
+              transition_label = 'state:docs-update-required'
+              desired_state = 'open'
+            final_labels = sorted(set(retained + [transition_label]))
             req('PATCH', f'/issues/{issue_number}', {
               'labels': final_labels,
               'state': desired_state,
@@ -126,12 +153,20 @@ jobs:
                 '',
                 f'- merged PR: #{pr_number}',
                 f'- PR title: {pr.get("title")}',
-                '- state labels normalized to `state:done`',
+                f'- transition path: `{transition_label}`',
               ]
-              if issue_number in closing:
-                body_lines.append('- issue closed because the PR body used an explicit closing keyword')
+              if can_transition_done:
+                body_lines.append('- source PR merged and governance/journal/docs truth touched in this merged PR')
               else:
-                body_lines.append('- issue left open because no explicit closing keyword was found in the PR body')
+                body_lines.append('- transition to `state:done` blocked because required closeout conditions were not met')
+                if not governance_truth_touched:
+                  body_lines.append('- missing condition: no governance/journal/docs/truth path changed in this PR')
+                if not has_merged_source:
+                  body_lines.append('- missing condition: issue body/title did not reference any merged source PR')
+              if issue_number in closing and can_transition_done:
+                body_lines.append('- issue closed because the PR body used an explicit closing keyword after closeout conditions passed')
+              else:
+                body_lines.append('- issue left open (no close keyword, or closeout conditions not satisfied)')
               req('POST', f'/issues/{issue_number}/comments', {'body': '\n'.join(body_lines)})
 
           print(f'processed={len(referenced)}')

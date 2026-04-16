@@ -330,6 +330,7 @@ Acceptance:
 Branch suggestions:
 - `si/historical-boundary-hardening-v1`
 - `si/tiered-onboarding-v1`
+- `si/authority-compression-onboarding-hardening-v1` (combined package when both scope slices ship together)
 
 ### Package 2A — historical boundary hardening
 Actions:

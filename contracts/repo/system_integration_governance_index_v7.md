@@ -9,7 +9,29 @@ This file is the current entrypoint for system integration governance, recovery,
 - `docs/agents/` = agent-facing onboarding and recovery material
 - `tools/governance/` = machine-readable governance support data used by workflows
 
-## Read order
+## Active SI truth path (authoritative)
+Use this exact path for all active SI startup/onboarding flows:
+1. `AGENTS.md`
+2. `contracts/repo/system_integration_governance_index_v7.md`
+3. `docs/agents/si_target_operating_model_v1.md`
+4. `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+5. `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+6. `journals/system-integration-normalization/stream_v6.md`
+
+Interpretation rule:
+- contracts + current SI status/decisions/stream are authoritative
+- reports/issues/dashboards/boards/chat memory are derived/supporting surfaces only
+- historical SI stream generations are deep-history only and must not be used as active startup truth
+
+## SI onboarding tiers (derived from authority, not parallel truth)
+- Tier 0 (safe-start target `< 5 minutes`): branch/remote preflight + active SI truth path + first actions
+- Tier 1 (working-context target `< 15 minutes`): active status/decisions/stream + currently enforced operating constraints
+- Tier 2 (deep history): older stream generations, superseded docs, and historical addenda for forensic context only
+
+## Meta-freeze rule (stabilization guard)
+Do not add new dashboards/prompts/boards/summaries/exchange artifacts unless replacing an existing canonical artifact in the same PR.
+
+## Full reference read order (deep context, not required for Tier-0 safe-start)
 1. `AGENTS.md`
 2. `contracts/repo/branch_strategy_v2.md`
 3. `contracts/repo/component_artifact_model_v1.md`
