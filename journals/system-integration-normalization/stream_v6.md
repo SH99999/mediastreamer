@@ -293,3 +293,10 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated status report workflow trigger set and status reporting docs to include packet schema/contract files and packet artifact outputs
 - updated SI governance/onboarding read orders to include the new status packet reporting contract
 - purpose: execute PR-P2 by introducing deterministic machine-readable status handoff plus markdown adapter compatibility
+
+### 2026-04-16 / si/governance-model-optimization / P3+P4 next-owner-click enforcement and source-registry lint
+- added `tools/governance/status_next_owner_click_enforcement_v1.py` and workflow `.github/workflows/status-next-owner-click-enforcement-v1.yml` to enforce `next_owner_click` + `source_commit` contract across generated status reports and packet artifacts
+- added `contracts/repo/governance_source_registry_standard_v1.md`, `tools/governance/governance_source_registry_v1.json`, and `tools/governance/governance_source_registry_lint_v1.py` with workflow `.github/workflows/governance-source-registry-lint-v1.yml`
+- updated SI governance index and SI onboarding read orders with source-registry governance contract and explicit enforcement expectations
+- updated status prompt/report guide with enforcement check references
+- purpose: execute PR-P3 and PR-P4 in one package while preserving deterministic owner action routing and duplicate-authority guardrails
