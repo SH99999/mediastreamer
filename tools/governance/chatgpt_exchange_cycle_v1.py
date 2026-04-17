@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Initialize a governed ChatGPT exchange cycle.
-Creates request/response files from templates and appends a stream entry.
+Creates request/response files from templates, optional demand intake,
+and appends a stream entry.
 """
 
 from __future__ import annotations
@@ -15,9 +16,11 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 EXCHANGE_ROOT = REPO_ROOT / "exchange" / "chatgpt"
 INBOX = EXCHANGE_ROOT / "inbox"
 OUTBOX = EXCHANGE_ROOT / "outbox"
+DEMANDS = EXCHANGE_ROOT / "demands"
 STREAM = EXCHANGE_ROOT / "streams" / "stream_v1.md"
 REQ_TEMPLATE = INBOX / "TEMPLATE__request_v1.md"
 RESP_TEMPLATE = OUTBOX / "TEMPLATE__response_v1.md"
+DEMAND_TEMPLATE = DEMANDS / "TEMPLATE__intake_v1.md"
 
 
 def slugify(value: str) -> str:
@@ -48,7 +51,7 @@ def main() -> int:
     parser.add_argument("--topic", required=True, help="exchange topic label")
     parser.add_argument(
         "--actor",
-        default="codex",
+        default="chatgpt",
         choices=["codex", "chatgpt"],
         help="who initialized this cycle entry",
     )
@@ -56,6 +59,11 @@ def main() -> int:
         "--branch-plan",
         default="si/<topic>",
         help="planned implementation branch path",
+    )
+    parser.add_argument(
+        "--create-demand",
+        action="store_true",
+        help="also create a demand intake artifact from template",
     )
     args = parser.parse_args()
 
@@ -76,6 +84,15 @@ def main() -> int:
     request_file.write_text(render_template(REQ_TEMPLATE, topic, cycle_id), encoding="utf-8")
     response_file.write_text(render_template(RESP_TEMPLATE, topic, cycle_id), encoding="utf-8")
 
+    demand_rel = "n/a"
+    if args.create_demand:
+        demand_name = f"{topic}__intake_v1.md"
+        demand_file = DEMANDS / demand_name
+        if demand_file.exists():
+            raise SystemExit("demand intake file already exists for topic")
+        demand_file.write_text(render_template(DEMAND_TEMPLATE, topic, cycle_id), encoding="utf-8")
+        demand_rel = f"exchange/chatgpt/demands/{demand_name}"
+
     ensure_stream()
     with STREAM.open("a", encoding="utf-8") as fh:
         fh.write(
@@ -83,14 +100,17 @@ def main() -> int:
             f"- actor: `{args.actor}`\n"
             f"- request: `exchange/chatgpt/inbox/{request_name}`\n"
             f"- response: `exchange/chatgpt/outbox/{response_name}`\n"
+            f"- demand: `{demand_rel}`\n"
             f"- branch plan: `{args.branch_plan}`\n"
             f"- owner decision needed: `accept | changes-requested | reject`\n"
-            f"- status: `initialized`\n"
+            f"- status transition: `draft -> chatok -> ready-for-codex`\n"
         )
 
     print(f"initialized cycle: {cycle_id}")
     print(request_file.relative_to(REPO_ROOT))
     print(response_file.relative_to(REPO_ROOT))
+    if args.create_demand:
+        print(demand_rel)
     print(STREAM.relative_to(REPO_ROOT))
     return 0
 

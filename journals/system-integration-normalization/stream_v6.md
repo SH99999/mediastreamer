@@ -3,6 +3,14 @@
 Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream because tuner now has a real repo-driven manual deploy/rollback lane after Bridge proved the lock-aware runtime path on the Pi.
 
 ## Entries
+
+### 2026-04-17 / si/chat-to-demand-autoroute-and-repo-continuity-v1 / chat-to-demand autoroute + continuity
+- standardized governed chat-to-demand lifecycle (`chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`) in canonical exchange contract and protocol docs
+- added explicit 5-minute max chat-only continuity rule and required demand intake persistence contract for decisions/risks/blockers/non-loss requirements
+- tightened demand artifact structure with required sections and canonical template under `exchange/chatgpt/demands/TEMPLATE__intake_v1.md`
+- extended exchange automation: cycle bootstrap can create demand intake (`--create-demand`) and watcher now detects `ready-for-codex` across demand/request/basis artifacts
+- purpose: keep repo as durable memory and ensure Codex executes from governed Git artifacts rather than chat-memory reconstruction
+
 ### 2026-04-17 / si/authority-compression-onboarding-hardening-v1 / active-path compression + historical boundary hardening
 - compressed active SI startup/onboarding path to one authority chain with explicit Tier-0/Tier-1/Tier-2 boundaries and acceptance targets (`<5m`, `<15m`)
 - aligned SI governance index, onboarding v7, role bootstrap map/profile, and SI role start prompt to the same canonical startup path

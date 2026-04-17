@@ -28,6 +28,7 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - tuner deploy and rollback are validated on the target Pi through the manual lock-aware workflow lane
   - bridge and tuner are both enabled in the autonomous delivery support matrix
 - what partially works:
+  - chat-to-demand exchange lane remains active under `exchange/chatgpt/` with watcher support for `ready-for-codex` artifacts
   - autonomous delivery remains support-matrix gated, currently including Bridge and Tuner while Fun Line and other components remain unsupported until evidence-led claims are completed
   - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
   - tuner deploy normalization is intentionally scoped to overlay/runtime/service while source-selection behavior remains hardware-governed (encoder short/long press) until full integration
@@ -144,3 +145,4 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 2. normalize the next component wrapper contract after bridge and tuner
 3. keep source-project scope boundaries explicit (hardware-governed until full integration)
 4. standardize immutable payload naming and governed pointer resolution across deployable components
+5. enforce the 5-minute chat-to-demand continuity SLA for relevant chat outcomes and route all execution from demand artifacts

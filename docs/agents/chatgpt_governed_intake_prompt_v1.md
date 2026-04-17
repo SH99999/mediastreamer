@@ -15,7 +15,8 @@ Impacted components: <comma-separated component suffixes>
 Decision needed from owner: <single sentence>
 Options: <opt-a>; <opt-b>; <opt-c>
 Recommended option: <opt-a|opt-b|opt-c>
-Do the full governance flow: create/update intake issue fields, prepare decision_output_v1, update required governance/journal docs, commit on si/<topic>, push branch, open PR to main, and report only final approval action for owner.
+Create/update demand intake at exchange/chatgpt/demands/<topic>__intake_v1.md within 5 minutes and set status progression draft->chatok->ready-for-codex.
+Do the full governance flow: prepare documented Codex job via git, execute on si/<topic>, update required governance/journal truth, move demand through in-execution->ready-for-chatgpt-review->pre-ok->ready-for-owner->closed, push branch, open PR to main, and report only final approval action for owner.
 ```
 
 ## Owner prompt (strict form)
@@ -37,19 +38,23 @@ governed_intake_v1:
     - id: "opt-c"
       text: "<option c>"
   recommended_option: "opt-a"
+  non_loss_requirements:
+    - "capture demand artifact in repo within 5 minutes"
   execution_request:
     branch_topic: "si/<topic>"
     require_pr_to_main: true
+    require_chatgpt_pre_ok: true
     report_mode: "owner-approval-only"
 ```
 
 ## Expected agent output
 The agent should return:
-1. intake artifact path(s) or issue update fields
-2. `decision_output_v1` block
-3. branch + commit + PR URL
-4. one explicit owner action: approve/merge PR (or exact blocker)
+1. demand intake artifact path + status
+2. branch + commit + PR URL
+3. rollback command
+4. next owner click
+5. one explicit owner action: approve/merge PR (or exact blocker)
 
 ## Notes
 - `source_proposal_uri` can be a GitHub file URL, gist URL, issue comment URL, or an existing repo path.
-- If the proposal exists only in another chat, put it into a file once (gist/repo file) and reference the URI; after that no repeated copy/paste is needed.
+- If the proposal exists only in another chat, capture it into `exchange/chatgpt/demands/<topic>__intake_v1.md` first, then continue with governed execution.
