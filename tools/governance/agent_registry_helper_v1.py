@@ -23,13 +23,6 @@ REQUIRED_FIELDS = [
 ]
 REQUIRED_AGENT_IDS = {
     "si",
-    "dev-tuner",
-    "dev-bridge",
-    "dev-generic",
-    "dev-hardware",
-    "dev-fun-line",
-    "dev-autoswitch",
-    "dev-ux",
 }
 ALLOWED_STATUS = {"available", "unavailable", "planned"}
 ALLOWED_DELEGATION = {"yes", "no"}

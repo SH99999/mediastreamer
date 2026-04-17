@@ -23,6 +23,8 @@ Each agent entry must provide:
 
 Required baseline agent ids:
 - `si`
+
+Archived/non-running ids may remain listed for restart traceability:
 - `dev-tuner`
 - `dev-bridge`
 - `dev-generic`
@@ -35,14 +37,14 @@ Required baseline agent ids:
 | agent_id | status | role | branch_hint | owned_components | startup_prompt_path | bootstrap_command | can_receive_work_from_si |
 |---|---|---|---|---|---|---|---|
 | si | available | system-integration | si/<topic> | system-integration | docs/agents/agent_role_start_prompts_v1.md#si-role | bash tools/governance/agent_git_bootstrap_v1.sh --role si --mode mode-b | no |
-| dev-tuner | available | component-developer | dev/tuner | tuner | docs/agents/agent_role_start_prompts_v1.md#dev-tuner-role | bash tools/governance/agent_git_bootstrap_v1.sh --role tuner --mode mode-b | yes |
-| dev-bridge | available | component-developer | dev/bridge | bridge | docs/agents/agent_role_start_prompts_v1.md#dev-bridge-role | bash tools/governance/agent_git_bootstrap_v1.sh --role bridge --mode mode-b | yes |
-| dev-generic | available | generic-developer | dev/<component> or si/<topic> | - | docs/agents/agent_role_start_prompts_v1.md#generic-developer-role | bash tools/governance/agent_git_bootstrap_v1.sh --mode mode-b | yes |
-| dev-hardware | available | hardware-developer | dev/hardware | hardware | docs/agents/agent_role_start_prompts_v1.md#dev-hardware-role | bash tools/governance/agent_git_bootstrap_v1.sh --role hardware --mode mode-b | yes |
-| dev-fun-line | planned | component-developer | dev/fun-line | fun-line | docs/agents/agent_role_start_prompts_v1.md#dev-fun-line-role | bash tools/governance/agent_git_bootstrap_v1.sh --role fun-line --mode mode-b | no |
-| dev-starter | planned | component-developer | dev/starter | starter | docs/agents/agent_role_start_prompts_v1.md#generic-developer-role | bash tools/governance/agent_git_bootstrap_v1.sh --mode mode-b | no |
-| dev-autoswitch | planned | component-developer | dev/autoswitch | autoswitch | docs/agents/agent_role_start_prompts_v1.md#dev-autoswitch-role | bash tools/governance/agent_git_bootstrap_v1.sh --role autoswitch --mode mode-b | no |
-| dev-ux | planned | ux-developer | si/<topic> or dev/<component> | ui | docs/agents/agent_role_start_prompts_v1.md#dev-ux-role | bash tools/governance/agent_git_bootstrap_v1.sh --role ux --mode mode-b | no |
+| dev-tuner | unavailable | component-developer | dev/tuner | tuner | docs/agents/agent_role_start_prompts_v1.md#dev-tuner-role | bash tools/governance/agent_git_bootstrap_v1.sh --role tuner --mode mode-b | no |
+| dev-bridge | unavailable | component-developer | dev/bridge | bridge | docs/agents/agent_role_start_prompts_v1.md#dev-bridge-role | bash tools/governance/agent_git_bootstrap_v1.sh --role bridge --mode mode-b | no |
+| dev-generic | unavailable | generic-developer | dev/<component> or si/<topic> | - | docs/agents/agent_role_start_prompts_v1.md#generic-developer-role | bash tools/governance/agent_git_bootstrap_v1.sh --mode mode-b | no |
+| dev-hardware | unavailable | hardware-developer | dev/hardware | hardware | docs/agents/agent_role_start_prompts_v1.md#dev-hardware-role | bash tools/governance/agent_git_bootstrap_v1.sh --role hardware --mode mode-b | no |
+| dev-fun-line | unavailable | component-developer | dev/fun-line | fun-line | docs/agents/agent_role_start_prompts_v1.md#dev-fun-line-role | bash tools/governance/agent_git_bootstrap_v1.sh --role fun-line --mode mode-b | no |
+| dev-starter | unavailable | component-developer | dev/starter | starter | docs/agents/agent_role_start_prompts_v1.md#generic-developer-role | bash tools/governance/agent_git_bootstrap_v1.sh --mode mode-b | no |
+| dev-autoswitch | unavailable | component-developer | dev/autoswitch | autoswitch | docs/agents/agent_role_start_prompts_v1.md#dev-autoswitch-role | bash tools/governance/agent_git_bootstrap_v1.sh --role autoswitch --mode mode-b | no |
+| dev-ux | unavailable | ux-developer | dev/ux | ui | docs/agents/agent_role_start_prompts_v1.md#dev-ux-role | bash tools/governance/agent_git_bootstrap_v1.sh --role ux --mode mode-b | no |
 
 ## SI delegation rule
 SI must consult this registry before delegation and only delegate direct work to agents with:
