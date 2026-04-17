@@ -4,14 +4,14 @@
 Provide a standard path for two-lane collaboration (ChatGPT + Codex) using Git artifacts with low owner effort and minimal knowledge loss.
 
 ## Quick start
-1. Ensure the operational ChatGPT write branch is available:
-   - `integration/chatgpt`
+1. Run bootstrap on dedicated branch:
+   - `bash tools/governance/agent_git_bootstrap_v1.sh --role si --mode mode-b si/chatgpt-git-exchange-<topic>`
 2. Activate governed mode:
    - `governed mode on`
-3. Create/update live session continuity artifact first on `integration/chatgpt`:
+3. Create/update live session continuity artifact first:
    - `exchange/chatgpt/sessions/<topic>__live_v1.md`
    - optional (recommended): initialize/refresh materialized protocol artifact `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`
-4. Promote with `ship to codex` on `integration/chatgpt`:
+4. Promote with `ship to codex` into demand intake:
    - `exchange/chatgpt/demands/<topic>__intake_v1.md` -> `ready-for-codex` (internal `chatok`)
    - publish canonical main pickup snapshot `exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md` -> `pickup-ready`
    - helper: `python3 tools/governance/chatgpt_promote_live_to_demand_v1.py --topic \"<topic>\" --ship-to-codex`
@@ -44,7 +44,7 @@ If durable truth update is not ready, live session capture is mandatory and dema
 Use:
 
 ```bash
-python3 tools/governance/chatgpt_exchange_cycle_v1.py --topic "<topic>" --branch-plan "integration/chatgpt" --create-demand
+python3 tools/governance/chatgpt_exchange_cycle_v1.py --topic "<topic>" --branch-plan "si/<topic>" --create-demand
 ```
 
 This creates request/response files, an optional demand intake file, and appends a stream entry.
@@ -106,8 +106,3 @@ python3 tools/governance/chatgpt_no_shell_bundle_v1.py
 
 Then upload only:
 - `exchange/chatgpt/bundles/current_context_bundle_v1.md`
-
-## Operational clarification
-- routine ChatGPT-authored `ship to codex` writes happen on `integration/chatgpt`
-- do not open a fresh `si/*` branch just to write the exchange artifacts for a normal ChatGPT->Codex handoff
-- Codex remains responsible for any downstream target-branch fan-out, normalization manifest generation, PR creation, and execution reporting
