@@ -39,3 +39,11 @@
 - branch plan: `si/agent-registry-and-full-role-formalization-v1`
 - owner decision needed: `none`
 - status: `ready-for-codex`
+
+### 2026-04-17 / cycle codex-trigger-and-materialized-chat-protocol / ship-to-codex
+- actor: `chatgpt`
+- source file: `exchange/chatgpt/demands/codex-trigger-and-materialized-chat-protocol__intake_v1.md`
+- action: promoted current governed chat topic into demand intake and shipped to Codex
+- branch plan: `si/codex-trigger-and-materialized-chat-protocol-v1`
+- owner decision needed: `none`
+- status: `ready-for-codex`
