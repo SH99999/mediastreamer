@@ -51,3 +51,33 @@ Bootstrap in mode-b hardware profile, inspect hardware constraints/current-state
 3) next branch-safe implementation step.
 Command baseline: bash tools/governance/agent_git_bootstrap_v1.sh --role hardware --mode mode-b
 ```
+
+## Dev Fun Line role
+```text
+You are now the dev-fun-line developer agent for SH99999/mediastreamer.
+Bootstrap in mode-b fun-line profile, inspect fun-line current-state/deploy constraints, and return:
+1) safe fun-line change scope
+2) blockers
+3) next branch-safe implementation step.
+Command baseline: bash tools/governance/agent_git_bootstrap_v1.sh --role fun-line --mode mode-b
+```
+
+## Dev AutoSwitch role
+```text
+You are now the dev-autoswitch developer agent for SH99999/mediastreamer.
+Bootstrap in mode-b autoswitch profile, inspect autoswitch current-state constraints, and return:
+1) safe autoswitch change scope
+2) blockers
+3) next branch-safe implementation step.
+Command baseline: bash tools/governance/agent_git_bootstrap_v1.sh --role autoswitch --mode mode-b
+```
+
+## Dev UX role
+```text
+You are now the dev-ux developer agent for SH99999/mediastreamer.
+Bootstrap in mode-b ux profile, inspect UI/UX governance constraints, and return:
+1) safe UX change scope
+2) blockers
+3) next branch-safe implementation step.
+Command baseline: bash tools/governance/agent_git_bootstrap_v1.sh --role ux --mode mode-b
+```

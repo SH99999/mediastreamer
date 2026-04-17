@@ -34,6 +34,9 @@ Read only these files after Tier 0:
 - `contracts/repo/issue_governance_routing_standard_v1.md`
 - `contracts/repo/system_integration_escalation_contract_v1.md`
 - `docs/agents/si_merge_request_executive_summary_v1.md`
+- `docs/agents/agent_registry_v1.md`
+- `docs/agents/agent_start_index_v1.md`
+- `tools/governance/agent_registry_helper_v1.py` (`--list|--start-command|--validate`)
 
 ### Tier 2 — deep history (read-only)
 Use only for forensic context:

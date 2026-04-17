@@ -21,6 +21,22 @@ Reduce cross-reference maintenance by providing one canonical pointer map for mo
 - startup state source: `journals/scale-radio-bridge/current_state_v1.md`
 - stream source: `journals/scale-radio-bridge/stream_v1.md`
 
+### hardware
+- startup state source: `journals/scale-radio-hardware/current_state_v1.md`
+- stream source: `journals/scale-radio-hardware/stream_v1.md`
+
+### fun-line
+- startup state source: `journals/scale-radio-fun-line/current_state_v1.md`
+- stream source: `journals/scale-radio-fun-line/stream_v1.md`
+
+### autoswitch
+- startup state source: `journals/scale-radio-autoswitch/current_state_v1.md`
+- stream source: `journals/scale-radio-autoswitch/stream_v1.md`
+
+### ux
+- startup governance source: `contracts/repo/ui_gui_governance_standard_v1.md`
+- stream source: `journals/system-integration-normalization/ui_gui_stream_v1.md`
+
 ### system-integration / governance
 - startup governance source: `contracts/repo/system_integration_governance_index_v7.md`
 - onboarding source: `docs/agents/system_integration_recovery_onboarding_v7.md`

@@ -102,9 +102,10 @@ def render_report(results: list[CheckResult], out_path: Path) -> None:
         "1. report generation",
         "2. next-owner-click enforcement",
         "3. component claim consistency check",
-        "4. source registry lint",
-        "5. SI branch-scope guard",
-        "6. one-click field presence sweep",
+        "4. agent registry alignment check",
+        "5. source registry lint",
+        "6. SI branch-scope guard",
+        "7. one-click field presence sweep",
     ])
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -118,6 +119,7 @@ def main() -> int:
         run(f"python3 tools/governance/generate_status_reports_v1.py --repo-root . --out-dir reports/status --generated-at {timestamp}", root),
         run("python3 tools/governance/status_next_owner_click_enforcement_v1.py", root),
         run("python3 tools/governance/component_claim_consistency_check_v1.py", root),
+        run("python3 tools/governance/agent_registry_helper_v1.py --validate", root),
         run("python3 tools/governance/governance_source_registry_lint_v1.py", root),
         run("bash -lc \"printf 'contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md\\n' > /tmp/changed_files_guard.txt && python3 tools/governance/si_branch_scope_guard_v1.py --branch si/governance-integration-check-v1 --changed-files /tmp/changed_files_guard.txt --enforce true\"", root),
         one_click_presence(root),
