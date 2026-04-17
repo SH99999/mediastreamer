@@ -33,6 +33,7 @@ Behavior:
 - invalid branch names (not `si/*`, `dev/*`, `integration/*`) are rejected
 - if `GH_TOKEN`/`GITHUB_TOKEN` exists and plain push auth fails, bootstrap configures a local repo credential helper for `https://github.com` and re-probes push auth
 - role hint output provides branch hint + startup packet lines for faster onboarding (`--role tuner|bridge|starter|hardware|fun-line|autoswitch|ux|si|governance|generic`)
+- role alias compatibility is supported for registry ids too (`dev-bridge`, `dev-starter`, `dev-tuner`, `dev-hardware`, `dev-fun-line`, `dev-autoswitch`, `dev-ux`)
 - mode-B output keeps startup to need-to-know lines and emits one deferred packet pointer map (`docs/agents/role_bootstrap_reference_map_v1.md`) plus role profile source (`docs/agents/role_bootstrap_profiles_v1.md`) to avoid information loss while reducing initial read time
 
 Optional environment overrides:
@@ -41,7 +42,7 @@ Optional environment overrides:
 - `CANONICAL_BASE_BRANCH` (default: `main`)
 - `AUTO_SYNC_MAIN` (default: `true`) to auto-fetch/rebase `si/*`, `dev/*`, and `integration/*` branches onto latest `git/main`
 - `ROLE_HINT` (default: `generic`) role profile hint used for startup/deferred packet output
-  - supported role hints: `tuner | bridge | starter | hardware | fun-line | autoswitch | ux | si | governance | generic`
+  - supported role hints: `tuner | bridge | starter | hardware | fun-line | autoswitch | ux | si | governance | generic` (and matching `dev-*` aliases)
 - `BOOTSTRAP_CONTEXT_MODE` (default: `classic`) one of `classic` or `mode-b`
 
 ## Required first reply contract (agent -> owner)

@@ -18,7 +18,7 @@ Usage:
 
 Options:
   --branch <name>   Explicit branch prep target.
-  --role <name>     Role profile hint (tuner | bridge | starter | hardware | fun-line | autoswitch | ux | si | governance | generic).
+  --role <name>     Role profile hint (tuner|dev-tuner | bridge|dev-bridge | starter|dev-starter | hardware|dev-hardware | fun-line|dev-fun-line | autoswitch|dev-autoswitch | ux|dev-ux | si|system-integration | governance | generic).
   --mode <name>     Context mode:
                     - classic (existing behavior)
                     - mode-b  (need-to-know startup + deferred references)
@@ -69,25 +69,25 @@ fi
 
 if [[ -z "${REQUESTED_BRANCH}" ]]; then
   case "${ROLE_HINT}" in
-    tuner)
+    tuner|dev-tuner)
       REQUESTED_BRANCH="dev/tuner"
       ;;
-    bridge)
+    bridge|dev-bridge)
       REQUESTED_BRANCH="dev/bridge"
       ;;
-    starter)
+    starter|dev-starter)
       REQUESTED_BRANCH="dev/starter"
       ;;
-    hardware)
+    hardware|dev-hardware)
       REQUESTED_BRANCH="dev/hardware"
       ;;
-    fun-line|fun_line|funline)
+    fun-line|fun_line|funline|dev-fun-line|dev_fun_line|devfunline)
       REQUESTED_BRANCH="dev/fun-line"
       ;;
-    autoswitch|auto-switch|auto_switch)
+    autoswitch|auto-switch|auto_switch|dev-autoswitch|dev-auto-switch|dev_auto_switch)
       REQUESTED_BRANCH="dev/autoswitch"
       ;;
-    ux|ui-ux|uiux)
+    ux|ui-ux|uiux|dev-ux|dev-ui-ux|devuiux)
       REQUESTED_BRANCH="dev/ux"
       ;;
     generic)
@@ -100,37 +100,37 @@ role_bootstrap_lines() {
   local role="$1"
   local mode="$2"
   case "${role}" in
-    tuner)
+    tuner|dev-tuner)
       echo "- role profile: tuner"
       echo "- branch hint: dev/tuner"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-tuner/current_state_v2.md"
       ;;
-    bridge)
+    bridge|dev-bridge)
       echo "- role profile: bridge"
       echo "- branch hint: dev/bridge"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-bridge/current_state_v1.md"
       ;;
-    starter)
+    starter|dev-starter)
       echo "- role profile: starter"
       echo "- branch hint: dev/starter"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-starter/current_state_v1.md"
       ;;
-    hardware)
+    hardware|dev-hardware)
       echo "- role profile: hardware"
       echo "- branch hint: dev/hardware"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-hardware/current_state_v1.md"
       ;;
-    fun-line|fun_line|funline)
+    fun-line|fun_line|funline|dev-fun-line|dev_fun_line|devfunline)
       echo "- role profile: fun-line"
       echo "- branch hint: dev/fun-line"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-fun-line/current_state_v1.md"
       ;;
-    autoswitch|auto-switch|auto_switch)
+    autoswitch|auto-switch|auto_switch|dev-autoswitch|dev-auto-switch|dev_auto_switch)
       echo "- role profile: autoswitch"
       echo "- branch hint: dev/autoswitch"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-autoswitch/current_state_v1.md"
       ;;
-    ux|ui-ux|uiux)
+    ux|ui-ux|uiux|dev-ux|dev-ui-ux|devuiux)
       echo "- role profile: ux"
       echo "- branch hint: dev/ux"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; contracts/repo/ui_gui_governance_standard_v1.md"
