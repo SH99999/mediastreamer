@@ -16,6 +16,7 @@ Define deterministic decision-quality scoring and rollback one-click action fiel
 
 ## Canonical packet alignment
 Scoring and rollback fields must be embedded in `status_packet_v1` payloads and visible in owner-facing markdown report sections.
+Claim classes (`governance_docs`, `runtime_validation`, `autonomy_eligibility`) must be shown in the same owner-facing sections so scoring cannot be misread as runtime/autonomy validation by itself.
 
 ## Rollback toggle
 - scoring validation feature flag: `OWNER_DECISION_SCORING_ENABLED=false`
@@ -26,3 +27,7 @@ If scoring or rollback fields are missing:
 - do not claim decision packet is fully compliant
 - provide explicit blocker with missing keys
 - keep manual owner decision path available
+
+If runtime/autonomy claim evidence fields are missing:
+- do not present runtime as validated or autonomy as eligible
+- degrade to `not_claimed` and preserve truthful owner guidance

@@ -185,3 +185,115 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: owner PR decision flow, state-label synchronization, governance closeout readiness, and review click-path.
 - What it explicitly does NOT affect: protected-`main` merge approval authority or the requirement for docs/journal truth updates.
 - Follow-up needed: keep rollback switch and robustness checks active; disable automation quickly through `OWNER_DECISION_AUTOMATION_ENABLED=false` if behavior degrades.
+
+### DEC-system_integration_normalization-33
+- Status: locked
+- Decision: governance-closeout automation must require evidence-gated transitions (`source PR merged` + `governance/journal/docs truth updated`) before assigning `state:done`; otherwise it must keep issues open with `state:docs-update-required` and write an explicit audit-trail comment.
+- Date context: SI TOM stabilization and queue-closeout hardening phase
+- Why this was chosen: merged PR state alone can over-close queue items and produce false owner pressure when governance truth is not actually aligned.
+- What it affects: governance issue lifecycle reliability, owner queue trust, and closeout workflow behavior after merged PRs.
+- What it explicitly does NOT affect: explicit PR-body close keywords after all closeout conditions are satisfied.
+- Follow-up needed: periodically audit legacy open SI escalation items and close stale merged-source items with documented reasons.
+
+### DEC-system_integration_normalization-34
+- Status: locked
+- Decision: SI startup must use one tiered onboarding model derived from a single active authority path (AGENTS -> SI governance index -> SI TOM -> current SI status/decisions/stream); historical SI streams and superseded docs are Tier-2 deep history only.
+- Date context: authority-compression onboarding hardening phase
+- Why this was chosen: replacing parallel startup chains with one active path reduces misreads, lowers onboarding burden, and prevents historical docs from competing with current truth.
+- What it affects: SI role prompts, bootstrap reference mapping, onboarding guidance, and historical-stream labeling discipline.
+- What it explicitly does NOT affect: preservation of historical materials for forensic/audit use.
+- Follow-up needed: keep active startup references pointed at current truth and enforce deep-history boundaries when new stream generations are added.
+
+### DEC-system_integration_normalization-35
+- Status: locked
+- Decision: one-click owner/status packet outputs must split claims into `governance/docs accepted`, `runtime validated`, and `autonomy eligible`, and only runtime/deploy/rollback/autonomy classes are evidence-gated.
+- Date context: evidence-gated one-click hardening phase
+- Why this was chosen: previous one-click packets could be misread as broader runtime/autonomy validation, especially on governance/docs-only packages.
+- What it affects: status packet schema, report generators, enforcement checks, and owner packet wording.
+- What it explicitly does NOT affect: lightweight handling for governance/docs-only/control-plane packages that do not claim runtime/deploy/autonomy impact.
+- Follow-up needed: keep packet/report contract and enforcement checks aligned when claim fields evolve.
+
+### DEC-system_integration_normalization-36
+- Status: locked
+- Decision: component truth uses an explicit evidence-led claim ledger (`repo_ready_payload_present`, `deploy_ready`, `tested_on_target`, `rollback_verified`, `runtime_validated`, `autonomy_eligible`, `tested_scope`, `evidence_path`, `rollback_path`, `source_ref`) and status packets must align to that ledger.
+- Date context: component evidence-ledger and claim-normalization phase
+- Why this was chosen: component current-state, SI status, matrix posture, and owner/status packet wording were drifting and could overstate validation/autonomy.
+- What it affects: component current-state files, autonomous support matrix wording, status packet schema/report generation, and claim consistency checks.
+- What it explicitly does NOT affect: creation of new dashboards/boards/report surfaces.
+- Follow-up needed: keep component claim ledgers updated whenever deploy/rollback/runtime/autonomy truth changes materially.
+
+### DEC-system_integration_normalization-37
+- Status: locked
+- Decision: SI startup/onboarding uses one compressed active path with tiered scope (`Tier 0`, `Tier 1`, `Tier 2`) and active docs must not require historical/superseded material outside explicit Tier-2 deep-history use.
+- Date context: authority-compression onboarding hardening completion phase
+- Why this was chosen: long startup read chains and mixed active/historical references increased misread risk and onboarding burden.
+- What it affects: SI governance index, onboarding v7, role bootstrap references/profiles, and startup prompt wording.
+- What it explicitly does NOT affect: preservation of historical stream generations and superseded docs for forensic review.
+- Follow-up needed: keep active startup references anchored to the authority chain and treat any missing startup-referenced file as a repo-truth defect.
+
+
+### DEC-system_integration_normalization-38
+- Status: locked
+- Decision: the governed ChatGPT->Codex lifecycle is `chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`, with a maximum 5-minute chat-only continuity window for relevant outcomes.
+- Date context: chat-to-demand autoroute and repo-continuity hardening phase
+- Why this was chosen: execution drift and knowledge loss increase when decisions remain in chat memory instead of durable repo artifacts.
+- What it affects: exchange demand artifacts, watcher automation, playbook/start prompts, and owner handoff sequencing.
+- What it explicitly does NOT affect: creation of new dashboards/boards/html surfaces or parallel exchange systems outside `exchange/chatgpt/`.
+- Follow-up needed: keep demand artifact contract, status lifecycle, and watch automation aligned as exchange tooling evolves.
+
+
+### DEC-system_integration_normalization-39
+- Status: locked
+- Decision: governed chat mode is activated by `governed mode on`; after activation, relevant chat deltas must be persisted to `exchange/chatgpt/sessions/<topic>__live_v1.md` within 5 minutes and promoted at `chatok` to `exchange/chatgpt/demands/<topic>__intake_v1.md` with `ready-for-codex`.
+- Date context: chat governed-mode and repo continuity hardening phase
+- Why this was chosen: owner repetition and chat-memory-only drift remain high without a one-time activation model and live continuity artifact.
+- What it affects: exchange lifecycle semantics, watcher routing, live-to-demand promotion, and owner command surface.
+- What it explicitly does NOT affect: addition of dashboards/boards/html surfaces or creation of a second exchange system.
+- Follow-up needed: keep session template, promotion helper, and protocol statuses aligned as exchange tooling evolves.
+
+
+### DEC-system_integration_normalization-40
+- Status: locked
+- Decision: owner-minimal governed chat handoff uses only `governed mode on` and `ship to codex` before merge-after-`pre-ok`; `chatok` is internalized and demand closure is automated after merged PR + pre-ok + closeout-done conditions.
+- Date context: owner-minimal chat handoff hardening phase
+- Why this was chosen: owner should not execute internal lifecycle commands or manually close demand artifacts.
+- What it affects: exchange lifecycle wording, live->demand promotion helper, demand auto-close automation, and owner boards/index visibility of `pre-ok` / `ready-for-owner`.
+- What it explicitly does NOT affect: addition of new dashboards/boards/html surfaces or manual owner routing/decomposition work.
+- Follow-up needed: keep demand lifecycle tracking fields populated (`source_pr_url`, `chatgpt_review_result`, `governance_closeout_status`, `next_owner_click`) so auto-close remains reliable.
+
+
+### DEC-system_integration_normalization-41
+- Status: locked
+- Decision: chat-driven demand/idea items must carry an execution gate classification (`now|quick_win|backlog`) with rationale and promotion metadata; owner backlog visibility is provided through existing owner surfaces without creating new dashboard families.
+- Date context: execution-gate and backlog-portfolio hardening phase
+- Why this was chosen: good ideas were at risk of being lost or executed implicitly without explicit gate/risk handling and owner visibility.
+- What it affects: demand/idea templates, exchange governance wording, owner board generation, and owner status/dashboard guidance.
+- What it explicitly does NOT affect: manual owner routing/decomposition work or unrelated governance/runtime packages.
+- Follow-up needed: ensure each active demand/idea artifact maintains gate fields and portfolio metadata so quick-win pull-in and backlog preservation remain auditable.
+
+### DEC-system_integration_normalization-42
+- Status: locked
+- Decision: owner repo-truth query surface is label-indexed and artifact-truth-backed; execution gates are standardized as labels `gate:now`, `gate:quick-win`, and `gate:backlog`, while demand/idea/journal/decision artifacts remain canonical detail.
+- Date context: label-only owner query surface hardening phase
+- Why this was chosen: owner needs stable, low-overhead queries (backlog/ideas/blockers/decisions/quick wins/component filters) that do not depend on fragile dashboards or project custom fields.
+- What it affects: issue routing labels, exchange templates/protocol, owner operational query guidance, and ChatGPT answer contract (structured summary + direct Git links + optional label-filter URL + explicit owner todo).
+- What it explicitly does NOT affect: creation of new dashboard/board/html surfaces or replacement of repo-truth artifact content with labels.
+- Follow-up needed: keep label index and artifact truth synchronized and treat any mismatch as a repo-truth defect.
+
+### DEC-system_integration_normalization-43
+- Status: locked
+- Decision: the single review-ready handoff marker is `status: ready-for-chatgpt-review`; the demand artifact carrying this marker must include `source_pr_url`, `source_branch`, and `review_target_artifacts`, and owner review pickup command is `review now`.
+- Date context: review-ready handoff marker + governance freeze package
+- Why this was chosen: owner/ChatGPT review pickup needed one unambiguous repo-visible marker with direct source references.
+- What it affects: exchange protocol/operating standard, demand template fields, owner-facing existing surfaces, and owner quickstart wording.
+- What it explicitly does NOT affect: creation of a second lifecycle/review system or new dashboard/board/html surfaces.
+- Follow-up needed: keep ready-for-review demand refs populated so `review now` resolution stays deterministic.
+
+### DEC-system_integration_normalization-44
+- Status: locked
+- Decision: governance/process expansion is frozen after this package; only bugfixes, regression fixes, small necessary corrections, and direct appliance-delivery support work are allowed.
+- Date context: governance freeze activation
+- Why this was chosen: governance support must stop expanding and remain subordinate to appliance delivery.
+- What it affects: SI governance package acceptance scope and future change triage.
+- What it explicitly does NOT affect: required fixes to existing governance paths when regressions/defects are found.
+- Follow-up needed: reject or defer non-exception governance/meta expansion proposals.

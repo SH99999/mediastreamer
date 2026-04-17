@@ -1,0 +1,35 @@
+name: chatgpt-demand-lifecycle-autoclose
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  autoclose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Auto-close demand artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/governance/chatgpt_demand_lifecycle_autoclose_v1.py
+
+      - name: Commit demand status updates
+        run: |
+          if git diff --quiet; then
+            echo "No demand status changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add exchange/chatgpt/demands/*.md
+          git commit -m "Auto-close governed demands after merge and closeout"
+          git push

@@ -11,6 +11,10 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 ## 2. Current Functional Status
 - what currently works:
   - governance, issue-routing, and reporting workflows exist on `main`
+  - governance closeout now applies evidence-gated state transitions so referenced governance issues move to `state:done` only when a merged source PR exists and governance/journal/docs truth paths were updated in the merged PR
+  - SI onboarding is now tiered (`Tier 0` safe-start, `Tier 1` working context, `Tier 2` deep history) and active startup truth is explicitly anchored to AGENTS + SI index + SI TOM + current SI status/decisions/stream
+  - SI startup references are compressed to one canonical active path with explicit deep-history boundary and startup acceptance targets (`Tier 0 < 5m`, `Tier 1 < 15m`)
+  - status/owner packet claim classes now separate `governance/docs accepted`, `runtime validated`, and `autonomy eligible`, with evidence-gated runtime/autonomy assertions and truthful degradation when evidence is missing
   - one-click branch rebase exists for all current and future `dev/*` and `integration/*` branches
   - weekly governance report issues are generated from repo truth
   - open decisions, branch drift, and journal freshness can become governance-routed issues automatically
@@ -24,7 +28,15 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - tuner deploy and rollback are validated on the target Pi through the manual lock-aware workflow lane
   - bridge and tuner are both enabled in the autonomous delivery support matrix
 - what partially works:
-  - autonomous delivery remains support-matrix gated, now including Bridge, Tuner, and Fun Line while other components remain unsupported
+  - execution-gate model (`now|quick_win|backlog`) is now standardized for demand/idea items with promotion rationale and related outputs fields
+  - owner repo-truth query model is now explicitly label-indexed (`gate:now|gate:quick-win|gate:backlog`, `state:blocked`, `state:needs-decision|state:awaiting-owner`, `component:<x>`) while canonical detail remains in demand/idea/journal/decision artifacts
+  - review-ready pickup is now explicitly anchored to demand `status: ready-for-chatgpt-review` with required refs (`source_pr_url`, `source_branch`, `review_target_artifacts`)
+  - owner command surface is now explicitly `governed mode on | ship to codex | review now | merge after pre-ok`
+  - governance/process expansion is frozen to exception-only fixes and direct delivery-support work
+  - owner-minimal chat handoff now uses only `governed mode on` and `ship to codex` before merge-after-pre-ok; internal `chatok` and demand closure are automation-owned
+  - governed chat mode can now persist live session continuity artifacts under `exchange/chatgpt/sessions/` and promote `chatok` sessions into `ready-for-codex` demand artifacts
+  - chat-to-demand exchange lane remains active under `exchange/chatgpt/` with watcher support for `ready-for-codex` artifacts
+  - autonomous delivery remains support-matrix gated, currently including Bridge and Tuner while Fun Line and other components remain unsupported until evidence-led claims are completed
   - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
   - tuner deploy normalization is intentionally scoped to overlay/runtime/service while source-selection behavior remains hardware-governed (encoder short/long press) until full integration
 - what is broken:
@@ -130,7 +142,7 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - Tuner overlay/runtime/service lane
 - next manual validation target with repo deploy lane ready:
   - Fun Line overlay lane (`current`)
-- delivery support matrix on `main` now supports Bridge, Tuner, and Fun Line for autonomous dispatch
+- delivery support matrix on `main` now supports Bridge and Tuner for autonomous dispatch; Fun Line is explicitly held non-autonomous pending target-Pi deploy/rollback evidence
 - autonomous deploy line remains partial at repository scope because other components are still unsupported
 - owner remains the final onsite acceptance gate before stable truth is merged to `main`
 - source-project artifacts remain temporarily out of deploy-lane scope and are controlled via hardware interaction rules (encoder short/long press) until full integration
@@ -140,3 +152,9 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 2. normalize the next component wrapper contract after bridge and tuner
 3. keep source-project scope boundaries explicit (hardware-governed until full integration)
 4. standardize immutable payload naming and governed pointer resolution across deployable components
+5. enforce the 5-minute chat-to-demand continuity SLA for relevant chat outcomes and route all execution from demand artifacts
+6. keep owner command surface constrained to `governed mode on | ship to codex | merge after pre-ok` for governed chat lanes
+7. keep owner-facing boards/index synchronized with demand `pre-ok` and `ready-for-owner` visibility
+8. keep owner-facing portfolio visibility synchronized for `now|quick_win|backlog` rows in existing owner boards
+9. keep owner query answers link-first (direct Git object links + optional label-filter URLs) and avoid introducing new dashboard/HTML surfaces for queryability
+10. enforce governance freeze scope during SI package intake (allow only bugfix/regression/small-correction/direct-delivery exceptions)

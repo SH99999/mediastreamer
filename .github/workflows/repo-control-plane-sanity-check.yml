@@ -17,16 +17,18 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           required = [
-            'contracts/repo/system_integration_governance_index_v4.md',
+            'contracts/repo/system_integration_governance_index_v7.md',
             'contracts/repo/issue_governance_routing_standard_v1.md',
             'contracts/repo/autonomous_execution_and_chat_intake_standard_v1.md',
             'contracts/repo/system_integration_escalation_contract_v1.md',
-            'docs/agents/system_integration_recovery_onboarding_v4.md',
-            'docs/agents/skill_autonomous_repo_operations_v1.md',
-            'journals/system-integration-normalization/STATUS_system_integration_normalization_v5.md',
-            'journals/system-integration-normalization/DECISIONS_system_integration_normalization_v5.md',
+            'docs/agents/system_integration_recovery_onboarding_v7.md',
+            'docs/agents/si_target_operating_model_v1.md',
+            'journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md',
+            'journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md',
             'tools/governance/label_catalog_v1.json',
-            'tools/governance/autonomous_delivery_matrix_v1.json',
+            'tools/governance/autonomous_delivery_matrix_v3.json',
+            'tools/governance/agent_git_bootstrap_v1.sh',
+            'tools/governance/setup_auth_check_v1.sh',
             '.github/workflows/weekly-governance-report-issue.yml',
             '.github/workflows/rebase-dev-and-integration-branches-on-main.yml',
             '.github/workflows/ensure-governance-labels.yml',
@@ -40,7 +42,7 @@ jobs:
             '.github/workflows/governance-closeout.yml',
             '.github/workflows/issue-context-enrichment.yml',
             '.github/workflows/system-integration-escalation.yml',
-            '.github/workflows/autonomous-delivery-orchestrator.yml',
+            '.github/workflows/autonomous-delivery-orchestrator-v3.yml',
             '.github/workflows/decision-verification-on-merge.yml'
           ]
           missing = [p for p in required if not Path(p).exists()]

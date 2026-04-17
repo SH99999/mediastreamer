@@ -1,0 +1,50 @@
+{
+  "schema": "status_packet_v1",
+  "component": "hardware",
+  "canonical_status": "functional_acceptance_open",
+  "evidence_links": [
+    "/workspace/mediastreamer/journals/scale-radio-hardware/current_state_v1.md",
+    "/workspace/mediastreamer/journals/scale-radio-hardware/stream_v1.md"
+  ],
+  "blockers": [
+    "no confirmed repo-integrated Pi-validated baseline yet",
+    "no confirmed production-ready install/rollback path in repo yet",
+    "live AS5600 communication on target Pi remains unvalidated",
+    "mechanical bracket/adapter dimensions remain open until real measurements are captured"
+  ],
+  "recommended_owner_action": "changes-requested",
+  "next_owner_click": "request_changes",
+  "decision_scoring": {
+    "evidence_quality": 2,
+    "rollback_readiness": 2,
+    "blast_radius": "medium",
+    "confidence": 68
+  },
+  "rollback_action": {
+    "enabled": true,
+    "command": "git revert <merge_commit_for_hardware>",
+    "verification": [
+      "rerun governance/report checks",
+      "confirm owner action contract fields still render"
+    ]
+  },
+  "claim_classes": {
+    "governance_docs": "accepted",
+    "runtime_validation": "not_claimed",
+    "autonomy_eligibility": "not_claimed"
+  },
+  "component_claims": {
+    "repo_ready_payload_present": false,
+    "deploy_ready": false,
+    "tested_on_target": false,
+    "rollback_verified": false,
+    "runtime_validated": false,
+    "autonomy_eligible": false,
+    "tested_scope": "hardware validation lane only; no deploy/rollback runtime proof on target Pi yet",
+    "evidence_path": "journals/scale-radio-hardware/current_state_v1.md; journals/scale-radio-hardware/stream_v1.md",
+    "rollback_path": "not-applicable (non-deploy hardware lane)",
+    "source_ref": "reports/status/packets/hardware.json"
+  },
+  "timestamp": "2026-04-16T00:00:00+00:00",
+  "source_commit": "c4ec33b112570bd8b52368e66e866a8c254c84bf"
+}

@@ -6,3 +6,4 @@
 - 2026-04-13: `mediastreamer-shellctl standby|wake|status` recorded as the authoritative runtime control interface.
 - 2026-04-13: Later appliance/direct-now-playing lines recorded as nonleading experiment history only.
 - 2026-04-13: Repo-path and payload normalization still marked unresolved and must be re-grounded against actual Git truth.
+- 2026-04-16: Added an explicit evidence-led claim ledger to keep starter status truthful (`deploy_ready/tested/rollback/runtime/autonomy` all pending until repo-normalized proof exists).

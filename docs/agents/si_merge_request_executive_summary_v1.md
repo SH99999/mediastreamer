@@ -17,6 +17,8 @@ Provide a one-click owner review packet so the owner can decide and merge with m
 7. `next_owner_click` (`approve_pr | request_changes | defer`)
 8. `decision_scoring` (`evidence_quality`, `rollback_readiness`, `blast_radius`, `confidence`)
 9. `rollback_one_click` (exact rollback command + verification checks)
+10. `claim_classes` (`governance_docs`, `runtime_validation`, `autonomy_eligibility`)
+11. `component_claims` (`deploy_ready`, `tested_on_target`, `rollback_verified`, `runtime_validated`, `autonomy_eligible`, `evidence_path`, `rollback_path`)
 
 ## Standard owner-facing output block
 ```text
@@ -29,6 +31,8 @@ SI Merge Request (Prepared)
   - <bullet 3>
 - Risk level: <low|medium|high>
 - Decision scoring: evidence_quality=<0-3>, rollback_readiness=<0-3>, blast_radius=<low|medium|high>, confidence=<0-100>
+- Claim classes: governance_docs=<accepted|pending>, runtime_validation=<not_claimed|validated>, autonomy_eligibility=<not_claimed|eligible>
+- Component claims: deploy_ready=<true|false>, tested_on_target=<true|false>, rollback_verified=<true|false>, runtime_validated=<true|false>, autonomy_eligible=<true|false>
 - Rollback: <exact revert command>
 - Owner decision needed: <accept|changes-requested|reject>
 - Next owner click: <approve_pr|request_changes|defer>

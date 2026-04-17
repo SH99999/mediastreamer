@@ -1,5 +1,7 @@
 # STREAM — system_integration_normalization
 
+Historical status: this file is historical/read-only and must not receive new entries. Active SI stream truth is `stream_v6.md`.
+
 Status note: this v2 file supersedes `stream_v1.md` as the current SI/N stream because the original file became stale and could not be cleanly updated through the normal connector mutation path without creating ambiguity.
 
 ## Entries

@@ -14,6 +14,18 @@
 - `payload_partial`
 - `functional_acceptance_open`
 
+## Evidence-led claim ledger
+- claim.repo_ready_payload_present: `false`
+- claim.deploy_ready: `false`
+- claim.tested_on_target: `false`
+- claim.rollback_verified: `false`
+- claim.runtime_validated: `false`
+- claim.autonomy_eligible: `false`
+- claim.tested_scope: `hardware validation lane only; no deploy/rollback runtime proof on target Pi yet`
+- claim.evidence_path: `journals/scale-radio-hardware/current_state_v1.md; journals/scale-radio-hardware/stream_v1.md`
+- claim.rollback_path: `not-applicable (non-deploy hardware lane)`
+- claim.source_ref: `reports/status/packets/hardware.json`
+
 ## Accepted hardware posture
 - retained donor parts in phase 1:
   - original SABA MT201 tuning knob

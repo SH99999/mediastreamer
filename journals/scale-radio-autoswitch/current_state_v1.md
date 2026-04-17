@@ -8,11 +8,24 @@
 ## Repo truth
 - component branch `dev/autoswitch` exists
 - legacy handover already provides concrete script/service mapping into component paths
-- component is runtime-validated enough to document clearly, but still not integrated enough for `main` truth
+- component runtime behavior is documented from legacy handover, but target-Pi deploy/rollback evidence is not yet normalized in this repo lane
 
 ## Lifecycle status
 - `payload_complete`
+- `deployment_candidate_started`
 - `functional_acceptance_open`
+
+## Evidence-led claim ledger
+- claim.repo_ready_payload_present: `true`
+- claim.deploy_ready: `false`
+- claim.tested_on_target: `false`
+- claim.rollback_verified: `false`
+- claim.runtime_validated: `false`
+- claim.autonomy_eligible: `false`
+- claim.tested_scope: `legacy runtime behavior documented only; no governed target-Pi evidence bundle`
+- claim.evidence_path: `journals/scale-radio-autoswitch/current_state_v1.md; journals/scale-radio-autoswitch/stream_v1.md`
+- claim.rollback_path: `not-yet-defined (deploy lane not normalized)`
+- claim.source_ref: `reports/status/packets/autoswitch.json`
 
 ## Accepted runtime posture
 - ALSA amplitude detection via `arecord + sox`

@@ -3,6 +3,67 @@
 Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream because tuner now has a real repo-driven manual deploy/rollback lane after Bridge proved the lock-aware runtime path on the Pi.
 
 ## Entries
+
+### 2026-04-17 / si/review-ready-handoff-marker-and-governance-freeze-v1 / review-ready marker + governance freeze
+- tightened lifecycle semantics so `ready-for-chatgpt-review` is the single canonical repo-visible handoff marker for review pickup
+- required review refs on ready-for-review demand artifacts: `source_pr_url`, `source_branch`, `review_target_artifacts`
+- aligned existing owner-facing surfaces and quickstart/status references to the minimal owner command set (`governed mode on`, `ship to codex`, `review now`, merge after `pre-ok`)
+- activated explicit governance freeze rule: no further governance/process/dashboard/board/prompt/meta expansion packages beyond exception-only fixes and direct delivery-support work
+- purpose: remove review pickup ambiguity and stop governance/control-plane growth before freeze
+
+### 2026-04-17 / si/label-only-owner-query-surface-v1 / label-indexed owner repo-truth query surface
+- standardized execution-gate labels for owner query/indexing (`gate:now`, `gate:quick-win`, `gate:backlog`) and aligned issue-routing governance wording
+- updated exchange demand/idea templates + protocol so labels are index/routing metadata while repo artifacts remain canonical detail truth
+- added canonical owner query guidance for repo-truth prompts (backlog, ideas, blockers, decisions awaiting owner, quick wins, component-filtered variants) with required ChatGPT response shape (structured summary, direct Git links, optional label URL, explicit owner todo/no-action)
+- purpose: make owner queries reliably answerable from labels + repo truth without adding new dashboards/boards/html surfaces or custom-field dependency
+
+### 2026-04-17 / si/execution-gate-and-backlog-portfolio-v1 / execution-gate + backlog portfolio visibility
+- standardized execution gate model (`now|quick_win|backlog`) with mandatory rationale/promotion fields for demand and idea artifacts
+- codified quick-win attachment rule for Codex and explicit downgrade-to-backlog behavior when safety/coherence checks fail
+- extended existing owner surfaces (status index, owner dashboard, owner action/decision boards) to expose execution-gate portfolio visibility without adding new dashboard families
+- reinforced Codex-owned routing/decomposition and backlog preservation requirements so appliance delivery remains primary
+- purpose: prevent idea loss, keep quick wins usable, and keep backlog owner-visible from Git truth
+
+### 2026-04-17 / si/owner-minimal-chat-handoff-v1 / owner-minimal handoff hardening
+- made owner-visible handoff command set minimal (`governed mode on`, `ship to codex`, merge after `pre-ok`) while internalizing `chatok` promotion semantics
+- removed owner-visible manual closure requirement and added automated demand closure workflow/script based on merged PR + `pre-ok` + `governance_closeout_status=done`
+- added demand lifecycle tracking fields and surfaced `pre-ok` / `ready-for-owner` rows (with PR link + next click) in existing owner action/decision boards
+- clarified Codex-owned routing/decomposition and durable truth update obligations in canonical exchange governance docs
+- purpose: reduce owner friction without adding new visual/meta surfaces or parallel exchange systems
+
+### 2026-04-17 / si/chat-governed-mode-and-repo-continuity-v1 / governed-mode activation + live continuity
+- added governed chat mode activation (`governed mode on`) with a canonical live-session artifact path `exchange/chatgpt/sessions/<topic>__live_v1.md`
+- standardized continuity SLA so governed chat deltas must be persisted to Git within 5 minutes and added required live-session fields including `last_material_update_utc`
+- defined explicit `chatok` promotion rule from live session to demand intake (`ready-for-codex`) and added promotion helper `tools/governance/chatgpt_promote_live_to_demand_v1.py`
+- aligned protocol/playbook/intake prompts and watcher/cycle tooling to the lifecycle `live -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
+- purpose: reduce owner prompt repetition and enforce durable repo continuity without creating a parallel exchange system
+
+### 2026-04-17 / si/chat-to-demand-autoroute-and-repo-continuity-v1 / chat-to-demand autoroute + continuity
+- standardized governed chat-to-demand lifecycle (`chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`) in canonical exchange contract and protocol docs
+- added explicit 5-minute max chat-only continuity rule and required demand intake persistence contract for decisions/risks/blockers/non-loss requirements
+- tightened demand artifact structure with required sections and canonical template under `exchange/chatgpt/demands/TEMPLATE__intake_v1.md`
+- extended exchange automation: cycle bootstrap can create demand intake (`--create-demand`) and watcher now detects `ready-for-codex` across demand/request/basis artifacts
+- purpose: keep repo as durable memory and ensure Codex executes from governed Git artifacts rather than chat-memory reconstruction
+
+### 2026-04-17 / si/authority-compression-onboarding-hardening-v1 / active-path compression + historical boundary hardening
+- compressed active SI startup/onboarding path to one authority chain with explicit Tier-0/Tier-1/Tier-2 boundaries and acceptance targets (`<5m`, `<15m`)
+- aligned SI governance index, onboarding v7, role bootstrap map/profile, and SI role start prompt to the same canonical startup path
+- tightened superseded index so older onboarding/index generations are explicit deep-history only
+- fixed repo-truth contradictions in SI status (duplicate autonomous-matrix line) and SI TOM (outdated missing-helper claim)
+- purpose: reduce onboarding burden and remove active-vs-history ambiguity without creating new control-plane surfaces
+
+### 2026-04-16 / si/component-evidence-ledger-and-claim-normalization-v1 / component claim normalization
+- normalized component current-state files for bridge, tuner, fun-line, starter, autoswitch, and hardware with a common evidence-led claim ledger
+- aligned status-packet/report generation and enforcement with the component claim ledger so claims degrade truthfully when evidence is missing
+- downgraded fun-line autonomy in the support matrix until target-Pi deploy/rollback evidence exists and updated SI status wording to match
+- purpose: remove claim drift between component truth, SI truth, matrix posture, and owner-facing status outputs
+
+### 2026-04-16 / si/evidence-gated-one-click-v1 / evidence-gated claim-class hardening
+- tightened one-click/status packet truth model with explicit claim classes: `governance/docs accepted`, `runtime validated`, `autonomy eligible`
+- updated status packet schema + report generator so runtime/autonomy validated states require structured evidence fields (evidence path, tested scope, source ref, rollback data)
+- updated enforcement checks to fail invalid runtime/autonomy claims without evidence while keeping governance/docs-only packages lightweight when no runtime/autonomy claim is made
+- purpose: keep owner one-click flow fast but prevent overstatement of deploy/runtime/autonomy truth
+
 ### 2026-04-12 / main / PR #26 merged
 - governance v2 docs landed on `main`
 - the first repo-native SI/N status and decision files were added
@@ -457,3 +518,17 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - updated `tools/governance/generate_owner_boards_v1.py` to include owner decision packets in action/decision boards
 - regenerated `reports/owner/owner_action_board_v1.html` and `reports/owner/owner_decision_board_v1.html`
 - purpose: ensure owner sees round decision packets directly in decision board with one-click open path
+
+### 2026-04-16 / si/tom-stabilization-auth-queue / SI TOM stabilization + auth-contract repair + queue-closeout hardening
+- restored `tools/governance/setup_auth_check_v1.sh` as a safe token-aware auth diagnostics helper with non-secret output and push dry-run result
+- updated `.github/workflows/repo-control-plane-sanity-check.yml` to current governance/onboarding/status baselines and added explicit auth-helper existence checks
+- hardened `.github/workflows/governance-closeout.yml` so `state:done` requires merged-source evidence and governance/journal/docs truth-path updates; otherwise issues remain open with `state:docs-update-required` plus an audit-trail comment
+- updated SI status/decision truth to lock the new closeout evidence gate and queue-trust behavior
+- purpose: stabilize immediate SI TOM package priorities without adding new dashboards/prompts/meta surfaces
+
+### 2026-04-16 / si/authority-compression-onboarding-hardening-v1 / tiered onboarding + active-truth compression + historical boundary hardening
+- updated SI governance index and SI onboarding to lock a single active SI truth path and tiered onboarding model (`Tier 0` < 5 min, `Tier 1` < 15 min, `Tier 2` deep-history only)
+- aligned SI role start prompt and bootstrap reference/profile docs with the same active-truth chain to remove competing startup entry paths
+- marked SI stream generations `stream_v1.md` through `stream_v5.md` as explicit historical/read-only and tightened superseded-doc handling for deep-history-only use
+- updated SI status and decisions with locked authority-compression rule (`DEC-system_integration_normalization-34`)
+- purpose: reduce startup read burden and ambiguity without introducing new dashboards/boards/html/prompt sprawl

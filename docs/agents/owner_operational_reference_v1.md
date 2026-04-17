@@ -76,6 +76,16 @@ Require exactly:
 Packet contract:
 - [SI merge request executive summary v1](./si_merge_request_executive_summary_v1.md)
 
+## Owner minimal command surface (canonical)
+- `governed mode on`
+- `ship to codex`
+- `review now`
+- merge to `main` after ChatGPT `pre-ok`
+
+Review-ready pickup marker:
+- demand `status: ready-for-chatgpt-review`
+- required demand references: `source_pr_url`, `source_branch`, `review_target_artifacts`
+
 ## Can ChatGPT issue creation be automated?
 **Yes.** Intake creation/normalization/routing is workflow-backed.
 - Use the governed issue templates.
@@ -101,6 +111,7 @@ Interpretation:
 
 ### Onboarding and execution
 - [SI recovery onboarding v7](./system_integration_recovery_onboarding_v7.md)
+- [ChatGPT owner quickstart v1](./chatgpt_owner_quickstart_v1.md)
 - [Agent git bootstrap guide](./agent_git_bootstrap_v1.md)
 - [Codex cloud environment setup](./codex_cloud_environment_setup_v1.md)
 - [Container startup setup](./container_startup_setup_v1.md)
@@ -140,6 +151,32 @@ Generated pages:
 - [Status bridge](../../reports/status/bridge.md)
 - [Status decisions](../../reports/status/decisions.md)
 - [Status blocker](../../reports/status/blocker.md)
+
+## Repo-truth owner query surface (label-index + Git-truth)
+Use this prompt style in ChatGPT:
+- `repo truth: what is in backlog`
+- `repo truth: open blockers`
+- `repo truth: decisions awaiting owner`
+- `repo truth: quick wins for tuner`
+- `repo truth: ideas already defined for fun-line`
+
+Query/index rule:
+- labels are the query index
+- repo artifacts are the truth
+- if labels disagree with repo artifacts, repo artifacts win and mismatch should be treated as a repo-truth defect
+
+Expected ChatGPT answer format:
+1. short structured summary
+2. direct Git links to the referenced files/commits
+3. optional GitHub label-filter URL
+4. explicit owner todo or `no action needed`
+
+Canonical query labels:
+- `gate:backlog` (backlog)
+- `gate:quick-win` (quick wins)
+- `state:blocked` (blockers)
+- `state:needs-decision` / `state:awaiting-owner` (decisions awaiting owner)
+- `component:<x>` (component filter)
 ## Current recurring setup topics to monitor
 - runtime token injection drift (`GH_TOKEN` / `GITHUB_TOKEN` not visible in active runtime session)
 - branch discipline drift (agent starts on `work` instead of `dev/*` or `si/*`)

@@ -15,6 +15,18 @@
 - `payload_partial`
 - `functional_acceptance_open`
 
+## Evidence-led claim ledger
+- claim.repo_ready_payload_present: `false`
+- claim.deploy_ready: `false`
+- claim.tested_on_target: `false`
+- claim.rollback_verified: `false`
+- claim.runtime_validated: `false`
+- claim.autonomy_eligible: `false`
+- claim.tested_scope: `legacy accepted baseline documented; repo deploy/rollback evidence not normalized`
+- claim.evidence_path: `journals/scale-radio-starter/current_state_v1.md; journals/scale-radio-starter/stream_v1.md`
+- claim.rollback_path: `not-yet-defined (deploy lane unresolved)`
+- claim.source_ref: `reports/status/packets/starter.json`
+
 ## Accepted baseline
 - `mediastreamer_bootdelay_fix_v0.1.0`
 - `mediastreamer_hybrid_startup_standby_v0.2.2_stable`

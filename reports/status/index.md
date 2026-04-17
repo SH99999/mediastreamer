@@ -3,27 +3,44 @@
 _Generated: 2026-04-16T00:00:00+00:00_
 
 Prompt aliases:
-- `agent role prompts` -> [Agent Role Start Prompts](../../docs/agents/agent_role_start_prompts_v1.md)
-- `owner dashboard` -> [Owner Dashboard HTML](../owner/owner_dashboard_v1.html)
-- `owner decision-board` -> [Owner Decision Board HTML](../owner/owner_decision_board_v1.html)
-- `owner action-board` -> [Owner Action Board HTML](../owner/owner_action_board_v1.html)
-- `owner governance summary` -> [Governance Summary HTML](../owner/governance_summary_v1.html)
-- `owner dashboard policy` -> [Owner Dashboard Quick Link Policy](../owner/owner_dashboard_quick_link_policy_v1.md)
 - `status tuner` -> [Status Tuner](./tuner.md)
 - `status governance` -> [Status Governance](./governance.md)
 - `status ui` -> [Status UI](./ui.md)
 - `status bridge` -> [Status Bridge](./bridge.md)
+- `status fun-line` -> [Status Fun Line](./fun-line.md)
+- `status starter` -> [Status Starter](./starter.md)
+- `status autoswitch` -> [Status Autoswitch](./autoswitch.md)
+- `status hardware` -> [Status Hardware](./hardware.md)
 - `status decisions` -> [Status Decisions](./decisions.md)
 - `status blocker` -> [Status Blocker](./blocker.md)
-- `owner audit-start` -> [Owner Audit Start ChatGPT Exchange](./owner_audit_start_chatgpt_exchange.md)
-- `owner idea-start` -> [Owner Idea Channel Start](./owner_idea_channel_start.md)
-- `owner audit-round2 prompt` -> [ChatGPT Audit Round2 Prompt](../../docs/agents/chatgpt_start_prompt_audit_answer_round2_v1.md)
+- `owner capture-prompt` -> [ChatGPT Capture-to-Demand Prompt](../../docs/agents/chatgpt_capture_to_demand_prompt_v1.md)
+- `owner governed-intake` -> [ChatGPT Governed Intake Prompt](../../docs/agents/chatgpt_governed_intake_prompt_v1.md)
+- `owner quickstart` -> [ChatGPT Owner Quickstart](../../docs/agents/chatgpt_owner_quickstart_v1.md)
+
+Owner minimal command set:
+- `governed mode on`
+- `ship to codex`
+- `review now`
+- merge to `main` after `pre-ok`
+
+Where to check chat review state:
+- [Owner action board](../owner/owner_action_board_v1.html)
+- [Owner decision board](../owner/owner_decision_board_v1.html)
+- Review-ready marker is `status: ready-for-chatgpt-review` on demand artifacts with `source_pr_url`, `source_branch`, and `review_target_artifacts`
+
+Execution-gate portfolio visibility:
+- Owner boards include `execution-gate-demand` / `execution-gate-idea` rows showing `now | quick_win | backlog`
+- rows include portfolio/component, promotion trigger, and related outputs when provided
 
 Status packet JSON artifacts:
 - [tuner](./packets/tuner.json)
 - [governance](./packets/governance.json)
 - [ui](./packets/ui.json)
 - [bridge](./packets/bridge.json)
+- [fun-line](./packets/fun-line.json)
+- [starter](./packets/starter.json)
+- [autoswitch](./packets/autoswitch.json)
+- [hardware](./packets/hardware.json)
 - [decisions](./packets/decisions.json)
 - [blocker](./packets/blocker.json)
 

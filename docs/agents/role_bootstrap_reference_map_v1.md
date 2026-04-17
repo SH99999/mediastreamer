@@ -25,6 +25,8 @@ Reduce cross-reference maintenance by providing one canonical pointer map for mo
 - startup governance source: `contracts/repo/system_integration_governance_index_v7.md`
 - onboarding source: `docs/agents/system_integration_recovery_onboarding_v7.md`
 - owner handoff source: `docs/agents/si_merge_request_executive_summary_v1.md`
+- active-truth chain source: `AGENTS.md` -> `system_integration_governance_index_v7.md` -> `si_target_operating_model_v1.md` -> current SI status/decisions/stream
+- tier map source (authoritative): Tier 0/1/2 definitions in `docs/agents/system_integration_recovery_onboarding_v7.md`
 
 ### generic
 - default governance source: `contracts/repo/system_integration_governance_index_v7.md`

@@ -1,27 +1,50 @@
 # CHATGPT GIT EXCHANGE PLAYBOOK V1
 
 ## Objective
-Provide a standard path for two-lane collaboration (ChatGPT + Codex) using Git artifacts with low owner effort.
+Provide a standard path for two-lane collaboration (ChatGPT + Codex) using Git artifacts with low owner effort and minimal knowledge loss.
 
 ## Quick start
 1. Run bootstrap on dedicated branch:
-   - `bash tools/governance/agent_git_bootstrap_v1.sh --branch si/chatgpt-git-exchange-<topic> --role si --mode mode-b`
-2. ChatGPT starts by filling audit basis first:
-   - `exchange/chatgpt/audit_basis/current_audit_basis_v1.md`
-3. After basis is ready-for-codex, continue with inbox request packages:
-   - `exchange/chatgpt/inbox/<topic>__request_v1.md`
-4. Produce response package in:
-   - `exchange/chatgpt/outbox/<topic>__response_v1.md`
-5. Add concrete implementation list (ranked, actionable, branchable).
+   - `bash tools/governance/agent_git_bootstrap_v1.sh --role si --mode mode-b si/chatgpt-git-exchange-<topic>`
+2. Activate governed mode:
+   - `governed mode on`
+3. Create/update live session continuity artifact first:
+   - `exchange/chatgpt/sessions/<topic>__live_v1.md`
+4. Promote with `ship to codex` into demand intake:
+   - `exchange/chatgpt/demands/<topic>__intake_v1.md` -> `ready-for-codex` (internal `chatok`)
+   - helper: `python3 tools/governance/chatgpt_promote_live_to_demand_v1.py --topic \"<topic>\" --ship-to-codex`
+5. Codex executes from demand + repo artifacts (not chat memory):
+   - `in-execution` -> `ready-for-chatgpt-review`
+6. ChatGPT review gate:
+   - set `pre-ok` or `changes-requested`
+7. Owner-ready handoff:
+   - `ready-for-owner` with PR + rollback + next owner click
+8. Demand is auto-closed after owner merge + governance closeout completion.
+
+## Execution gate classification
+Each demand/idea item must include:
+- `execution_gate: now|quick_win|backlog`
+- `why_now`, `why_not_now`, `promotion_trigger`
+- `safe_to_attach_to_current_package: yes|no`
+- `related_files_outputs`, `impacted_portfolio_component`
+
+Gate behavior:
+- `now`: executes in current demand package
+- `quick_win`: Codex may attach when safe/coherent
+- `backlog`: preserved and visible to owner; not silently executed
+
+## Max-delta continuity rule
+No relevant chat decision/risk/request/blocker/non-loss requirement may remain chat-only for more than 5 minutes.
+If durable truth update is not ready, live session capture is mandatory and demand promotion follows at `ship to codex`.
 
 ## Autonomous cycle init
 Use:
 
 ```bash
-python3 tools/governance/chatgpt_exchange_cycle_v1.py --topic "<topic>" --branch-plan "si/<topic>"
+python3 tools/governance/chatgpt_exchange_cycle_v1.py --topic "<topic>" --branch-plan "si/<topic>" --create-demand
 ```
 
-This creates request/response files from templates and appends the living stream entry.
+This creates request/response files, an optional demand intake file, and appends a stream entry.
 
 ## Review trigger (how Codex knows when to evaluate ChatGPT content)
 Use:
@@ -30,75 +53,33 @@ Use:
 python3 tools/governance/chatgpt_exchange_watch_v1.py
 ```
 
-Codex reviews/evaluates when any watched artifact contains:
+Codex evaluates actionable artifacts when status is:
 - `status: ready-for-codex`
 
-## Round-2 consensus + owner decision derivation
-1. initialize round request (`*__request_v1.md`) with Codex proposal set
-2. collect ChatGPT response with `agreement_score_chatgpt`
-3. set Codex score and derive owner decision:
-
-```bash
-python3 tools/governance/chatgpt_consensus_decision_v1.py --chatgpt-score <0..100> --codex-score <0..100>
-```
-
-4. store final block in `exchange/chatgpt/outbox/<topic>__consensus_owner_decision_v1.md`
-
 ## Internal channel vs owner handoff
-- Internal ChatGPT↔Codex exchange may use compact/machine-oriented notes to reduce latency.
+- Internal ChatGPT↔Codex exchange may use compact/machine-oriented notes.
 - Owner handoff must be generated as a human-readable decision packet.
 - Decision packet template:
   - `exchange/chatgpt/outbox/TEMPLATE__owner_decision_packet_v1.md`
-- Packet generator:
 
-```bash
-python3 tools/governance/chatgpt_owner_decision_packet_v1.py --topic "<topic>" --chatgpt-score <0..100> --codex-score <0..100>
-```
+## Demand intake contract
+Demand intake must include:
+- source/context
+- objective
+- locked/open decisions
+- required implementation
+- required governance updates
+- risks
+- non-loss requirements
+- execution request for Codex
+- status marker
 
-## Response package contract (essential only)
-Every `outbox/*response*` file should include:
-- summary of ask (max 5 bullets)
-- assumptions/gaps (only blockers)
-- concrete implementation proposals (ranked)
-- proposed branch/workflow path
-- owner decision needed (`accept|changes-requested|reject`)
+Template:
+- `exchange/chatgpt/demands/TEMPLATE__intake_v1.md`
 
-## Minimal template
-```text
-# <topic> response v1
-
-## ask summary
-- ...
-
-## blockers / missing inputs
-- ...
-
-## implementation proposals (ranked)
-1. ...
-2. ...
-3. ...
-
-## branch plan
-- si/<topic>
-- optional dev/<component>
-
-## owner decision needed
-- accept | changes-requested | reject
-```
-
-
-## Idea channel quickstart
-1. ChatGPT starts with `exchange/chatgpt/ideas/<topic>__idea_seed_v1.md`.
-2. ChatGPT sets `status: ready-for-codex`.
-3. Codex delivers round-1 proposal (gov fit + ranked implementation options).
-4. ChatGPT returns round-2 alignment (`*__round2_alignment_v1.md`).
-5. Codex publishes owner decision packet and implementation lane (`si/<topic>` + optional `dev/<component>`).
-
-## Demand intake extension
-If ChatGPT produced a demand:
-1. save to `exchange/chatgpt/demands/<demand-id>__intake_v1.md`
-2. map to governed issue intake
-3. track resulting implementation PR from dedicated branch
+## Live session contract
+Live session must include continuity fields and timestamp:
+- `exchange/chatgpt/sessions/TEMPLATE__live_v1.md`
 
 ## Operating rule
 Prefer short, structured artifacts over narrative text blocks.
@@ -107,7 +88,7 @@ Prefer short, structured artifacts over narrative text blocks.
 Use:
 - `docs/agents/chatgpt_start_prompt_git_exchange_v3.md`
 - `docs/agents/chatgpt_start_prompt_idea_channel_v1.md`
-- These prompts cover audit-start and idea-channel flows with branch-use rules.
+- `docs/agents/chatgpt_capture_to_demand_prompt_v1.md`
 
 ## No-shell / GUI-only mode (single-file handoff)
 If ChatGPT cannot use terminal/shell or requires repeated file permission prompts:

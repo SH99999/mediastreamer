@@ -53,12 +53,11 @@ Keep these as part of the baseline operating model:
 These are the key problems the new SI Codex must treat as real defects, not cosmetic issues.
 
 ### A. Documentation / executable contract drift
-The active startup/onboarding path still references `tools/governance/setup_auth_check_v1.sh`, but the file is not present on `main`.
+Startup/onboarding docs and executable helper presence must stay aligned. `tools/governance/setup_auth_check_v1.sh` is now present and should be treated as part of startup truth verification.
 
 Implication:
-- onboarding credibility is broken
-- startup docs and stream truth are inconsistent
-- this is a P1 fix
+- if any startup-referenced helper is missing in repo state, treat as a `repo-truth defect`
+- repair the contradiction in the same package instead of carrying narrative-only claims
 
 ### B. Queue lifecycle is not self-closing
 There are open SI escalation issues whose source PRs are already merged.
@@ -299,7 +298,7 @@ Branch suggestions:
 
 ### Package 1A — auth contract repair
 Actions:
-- decide whether `setup_auth_check_v1.sh` should exist
+- keep startup helper references aligned with actual repo file presence (no narrative-only startup claims)
 - either:
   - restore it safely, or
   - remove all references and replace with the actual supported auth-check path
@@ -330,6 +329,7 @@ Acceptance:
 Branch suggestions:
 - `si/historical-boundary-hardening-v1`
 - `si/tiered-onboarding-v1`
+- `si/authority-compression-onboarding-hardening-v1` (combined package when both scope slices ship together)
 
 ### Package 2A — historical boundary hardening
 Actions:

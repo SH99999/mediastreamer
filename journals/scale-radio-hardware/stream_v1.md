@@ -6,3 +6,4 @@
 - 2026-04-13: AS5600 recorded as the phase-1 sensor baseline with I2C-first, HiFiBerry-safe wiring discipline.
 - 2026-04-13: Standalone Volumio validation plugin requirement recorded as a locked hardware-track rule.
 - 2026-04-13: Component remains dev-only pending repo source normalization and target-Pi validation.
+- 2026-04-16: Added an explicit evidence-led claim ledger so hardware lane remains clearly non-deploy/non-autonomy until target-Pi evidence is available.

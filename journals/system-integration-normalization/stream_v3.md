@@ -1,5 +1,7 @@
 # STREAM — system_integration_normalization
 
+Historical status: this file is historical/read-only and must not receive new entries. Active SI stream truth is `stream_v6.md`.
+
 Status note: this v3 file supersedes `stream_v2.md` as the current SI/N stream because target deploy/test exclusivity and lock-aware workflow alignment materially changed the operating model after the earlier v2 alignment snapshot.
 
 ## Entries

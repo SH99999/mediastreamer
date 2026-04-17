@@ -36,9 +36,12 @@ Mode-B is optimization only. It does not relax branch doctrine, protected-`main`
 - branch hint: `si/<topic>`
 - startup add-on:
   - `contracts/repo/system_integration_governance_index_v7.md`
+  - `docs/agents/si_target_operating_model_v1.md`
 - deferred packet:
-  - `docs/agents/system_integration_recovery_onboarding_v7.md`
-  - `docs/agents/owner_operational_reference_v1.md`
+  - `docs/agents/system_integration_recovery_onboarding_v7.md` (Tier-0/Tier-1/Tier-2 canonical map)
+  - `journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md`
+  - `journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md`
+  - `journals/system-integration-normalization/stream_v6.md`
   - `docs/agents/si_merge_request_executive_summary_v1.md`
 
 ### generic

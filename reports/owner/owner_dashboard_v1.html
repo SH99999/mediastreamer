@@ -15,7 +15,7 @@
 </head>
 <body>
   <h1>Owner Dashboard v1</h1>
-  <p>Single owner entrypoint for decisions, packets, reports, and direct click queues.</p>
+  <p>Single owner entrypoint for decisions, packets, reports, and direct click queues. Owner minimal chat handoff is: <code>governed mode on</code> -> <code>ship to codex</code> -> merge after <code>pre-ok</code>. Execution gate portfolio is visible in owner boards as <code>now</code>/<code>quick_win</code>/<code>backlog</code>.</p>
 
   <div class="grid">
     <section class="card">
@@ -23,6 +23,8 @@
       <ul>
         <li><a href="./owner_action_board_v1.html">Owner Action Board</a></li>
         <li><a href="./owner_decision_board_v1.html">Owner Decision Board</a></li>
+        <li>Check rows where <code>type=chat-review</code> to see <code>pre-ok</code> / <code>ready-for-owner</code> and PR link.</li>
+        <li>Check rows where <code>type=execution-gate-demand</code> or <code>execution-gate-idea</code> to see now/quick_win/backlog portfolio.</li>
       </ul>
     </section>
 
@@ -48,6 +50,8 @@
       <h2>4) Start prompts (ChatGPT + Agents)</h2>
       <ul>
         <li><a href="../../docs/agents/chatgpt_start_prompt_git_exchange_v1.md">ChatGPT exchange start prompt</a></li>
+        <li><a href="../../docs/agents/chatgpt_capture_to_demand_prompt_v1.md">ChatGPT capture-to-demand prompt</a></li>
+        <li><a href="../../docs/agents/chatgpt_governed_intake_prompt_v1.md">ChatGPT governed intake prompt</a></li>
         <li><a href="../../docs/agents/agent_role_start_prompts_v1.md">Agent role start prompts</a></li>
         <li><a href="../../docs/agents/agent_git_bootstrap_v1.md">Bootstrap guide</a></li>
       </ul>

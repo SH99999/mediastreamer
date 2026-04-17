@@ -40,6 +40,12 @@ When deploy status changes materially:
 - update autonomous matrix in the same change set or explicitly state why deferred
 - keep matrix workflow references aligned with active deploy/rollback workflows
 
+## Claim gating for one-click owner/report packets
+- deploy/runtime/autonomy claims must be evidence-gated in status/owner packets
+- minimum runtime/deploy claim evidence: tested scope + evidence path + source ref + rollback verification
+- minimum autonomy claim evidence: eligibility scope + evidence path + source ref + rollback path
+- governance/docs-only packages may stay lightweight and must not be forced to provide runtime evidence unless they explicitly claim deploy/runtime/autonomy impact
+
 ## Failure and blocker handling
 - if safe completion is blocked by tooling/access/runtime constraints, publish an explicit blocker
 - do not imply deployment success without evidence

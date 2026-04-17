@@ -1,5 +1,7 @@
 # STREAM — system_integration_normalization
 
+Historical status: this file is historical/read-only and must not receive new entries. Active SI stream truth is `stream_v6.md`.
+
 Status note: this v4 file supersedes `stream_v3.md` as the current SI/N stream because the truthfulness-and-negative-answer rule materially changed the governed execution model after the deploy-exclusivity alignment.
 
 ## Entries
