@@ -63,3 +63,11 @@
 - branch plan: `si/chat-backup-only-command-v1`
 - owner decision needed: `none`
 - status: `ready-for-codex`
+
+### 2026-04-17 / cycle appliance-control-overlay-and-install-stabilization / ship-to-codex
+- actor: `chatgpt`
+- source file: `exchange/chatgpt/demands/appliance-control-overlay-and-install-stabilization__intake_v1.md`
+- action: materialized the current owner requirements into canonical exchange artifacts on `integration/chatgpt` and shipped them to Codex without using issue intake as the execution source
+- branch plan: `integration/chatgpt`
+- owner decision needed: `none`
+- status: `ready-for-codex`
