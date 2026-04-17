@@ -85,15 +85,16 @@ Packet contract:
 - [SI merge request executive summary v1](./si_merge_request_executive_summary_v1.md)
 
 ## Owner minimal command surface (canonical)
+- `governed mode on`
 - `ship to codex`
 - `review now`
 - merge to `main` when PR is decision-ready on repo truth (`pre-ok` optional)
 
-Note: `governed mode on` is ChatGPT-internal session activation and not part of the owner command surface.
-
 Review-ready pickup marker:
 - demand `status: ready-for-chatgpt-review`
-- required demand references: `source_pr_url`, `source_branch`, `review_target_artifacts`
+- required demand references: `source_pr_url`
+- `source_branch`
+- `review_target_artifacts`
 
 ## Can ChatGPT issue creation be automated?
 **Yes.** Intake creation/normalization/routing is workflow-backed.
