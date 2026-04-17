@@ -23,11 +23,8 @@
       "reason": "deploy contract not yet normalized"
     },
     "fun-line": {
-      "auto_delivery_supported": true,
-      "default_git_ref": "dev/fun-line",
-      "default_payload": "current",
-      "deploy_workflow": "component-test-deploy-v10.yml",
-      "rollback_workflow": "component-test-rollback-v10.yml"
+      "auto_delivery_supported": false,
+      "reason": "target-Pi deploy/rollback evidence ledger is pending for normalized fun-line lane"
     },
     "hardware": {
       "auto_delivery_supported": false,

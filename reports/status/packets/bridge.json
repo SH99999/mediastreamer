@@ -1,7 +1,7 @@
 {
   "schema": "status_packet_v1",
   "component": "bridge",
-  "canonical_status": "functional_acceptance_pending",
+  "canonical_status": "functional_acceptance_open",
   "evidence_links": [
     "/workspace/mediastreamer/journals/scale-radio-bridge/current_state_v1.md",
     "/workspace/mediastreamer/journals/scale-radio-bridge/stream_v1.md"
@@ -33,18 +33,30 @@
     "runtime_validation": "validated",
     "autonomy_eligibility": "eligible"
   },
+  "component_claims": {
+    "repo_ready_payload_present": true,
+    "deploy_ready": true,
+    "tested_on_target": true,
+    "rollback_verified": true,
+    "runtime_validated": true,
+    "autonomy_eligible": true,
+    "tested_scope": "bridge provider-layer deploy/rollback lane on target Pi",
+    "evidence_path": "journals/scale-radio-bridge/current_state_v1.md; journals/scale-radio-bridge/stream_v1.md; tools/governance/autonomous_delivery_matrix_v3.json",
+    "rollback_path": ".github/workflows/component-test-rollback-v9.yml (component=bridge, payload=current_dev)",
+    "source_ref": "reports/status/packets/bridge.json"
+  },
   "timestamp": "2026-04-16T00:00:00+00:00",
-  "source_commit": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
+  "source_commit": "c4ec33b112570bd8b52368e66e866a8c254c84bf",
   "runtime_claim": {
-    "evidence_path": "/workspace/mediastreamer/journals/scale-radio-bridge/current_state_v1.md",
-    "tested_scope": "manual deploy/rollback validation on target Pi lane",
-    "source_ref": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
-    "rollback_verification": "rollback lane validated on target Pi"
+    "evidence_path": "journals/scale-radio-bridge/current_state_v1.md; journals/scale-radio-bridge/stream_v1.md; tools/governance/autonomous_delivery_matrix_v3.json",
+    "tested_scope": "bridge provider-layer deploy/rollback lane on target Pi",
+    "source_ref": "reports/status/packets/bridge.json",
+    "rollback_verification": ".github/workflows/component-test-rollback-v9.yml (component=bridge, payload=current_dev)"
   },
   "autonomy_claim": {
-    "evidence_path": "tools/governance/autonomous_delivery_matrix_v3.json",
-    "tested_scope": "bridge component matrix eligibility and validated target-Pi runtime lane",
-    "source_ref": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
-    "rollback_path": "git revert <merge_commit_for_bridge>"
+    "evidence_path": "journals/scale-radio-bridge/current_state_v1.md; journals/scale-radio-bridge/stream_v1.md; tools/governance/autonomous_delivery_matrix_v3.json",
+    "tested_scope": "bridge provider-layer deploy/rollback lane on target Pi",
+    "source_ref": "reports/status/packets/bridge.json",
+    "rollback_path": ".github/workflows/component-test-rollback-v9.yml (component=bridge, payload=current_dev)"
   }
 }

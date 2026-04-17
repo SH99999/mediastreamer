@@ -31,12 +31,20 @@ Status note: this v2 file remains the current tuner deploy-lane truth and is upd
 - `payload_complete`
 - `deployment_candidate_started`
 - `deploy_ready`
-- `deploy_validated_on_pi`
-- `rollback_validated_on_pi`
-- `manual_runtime_validation_passed`
-- `autonomous_delivery_enabled`
+- `tested_on_pi`
 - `functional_acceptance_open`
-- `autonomous_delivery_enabled_for_overlay_lane`
+
+## Evidence-led claim ledger
+- claim.repo_ready_payload_present: `true`
+- claim.deploy_ready: `true`
+- claim.tested_on_target: `true`
+- claim.rollback_verified: `true`
+- claim.runtime_validated: `true`
+- claim.autonomy_eligible: `true`
+- claim.tested_scope: `overlay/runtime/service lane on target Pi; source tile remains out of deploy scope`
+- claim.evidence_path: `journals/scale-radio-tuner/current_state_v2.md; journals/scale-radio-tuner/stream_v2.md; tools/governance/autonomous_delivery_matrix_v3.json`
+- claim.rollback_path: `.github/workflows/component-test-rollback-v10.yml (component=tuner, payload=current)`
+- claim.source_ref: `reports/status/packets/tuner.json`
 
 ## Accepted baseline
 - authoritative overlay/render baseline in repo: `1.10.2`

@@ -212,3 +212,12 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: status packet schema, report generators, enforcement checks, and owner packet wording.
 - What it explicitly does NOT affect: lightweight handling for governance/docs-only/control-plane packages that do not claim runtime/deploy/autonomy impact.
 - Follow-up needed: keep packet/report contract and enforcement checks aligned when claim fields evolve.
+
+### DEC-system_integration_normalization-36
+- Status: locked
+- Decision: component truth uses an explicit evidence-led claim ledger (`repo_ready_payload_present`, `deploy_ready`, `tested_on_target`, `rollback_verified`, `runtime_validated`, `autonomy_eligible`, `tested_scope`, `evidence_path`, `rollback_path`, `source_ref`) and status packets must align to that ledger.
+- Date context: component evidence-ledger and claim-normalization phase
+- Why this was chosen: component current-state, SI status, matrix posture, and owner/status packet wording were drifting and could overstate validation/autonomy.
+- What it affects: component current-state files, autonomous support matrix wording, status packet schema/report generation, and claim consistency checks.
+- What it explicitly does NOT affect: creation of new dashboards/boards/report surfaces.
+- Follow-up needed: keep component claim ledgers updated whenever deploy/rollback/runtime/autonomy truth changes materially.

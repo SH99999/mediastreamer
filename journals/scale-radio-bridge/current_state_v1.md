@@ -18,6 +18,18 @@
 - `tested_on_pi`
 - `functional_acceptance_open`
 
+## Evidence-led claim ledger
+- claim.repo_ready_payload_present: `true`
+- claim.deploy_ready: `true`
+- claim.tested_on_target: `true`
+- claim.rollback_verified: `true`
+- claim.runtime_validated: `true`
+- claim.autonomy_eligible: `true`
+- claim.tested_scope: `bridge provider-layer deploy/rollback lane on target Pi`
+- claim.evidence_path: `journals/scale-radio-bridge/current_state_v1.md; journals/scale-radio-bridge/stream_v1.md; tools/governance/autonomous_delivery_matrix_v3.json`
+- claim.rollback_path: `.github/workflows/component-test-rollback-v9.yml (component=bridge, payload=current_dev)`
+- claim.source_ref: `reports/status/packets/bridge.json`
+
 ## Accepted baselines
 - rollback anchor: `rsob_022sf22l.zip`
 - conservative current dev continuation: `radioscale_overlay_bridge_0.2.3_db_cache_r1.zip`

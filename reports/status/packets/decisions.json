@@ -27,6 +27,18 @@
     "runtime_validation": "not_claimed",
     "autonomy_eligibility": "not_claimed"
   },
+  "component_claims": {
+    "repo_ready_payload_present": false,
+    "deploy_ready": false,
+    "tested_on_target": false,
+    "rollback_verified": false,
+    "runtime_validated": false,
+    "autonomy_eligible": false,
+    "tested_scope": "decision log status view",
+    "evidence_path": "/workspace/mediastreamer/journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md",
+    "rollback_path": "git revert <merge_commit_for_decisions>",
+    "source_ref": "c4ec33b112570bd8b52368e66e866a8c254c84bf"
+  },
   "timestamp": "2026-04-16T00:00:00+00:00",
-  "source_commit": "a4aff91747304e3717a74839406b6fc8ac7f93b3"
+  "source_commit": "c4ec33b112570bd8b52368e66e866a8c254c84bf"
 }

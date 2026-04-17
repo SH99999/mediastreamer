@@ -7,6 +7,10 @@ Prompt aliases:
 - `status governance` -> [Status Governance](./governance.md)
 - `status ui` -> [Status UI](./ui.md)
 - `status bridge` -> [Status Bridge](./bridge.md)
+- `status fun-line` -> [Status Fun Line](./fun-line.md)
+- `status starter` -> [Status Starter](./starter.md)
+- `status autoswitch` -> [Status Autoswitch](./autoswitch.md)
+- `status hardware` -> [Status Hardware](./hardware.md)
 - `status decisions` -> [Status Decisions](./decisions.md)
 - `status blocker` -> [Status Blocker](./blocker.md)
 
@@ -15,6 +19,10 @@ Status packet JSON artifacts:
 - [governance](./packets/governance.json)
 - [ui](./packets/ui.json)
 - [bridge](./packets/bridge.json)
+- [fun-line](./packets/fun-line.json)
+- [starter](./packets/starter.json)
+- [autoswitch](./packets/autoswitch.json)
+- [hardware](./packets/hardware.json)
 - [decisions](./packets/decisions.json)
 - [blocker](./packets/blocker.json)
 

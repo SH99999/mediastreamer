@@ -38,6 +38,28 @@ def section_bullets(text: str, heading: str) -> list[str]:
     return out
 
 
+def section_claim_map(text: str, heading: str) -> dict[str, str]:
+    lines = text.splitlines()
+    out: dict[str, str] = {}
+    capture = False
+    heading_prefix = f"## {heading}"
+    for line in lines:
+        if line.startswith("## ") and line.strip() == heading_prefix:
+            capture = True
+            continue
+        if capture and line.startswith("## "):
+            break
+        if capture and line.lstrip().startswith("- claim."):
+            body = line.lstrip()[2:].strip()
+            key_value = body.split(":", 1)
+            if len(key_value) != 2:
+                continue
+            key = key_value[0].strip().removeprefix("claim.")
+            value = key_value[1].strip().strip("`")
+            out[key] = value
+    return out
+
+
 def source_commit(repo_root: Path) -> str:
     return subprocess.check_output(["git", "-C", str(repo_root), "rev-parse", "HEAD"], text=True).strip()
 
@@ -46,6 +68,8 @@ def component_matrix_key(component: str) -> str:
     mapping = {
         "tuner": "tuner",
         "bridge": "bridge",
+        "fun line": "fun-line",
+        "fun-line": "fun-line",
     }
     return mapping.get(component.lower(), component.lower())
 
@@ -68,6 +92,7 @@ def status_packet(
     decision_scoring: dict,
     rollback_action: dict,
     claim_classes: dict,
+    component_claims: dict,
     runtime_claim: dict | None,
     autonomy_claim: dict | None,
     generated_at: str,
@@ -84,6 +109,7 @@ def status_packet(
         "decision_scoring": decision_scoring,
         "rollback_action": rollback_action,
         "claim_classes": claim_classes,
+        "component_claims": component_claims,
         "timestamp": generated_at,
         "source_commit": source_commit_id,
     }
@@ -135,6 +161,12 @@ def owner_contract_block(packet: dict) -> list[str]:
         f"- claim_classes.governance_docs: `{packet['claim_classes']['governance_docs']}`",
         f"- claim_classes.runtime_validation: `{packet['claim_classes']['runtime_validation']}`",
         f"- claim_classes.autonomy_eligibility: `{packet['claim_classes']['autonomy_eligibility']}`",
+        f"- component_claims.repo_ready_payload_present: `{packet['component_claims']['repo_ready_payload_present']}`",
+        f"- component_claims.deploy_ready: `{packet['component_claims']['deploy_ready']}`",
+        f"- component_claims.tested_on_target: `{packet['component_claims']['tested_on_target']}`",
+        f"- component_claims.rollback_verified: `{packet['component_claims']['rollback_verified']}`",
+        f"- component_claims.runtime_validated: `{packet['component_claims']['runtime_validated']}`",
+        f"- component_claims.autonomy_eligible: `{packet['component_claims']['autonomy_eligible']}`",
         f"- runtime_claim.evidence_path: `{runtime_evidence}`",
         f"- runtime_claim.tested_scope: `{runtime_scope}`",
         f"- autonomy_claim.evidence_path: `{autonomy_evidence}`",
@@ -151,46 +183,67 @@ def owner_contract_block(packet: dict) -> list[str]:
 
 def status_from_component(component: str, current_state_path: Path, stream_path: Path, generated_at: str, source_commit_id: str, repo_root: Path) -> Report:
     cs = read(current_state_path)
+    component_slug = component_matrix_key(component)
     lifecycle = section_bullets(cs, "Lifecycle status")[:6]
     gaps = section_bullets(cs, "Current gaps")[:4]
     next_actions = section_bullets(cs, "Repo-normalized next action")[:3]
 
-    lifecycle_text = "\n".join(lifecycle).lower()
-    runtime_validated = any(
-        marker in lifecycle_text
-        for marker in ["validated_on_pi", "deploy_validated_on_pi", "rollback_validated_on_pi", "tested_on_pi"]
-    )
+    claims = section_claim_map(cs, "Evidence-led claim ledger")
+
+    def as_bool(key: str) -> bool:
+        return claims.get(key, "false").lower() == "true"
+
+    component_claims = {
+        "repo_ready_payload_present": as_bool("repo_ready_payload_present"),
+        "deploy_ready": as_bool("deploy_ready"),
+        "tested_on_target": as_bool("tested_on_target"),
+        "rollback_verified": as_bool("rollback_verified"),
+        "runtime_validated": as_bool("runtime_validated"),
+        "autonomy_eligible": as_bool("autonomy_eligible"),
+        "tested_scope": claims.get("tested_scope", "not-specified"),
+        "evidence_path": claims.get("evidence_path", current_state_path.as_posix()),
+        "rollback_path": claims.get("rollback_path", default_rollback_action(component.lower())["command"]),
+        "source_ref": claims.get("source_ref", source_commit_id),
+    }
+
+    runtime_validated = component_claims["runtime_validated"]
     runtime_claim = None
     if runtime_validated:
         runtime_claim = {
-            "evidence_path": current_state_path.as_posix(),
-            "tested_scope": "manual deploy/rollback validation on target Pi lane",
-            "source_ref": source_commit_id,
-            "rollback_verification": "rollback lane validated on target Pi",
+            "evidence_path": component_claims["evidence_path"],
+            "tested_scope": component_claims["tested_scope"],
+            "source_ref": component_claims["source_ref"],
+            "rollback_verification": component_claims["rollback_path"],
         }
-    is_autonomy_eligible = runtime_validated and autonomy_supported(repo_root, component)
+
+    matrix_support = autonomy_supported(repo_root, component)
+    is_autonomy_eligible = runtime_validated and component_claims["autonomy_eligible"] and matrix_support
     autonomy_claim = None
     if is_autonomy_eligible:
         autonomy_claim = {
-            "evidence_path": "tools/governance/autonomous_delivery_matrix_v3.json",
-            "tested_scope": f"{component.lower()} component matrix eligibility and validated target-Pi runtime lane",
-            "source_ref": source_commit_id,
-            "rollback_path": f"git revert <merge_commit_for_{component.lower()}>",
+            "evidence_path": component_claims["evidence_path"],
+            "tested_scope": component_claims["tested_scope"],
+            "source_ref": component_claims["source_ref"],
+            "rollback_path": component_claims["rollback_path"],
         }
 
     packet = status_packet(
-        component=component.lower(),
-        canonical_status="functional_acceptance_pending" if gaps else "deploy_candidate_started",
+        component=component_slug,
+        canonical_status="functional_acceptance_open" if gaps else "deployment_candidate_started",
         evidence_links=[current_state_path.as_posix(), stream_path.as_posix()],
         blockers=gaps,
         recommended_owner_action="changes-requested" if gaps else "accept",
         next_owner_click="request_changes" if gaps else "approve_pr",
         decision_scoring=default_decision_scoring(gaps),
-        rollback_action=default_rollback_action(component.lower()),
+        rollback_action=default_rollback_action(component_slug),
         claim_classes={
             "governance_docs": "accepted",
             "runtime_validation": "validated" if runtime_validated else "not_claimed",
             "autonomy_eligibility": "eligible" if is_autonomy_eligible else "not_claimed",
+        },
+        component_claims={
+            **component_claims,
+            "autonomy_eligible": is_autonomy_eligible,
         },
         runtime_claim=runtime_claim,
         autonomy_claim=autonomy_claim,
@@ -227,7 +280,7 @@ def status_from_component(component: str, current_state_path: Path, stream_path:
         "```",
         "",
     ])
-    return Report(component.lower(), f"Status {component}", body, packet)
+    return Report(component_slug, f"Status {component}", body, packet)
 
 
 def governance_status_report(si_status_path: Path, generated_at: str, source_commit_id: str) -> Report:
@@ -260,7 +313,7 @@ def governance_status_report(si_status_path: Path, generated_at: str, source_com
 
     packet = status_packet(
         component="governance",
-        canonical_status="functional_acceptance_pending" if broken else "deploy_candidate_started",
+        canonical_status="functional_acceptance_open" if broken else "deployment_candidate_started",
         evidence_links=[si_status_path.as_posix()],
         blockers=broken,
         recommended_owner_action="changes-requested" if broken else "accept",
@@ -271,6 +324,18 @@ def governance_status_report(si_status_path: Path, generated_at: str, source_com
             "governance_docs": "accepted",
             "runtime_validation": "not_claimed",
             "autonomy_eligibility": "not_claimed",
+        },
+        component_claims={
+            "repo_ready_payload_present": False,
+            "deploy_ready": False,
+            "tested_on_target": False,
+            "rollback_verified": False,
+            "runtime_validated": False,
+            "autonomy_eligible": False,
+            "tested_scope": "governance/docs status view",
+            "evidence_path": si_status_path.as_posix(),
+            "rollback_path": default_rollback_action("governance")["command"],
+            "source_ref": source_commit_id,
         },
         runtime_claim=None,
         autonomy_claim=None,
@@ -316,7 +381,7 @@ def ui_status_report(ui_stream_path: Path, generated_at: str, source_commit_id: 
 
     packet = status_packet(
         component="ui",
-        canonical_status="deploy_candidate_started",
+        canonical_status="deployment_candidate_started",
         evidence_links=[ui_stream_path.as_posix()],
         blockers=[],
         recommended_owner_action="accept",
@@ -327,6 +392,18 @@ def ui_status_report(ui_stream_path: Path, generated_at: str, source_commit_id: 
             "governance_docs": "accepted",
             "runtime_validation": "not_claimed",
             "autonomy_eligibility": "not_claimed",
+        },
+        component_claims={
+            "repo_ready_payload_present": False,
+            "deploy_ready": False,
+            "tested_on_target": False,
+            "rollback_verified": False,
+            "runtime_validated": False,
+            "autonomy_eligible": False,
+            "tested_scope": "ui governance stream status view",
+            "evidence_path": ui_stream_path.as_posix(),
+            "rollback_path": default_rollback_action("ui")["command"],
+            "source_ref": source_commit_id,
         },
         runtime_claim=None,
         autonomy_claim=None,
@@ -376,6 +453,18 @@ def decisions_report(decisions_path: Path, generated_at: str, source_commit_id: 
             "governance_docs": "accepted",
             "runtime_validation": "not_claimed",
             "autonomy_eligibility": "not_claimed",
+        },
+        component_claims={
+            "repo_ready_payload_present": False,
+            "deploy_ready": False,
+            "tested_on_target": False,
+            "rollback_verified": False,
+            "runtime_validated": False,
+            "autonomy_eligible": False,
+            "tested_scope": "decision log status view",
+            "evidence_path": decisions_path.as_posix(),
+            "rollback_path": default_rollback_action("decisions")["command"],
+            "source_ref": source_commit_id,
         },
         runtime_claim=None,
         autonomy_claim=None,
@@ -434,7 +523,7 @@ def blocker_report(si_status_path: Path, generated_at: str, source_commit_id: st
 
     packet = status_packet(
         component="blocker",
-        canonical_status="functional_acceptance_pending" if broken else "deploy_candidate_started",
+        canonical_status="functional_acceptance_open" if broken else "deployment_candidate_started",
         evidence_links=[si_status_path.as_posix()],
         blockers=broken + open_decisions,
         recommended_owner_action="run_workflow" if broken or open_decisions else "defer",
@@ -445,6 +534,18 @@ def blocker_report(si_status_path: Path, generated_at: str, source_commit_id: st
             "governance_docs": "accepted",
             "runtime_validation": "not_claimed",
             "autonomy_eligibility": "not_claimed",
+        },
+        component_claims={
+            "repo_ready_payload_present": False,
+            "deploy_ready": False,
+            "tested_on_target": False,
+            "rollback_verified": False,
+            "runtime_validated": False,
+            "autonomy_eligible": False,
+            "tested_scope": "si blocker status view",
+            "evidence_path": si_status_path.as_posix(),
+            "rollback_path": default_rollback_action("blocker")["command"],
+            "source_ref": source_commit_id,
         },
         runtime_claim=None,
         autonomy_claim=None,
@@ -525,6 +626,38 @@ def main():
             source_commit_id,
             root,
         ),
+        status_from_component(
+            "Fun Line",
+            root / "journals/scale-radio-fun-line/current_state_v1.md",
+            root / "journals/scale-radio-fun-line/stream_v1.md",
+            generated_at,
+            source_commit_id,
+            root,
+        ),
+        status_from_component(
+            "Starter",
+            root / "journals/scale-radio-starter/current_state_v1.md",
+            root / "journals/scale-radio-starter/stream_v1.md",
+            generated_at,
+            source_commit_id,
+            root,
+        ),
+        status_from_component(
+            "Autoswitch",
+            root / "journals/scale-radio-autoswitch/current_state_v1.md",
+            root / "journals/scale-radio-autoswitch/stream_v1.md",
+            generated_at,
+            source_commit_id,
+            root,
+        ),
+        status_from_component(
+            "Hardware",
+            root / "journals/scale-radio-hardware/current_state_v1.md",
+            root / "journals/scale-radio-hardware/stream_v1.md",
+            generated_at,
+            source_commit_id,
+            root,
+        ),
         decisions_report(root / "journals/system-integration-normalization/DECISIONS_system_integration_normalization_v9.md", generated_at, source_commit_id),
         blocker_report(root / "journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md", generated_at, source_commit_id),
     ]
@@ -542,6 +675,10 @@ def main():
         "- `status governance` -> [Status Governance](./governance.md)",
         "- `status ui` -> [Status UI](./ui.md)",
         "- `status bridge` -> [Status Bridge](./bridge.md)",
+        "- `status fun-line` -> [Status Fun Line](./fun-line.md)",
+        "- `status starter` -> [Status Starter](./starter.md)",
+        "- `status autoswitch` -> [Status Autoswitch](./autoswitch.md)",
+        "- `status hardware` -> [Status Hardware](./hardware.md)",
         "- `status decisions` -> [Status Decisions](./decisions.md)",
         "- `status blocker` -> [Status Blocker](./blocker.md)",
         "",
@@ -550,6 +687,10 @@ def main():
         "- [governance](./packets/governance.json)",
         "- [ui](./packets/ui.json)",
         "- [bridge](./packets/bridge.json)",
+        "- [fun-line](./packets/fun-line.json)",
+        "- [starter](./packets/starter.json)",
+        "- [autoswitch](./packets/autoswitch.json)",
+        "- [hardware](./packets/hardware.json)",
         "- [decisions](./packets/decisions.json)",
         "- [blocker](./packets/blocker.json)",
         "",

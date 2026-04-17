@@ -1,0 +1,50 @@
+{
+  "schema": "status_packet_v1",
+  "component": "fun-line",
+  "canonical_status": "functional_acceptance_open",
+  "evidence_links": [
+    "/workspace/mediastreamer/journals/scale-radio-fun-line/current_state_v1.md",
+    "/workspace/mediastreamer/journals/scale-radio-fun-line/stream_v1.md"
+  ],
+  "blockers": [
+    "later 0.5.0 and 0.6.0 lines are not authoritative runtime baselines",
+    "config pages repeatedly failed and remain non-authoritative",
+    "importer/catalog workflow must be treated as unvalidated/non-working",
+    "payload path is normalized for deploy testing, but target-Pi validation evidence is still pending"
+  ],
+  "recommended_owner_action": "changes-requested",
+  "next_owner_click": "request_changes",
+  "decision_scoring": {
+    "evidence_quality": 2,
+    "rollback_readiness": 2,
+    "blast_radius": "medium",
+    "confidence": 68
+  },
+  "rollback_action": {
+    "enabled": true,
+    "command": "git revert <merge_commit_for_fun-line>",
+    "verification": [
+      "rerun governance/report checks",
+      "confirm owner action contract fields still render"
+    ]
+  },
+  "claim_classes": {
+    "governance_docs": "accepted",
+    "runtime_validation": "not_claimed",
+    "autonomy_eligibility": "not_claimed"
+  },
+  "component_claims": {
+    "repo_ready_payload_present": true,
+    "deploy_ready": true,
+    "tested_on_target": false,
+    "rollback_verified": false,
+    "runtime_validated": false,
+    "autonomy_eligible": false,
+    "tested_scope": "target-Pi deploy/rollback evidence is still pending",
+    "evidence_path": "journals/scale-radio-fun-line/current_state_v1.md; journals/scale-radio-fun-line/stream_v1.md",
+    "rollback_path": ".github/workflows/component-test-rollback-v10.yml (component=fun-line, payload=current) pending target-Pi verification",
+    "source_ref": "reports/status/packets/fun-line.json"
+  },
+  "timestamp": "2026-04-16T00:00:00+00:00",
+  "source_commit": "c4ec33b112570bd8b52368e66e866a8c254c84bf"
+}

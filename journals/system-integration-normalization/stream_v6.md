@@ -3,6 +3,12 @@
 Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream because tuner now has a real repo-driven manual deploy/rollback lane after Bridge proved the lock-aware runtime path on the Pi.
 
 ## Entries
+### 2026-04-16 / si/component-evidence-ledger-and-claim-normalization-v1 / component claim normalization
+- normalized component current-state files for bridge, tuner, fun-line, starter, autoswitch, and hardware with a common evidence-led claim ledger
+- aligned status-packet/report generation and enforcement with the component claim ledger so claims degrade truthfully when evidence is missing
+- downgraded fun-line autonomy in the support matrix until target-Pi deploy/rollback evidence exists and updated SI status wording to match
+- purpose: remove claim drift between component truth, SI truth, matrix posture, and owner-facing status outputs
+
 ### 2026-04-16 / si/evidence-gated-one-click-v1 / evidence-gated claim-class hardening
 - tightened one-click/status packet truth model with explicit claim classes: `governance/docs accepted`, `runtime validated`, `autonomy eligible`
 - updated status packet schema + report generator so runtime/autonomy validated states require structured evidence fields (evidence path, tested scope, source ref, rollback data)

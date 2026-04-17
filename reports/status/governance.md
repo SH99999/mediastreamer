@@ -11,7 +11,7 @@ _Generated: 2026-04-16T00:00:00+00:00_
 - weekly governance report issues are generated from repo truth
 
 ## Partial
-- autonomous delivery remains support-matrix gated, now including Bridge, Tuner, and Fun Line while other components remain unsupported
+- autonomous delivery remains support-matrix gated, currently including Bridge and Tuner while Fun Line and other components remain unsupported until evidence-led claims are completed
 - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
 - tuner deploy normalization is intentionally scoped to overlay/runtime/service while source-selection behavior remains hardware-governed (encoder short/long press) until full integration
 
@@ -27,6 +27,12 @@ _Generated: 2026-04-16T00:00:00+00:00_
 - claim_classes.governance_docs: `accepted`
 - claim_classes.runtime_validation: `not_claimed`
 - claim_classes.autonomy_eligibility: `not_claimed`
+- component_claims.repo_ready_payload_present: `False`
+- component_claims.deploy_ready: `False`
+- component_claims.tested_on_target: `False`
+- component_claims.rollback_verified: `False`
+- component_claims.runtime_validated: `False`
+- component_claims.autonomy_eligible: `False`
 - runtime_claim.evidence_path: `n/a`
 - runtime_claim.tested_scope: `n/a`
 - autonomy_claim.evidence_path: `n/a`
@@ -36,7 +42,7 @@ _Generated: 2026-04-16T00:00:00+00:00_
 - decision_scoring.blast_radius: `medium`
 - decision_scoring.confidence: `68`
 - rollback_action.command: `git revert <merge_commit_for_governance>`
-- source_commit: `a4aff91747304e3717a74839406b6fc8ac7f93b3`
+- source_commit: `c4ec33b112570bd8b52368e66e866a8c254c84bf`
 
 ## Visual snapshot
 ```mermaid

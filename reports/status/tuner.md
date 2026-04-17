@@ -6,9 +6,8 @@ _Generated: 2026-04-16T00:00:00+00:00_
 - `payload_complete`
 - `deployment_candidate_started`
 - `deploy_ready`
-- `deploy_validated_on_pi`
-- `rollback_validated_on_pi`
-- `manual_runtime_validation_passed`
+- `tested_on_pi`
+- `functional_acceptance_open`
 
 ## Main open points
 - the currently normalized deploy lane intentionally covers the overlay and resident renderer service only
@@ -28,22 +27,28 @@ _Generated: 2026-04-16T00:00:00+00:00_
 - claim_classes.governance_docs: `accepted`
 - claim_classes.runtime_validation: `validated`
 - claim_classes.autonomy_eligibility: `eligible`
-- runtime_claim.evidence_path: `/workspace/mediastreamer/journals/scale-radio-tuner/current_state_v2.md`
-- runtime_claim.tested_scope: `manual deploy/rollback validation on target Pi lane`
-- autonomy_claim.evidence_path: `tools/governance/autonomous_delivery_matrix_v3.json`
-- autonomy_claim.tested_scope: `tuner component matrix eligibility and validated target-Pi runtime lane`
+- component_claims.repo_ready_payload_present: `True`
+- component_claims.deploy_ready: `True`
+- component_claims.tested_on_target: `True`
+- component_claims.rollback_verified: `True`
+- component_claims.runtime_validated: `True`
+- component_claims.autonomy_eligible: `True`
+- runtime_claim.evidence_path: `journals/scale-radio-tuner/current_state_v2.md; journals/scale-radio-tuner/stream_v2.md; tools/governance/autonomous_delivery_matrix_v3.json`
+- runtime_claim.tested_scope: `overlay/runtime/service lane on target Pi; source tile remains out of deploy scope`
+- autonomy_claim.evidence_path: `journals/scale-radio-tuner/current_state_v2.md; journals/scale-radio-tuner/stream_v2.md; tools/governance/autonomous_delivery_matrix_v3.json`
+- autonomy_claim.tested_scope: `overlay/runtime/service lane on target Pi; source tile remains out of deploy scope`
 - decision_scoring.evidence_quality: `2`
 - decision_scoring.rollback_readiness: `2`
 - decision_scoring.blast_radius: `medium`
 - decision_scoring.confidence: `68`
 - rollback_action.command: `git revert <merge_commit_for_tuner>`
-- source_commit: `a4aff91747304e3717a74839406b6fc8ac7f93b3`
+- source_commit: `c4ec33b112570bd8b52368e66e866a8c254c84bf`
 
 ## Visual snapshot
 ```mermaid
 pie
     title Lifecycle snapshot
-    "lifecycle entries" : 6
+    "lifecycle entries" : 5
     "main gaps" : 4
     "next actions" : 0
 ```

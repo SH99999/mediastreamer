@@ -17,6 +17,7 @@ Define a canonical machine-readable status handoff payload for SI/governance and
 - `decision_scoring`
 - `rollback_action`
 - `claim_classes`
+- `component_claims`
 - `timestamp`
 - `source_commit`
 
@@ -67,6 +68,23 @@ Runtime/autonomy evidence requirements:
 
 Truthful degradation rule:
 - if runtime/autonomy evidence is missing, packet/report output must degrade to `not_claimed` and must not present fully validated or eligible claims.
+
+## Component claim ledger contract (mandatory)
+Component-facing packets must expose one normalized claim ledger object:
+- `component_claims.repo_ready_payload_present` (boolean)
+- `component_claims.deploy_ready` (boolean)
+- `component_claims.tested_on_target` (boolean)
+- `component_claims.rollback_verified` (boolean)
+- `component_claims.runtime_validated` (boolean)
+- `component_claims.autonomy_eligible` (boolean)
+- `component_claims.tested_scope` (string)
+- `component_claims.evidence_path` (string)
+- `component_claims.rollback_path` (string)
+- `component_claims.source_ref` (string)
+
+Alignment rule:
+- `component_claims.autonomy_eligible=true` must not contradict `tools/governance/autonomous_delivery_matrix_v3.json`
+- component claim fields must align with current-state/stream truth for the same component
 
 ## Canonical-status alignment
 `canonical_status` must follow `contracts/repo/status_taxonomy_contract_v1.md` and must not invent new lifecycle labels.

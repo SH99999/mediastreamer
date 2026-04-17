@@ -1,7 +1,7 @@
 {
   "schema": "status_packet_v1",
   "component": "tuner",
-  "canonical_status": "functional_acceptance_pending",
+  "canonical_status": "functional_acceptance_open",
   "evidence_links": [
     "/workspace/mediastreamer/journals/scale-radio-tuner/current_state_v2.md",
     "/workspace/mediastreamer/journals/scale-radio-tuner/stream_v2.md"
@@ -33,18 +33,30 @@
     "runtime_validation": "validated",
     "autonomy_eligibility": "eligible"
   },
+  "component_claims": {
+    "repo_ready_payload_present": true,
+    "deploy_ready": true,
+    "tested_on_target": true,
+    "rollback_verified": true,
+    "runtime_validated": true,
+    "autonomy_eligible": true,
+    "tested_scope": "overlay/runtime/service lane on target Pi; source tile remains out of deploy scope",
+    "evidence_path": "journals/scale-radio-tuner/current_state_v2.md; journals/scale-radio-tuner/stream_v2.md; tools/governance/autonomous_delivery_matrix_v3.json",
+    "rollback_path": ".github/workflows/component-test-rollback-v10.yml (component=tuner, payload=current)",
+    "source_ref": "reports/status/packets/tuner.json"
+  },
   "timestamp": "2026-04-16T00:00:00+00:00",
-  "source_commit": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
+  "source_commit": "c4ec33b112570bd8b52368e66e866a8c254c84bf",
   "runtime_claim": {
-    "evidence_path": "/workspace/mediastreamer/journals/scale-radio-tuner/current_state_v2.md",
-    "tested_scope": "manual deploy/rollback validation on target Pi lane",
-    "source_ref": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
-    "rollback_verification": "rollback lane validated on target Pi"
+    "evidence_path": "journals/scale-radio-tuner/current_state_v2.md; journals/scale-radio-tuner/stream_v2.md; tools/governance/autonomous_delivery_matrix_v3.json",
+    "tested_scope": "overlay/runtime/service lane on target Pi; source tile remains out of deploy scope",
+    "source_ref": "reports/status/packets/tuner.json",
+    "rollback_verification": ".github/workflows/component-test-rollback-v10.yml (component=tuner, payload=current)"
   },
   "autonomy_claim": {
-    "evidence_path": "tools/governance/autonomous_delivery_matrix_v3.json",
-    "tested_scope": "tuner component matrix eligibility and validated target-Pi runtime lane",
-    "source_ref": "a4aff91747304e3717a74839406b6fc8ac7f93b3",
-    "rollback_path": "git revert <merge_commit_for_tuner>"
+    "evidence_path": "journals/scale-radio-tuner/current_state_v2.md; journals/scale-radio-tuner/stream_v2.md; tools/governance/autonomous_delivery_matrix_v3.json",
+    "tested_scope": "overlay/runtime/service lane on target Pi; source tile remains out of deploy scope",
+    "source_ref": "reports/status/packets/tuner.json",
+    "rollback_path": ".github/workflows/component-test-rollback-v10.yml (component=tuner, payload=current)"
   }
 }

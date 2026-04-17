@@ -1,12 +1,16 @@
 {
   "schema": "status_packet_v1",
-  "component": "governance",
+  "component": "autoswitch",
   "canonical_status": "functional_acceptance_open",
   "evidence_links": [
-    "/workspace/mediastreamer/journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md"
+    "/workspace/mediastreamer/journals/scale-radio-autoswitch/current_state_v1.md",
+    "/workspace/mediastreamer/journals/scale-radio-autoswitch/stream_v1.md"
   ],
   "blockers": [
-    "unsupported components still cannot use autonomous delivery and must still escalate or no-op safely"
+    "previous playback source restore is unresolved",
+    "renderer-visible tape-state export is unresolved",
+    "interaction with future overlay ownership signaling remains unresolved",
+    "long-duration runtime validation is still open"
   ],
   "recommended_owner_action": "changes-requested",
   "next_owner_click": "request_changes",
@@ -18,7 +22,7 @@
   },
   "rollback_action": {
     "enabled": true,
-    "command": "git revert <merge_commit_for_governance>",
+    "command": "git revert <merge_commit_for_autoswitch>",
     "verification": [
       "rerun governance/report checks",
       "confirm owner action contract fields still render"
@@ -30,16 +34,16 @@
     "autonomy_eligibility": "not_claimed"
   },
   "component_claims": {
-    "repo_ready_payload_present": false,
+    "repo_ready_payload_present": true,
     "deploy_ready": false,
     "tested_on_target": false,
     "rollback_verified": false,
     "runtime_validated": false,
     "autonomy_eligible": false,
-    "tested_scope": "governance/docs status view",
-    "evidence_path": "/workspace/mediastreamer/journals/system-integration-normalization/STATUS_system_integration_normalization_v8.md",
-    "rollback_path": "git revert <merge_commit_for_governance>",
-    "source_ref": "c4ec33b112570bd8b52368e66e866a8c254c84bf"
+    "tested_scope": "legacy runtime behavior documented only; no governed target-Pi evidence bundle",
+    "evidence_path": "journals/scale-radio-autoswitch/current_state_v1.md; journals/scale-radio-autoswitch/stream_v1.md",
+    "rollback_path": "not-yet-defined (deploy lane not normalized)",
+    "source_ref": "reports/status/packets/autoswitch.json"
   },
   "timestamp": "2026-04-16T00:00:00+00:00",
   "source_commit": "c4ec33b112570bd8b52368e66e866a8c254c84bf"

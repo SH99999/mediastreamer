@@ -27,16 +27,22 @@ _Generated: 2026-04-16T00:00:00+00:00_
 - claim_classes.governance_docs: `accepted`
 - claim_classes.runtime_validation: `validated`
 - claim_classes.autonomy_eligibility: `eligible`
-- runtime_claim.evidence_path: `/workspace/mediastreamer/journals/scale-radio-bridge/current_state_v1.md`
-- runtime_claim.tested_scope: `manual deploy/rollback validation on target Pi lane`
-- autonomy_claim.evidence_path: `tools/governance/autonomous_delivery_matrix_v3.json`
-- autonomy_claim.tested_scope: `bridge component matrix eligibility and validated target-Pi runtime lane`
+- component_claims.repo_ready_payload_present: `True`
+- component_claims.deploy_ready: `True`
+- component_claims.tested_on_target: `True`
+- component_claims.rollback_verified: `True`
+- component_claims.runtime_validated: `True`
+- component_claims.autonomy_eligible: `True`
+- runtime_claim.evidence_path: `journals/scale-radio-bridge/current_state_v1.md; journals/scale-radio-bridge/stream_v1.md; tools/governance/autonomous_delivery_matrix_v3.json`
+- runtime_claim.tested_scope: `bridge provider-layer deploy/rollback lane on target Pi`
+- autonomy_claim.evidence_path: `journals/scale-radio-bridge/current_state_v1.md; journals/scale-radio-bridge/stream_v1.md; tools/governance/autonomous_delivery_matrix_v3.json`
+- autonomy_claim.tested_scope: `bridge provider-layer deploy/rollback lane on target Pi`
 - decision_scoring.evidence_quality: `2`
 - decision_scoring.rollback_readiness: `2`
 - decision_scoring.blast_radius: `medium`
 - decision_scoring.confidence: `68`
 - rollback_action.command: `git revert <merge_commit_for_bridge>`
-- source_commit: `a4aff91747304e3717a74839406b6fc8ac7f93b3`
+- source_commit: `c4ec33b112570bd8b52368e66e866a8c254c84bf`
 
 ## Visual snapshot
 ```mermaid

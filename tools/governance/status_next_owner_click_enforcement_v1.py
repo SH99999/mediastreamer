@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-REPORTS = ["tuner", "governance", "ui", "bridge", "decisions", "blocker"]
+REPORTS = ["tuner", "governance", "ui", "bridge", "fun-line", "starter", "autoswitch", "hardware", "decisions", "blocker"]
 REQUIRED_PACKET_KEYS = {
     "schema",
     "component",
@@ -16,6 +16,7 @@ REQUIRED_PACKET_KEYS = {
     "decision_scoring",
     "rollback_action",
     "claim_classes",
+    "component_claims",
     "timestamp",
     "source_commit",
 }
@@ -25,6 +26,7 @@ ALLOWED_NEXT_OWNER_CLICK = {"approve_pr", "request_changes", "run_workflow", "de
 def main() -> int:
     root = Path(__file__).resolve().parents[2]
     failures: list[str] = []
+    matrix = json.loads((root / "tools" / "governance" / "autonomous_delivery_matrix_v3.json").read_text(encoding="utf-8"))
 
     for slug in REPORTS:
         report_path = root / "reports" / "status" / f"{slug}.md"
@@ -46,6 +48,8 @@ def main() -> int:
             failures.append(f"missing_decision_scoring_in_report:{report_path.relative_to(root)}")
         if "claim_classes.governance_docs:" not in report_text:
             failures.append(f"missing_claim_classes_in_report:{report_path.relative_to(root)}")
+        if "component_claims.deploy_ready:" not in report_text:
+            failures.append(f"missing_component_claims_in_report:{report_path.relative_to(root)}")
         if "rollback_action.command:" not in report_text:
             failures.append(f"missing_rollback_action_in_report:{report_path.relative_to(root)}")
         if "source_commit:" not in report_text:
@@ -128,6 +132,49 @@ def main() -> int:
                         failures.append(f"invalid_autonomy_claim_{key}:{packet_path.relative_to(root)}")
         elif autonomy_claim is not None:
             failures.append(f"autonomy_claim_present_without_eligible_status:{packet_path.relative_to(root)}")
+
+        component_claims = packet.get("component_claims", {})
+        if not isinstance(component_claims, dict):
+            failures.append(f"invalid_component_claims_type:{packet_path.relative_to(root)}")
+            component_claims = {}
+        required_component_claim_keys = {
+            "repo_ready_payload_present",
+            "deploy_ready",
+            "tested_on_target",
+            "rollback_verified",
+            "runtime_validated",
+            "autonomy_eligible",
+            "tested_scope",
+            "evidence_path",
+            "rollback_path",
+            "source_ref",
+        }
+        missing_component_claims = required_component_claim_keys - set(component_claims.keys())
+        if missing_component_claims:
+            failures.append(
+                f"missing_component_claim_keys:{packet_path.relative_to(root)}:{','.join(sorted(missing_component_claims))}"
+            )
+        for key in ("repo_ready_payload_present", "deploy_ready", "tested_on_target", "rollback_verified", "runtime_validated", "autonomy_eligible"):
+            value = component_claims.get(key)
+            if not isinstance(value, bool):
+                failures.append(f"invalid_component_claim_bool_{key}:{packet_path.relative_to(root)}:{value}")
+        for key in ("tested_scope", "evidence_path", "rollback_path", "source_ref"):
+            value = component_claims.get(key)
+            if not isinstance(value, str) or not value.strip():
+                failures.append(f"invalid_component_claim_text_{key}:{packet_path.relative_to(root)}")
+
+        if component_claims.get("runtime_validated") is True and claim_classes.get("runtime_validation") != "validated":
+            failures.append(f"runtime_claim_class_mismatch:{packet_path.relative_to(root)}")
+        if component_claims.get("autonomy_eligible") is True and claim_classes.get("autonomy_eligibility") != "eligible":
+            failures.append(f"autonomy_claim_class_mismatch:{packet_path.relative_to(root)}")
+
+        component_name = packet.get("component")
+        if isinstance(component_name, str):
+            matrix_entry = matrix.get("components", {}).get(component_name)
+            if isinstance(matrix_entry, dict):
+                matrix_auto = matrix_entry.get("auto_delivery_supported")
+                if isinstance(matrix_auto, bool) and component_claims.get("autonomy_eligible") is True and matrix_auto is not True:
+                    failures.append(f"autonomy_matrix_mismatch:{packet_path.relative_to(root)}:{component_name}")
 
     if failures:
         print("status_next_owner_click_enforcement=fail")

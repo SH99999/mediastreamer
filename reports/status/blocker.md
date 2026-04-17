@@ -77,6 +77,12 @@ _Generated: 2026-04-16T00:00:00+00:00_
 - claim_classes.governance_docs: `accepted`
 - claim_classes.runtime_validation: `not_claimed`
 - claim_classes.autonomy_eligibility: `not_claimed`
+- component_claims.repo_ready_payload_present: `False`
+- component_claims.deploy_ready: `False`
+- component_claims.tested_on_target: `False`
+- component_claims.rollback_verified: `False`
+- component_claims.runtime_validated: `False`
+- component_claims.autonomy_eligible: `False`
 - runtime_claim.evidence_path: `n/a`
 - runtime_claim.tested_scope: `n/a`
 - autonomy_claim.evidence_path: `n/a`
@@ -86,7 +92,7 @@ _Generated: 2026-04-16T00:00:00+00:00_
 - decision_scoring.blast_radius: `medium`
 - decision_scoring.confidence: `68`
 - rollback_action.command: `git revert <merge_commit_for_blocker>`
-- source_commit: `a4aff91747304e3717a74839406b6fc8ac7f93b3`
+- source_commit: `c4ec33b112570bd8b52368e66e866a8c254c84bf`
 
 ## Visual snapshot
 ```mermaid

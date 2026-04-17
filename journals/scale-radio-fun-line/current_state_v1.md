@@ -18,6 +18,18 @@
 - `deploy_ready`
 - `functional_acceptance_open`
 
+## Evidence-led claim ledger
+- claim.repo_ready_payload_present: `true`
+- claim.deploy_ready: `true`
+- claim.tested_on_target: `false`
+- claim.rollback_verified: `false`
+- claim.runtime_validated: `false`
+- claim.autonomy_eligible: `false`
+- claim.tested_scope: `target-Pi deploy/rollback evidence is still pending`
+- claim.evidence_path: `journals/scale-radio-fun-line/current_state_v1.md; journals/scale-radio-fun-line/stream_v1.md`
+- claim.rollback_path: `.github/workflows/component-test-rollback-v10.yml (component=fun-line, payload=current) pending target-Pi verification`
+- claim.source_ref: `reports/status/packets/fun-line.json`
+
 ## Accepted baseline
 - authoritative runtime baseline: `0.4.2`
 - Dog Line is the first production actor to carry forward

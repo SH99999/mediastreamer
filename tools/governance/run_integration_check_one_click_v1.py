@@ -26,10 +26,11 @@ def run(cmd: str, cwd: Path) -> CheckResult:
 
 
 def one_click_presence(root: Path) -> CheckResult:
-    reports = ["tuner", "governance", "ui", "bridge", "decisions", "blocker"]
+    reports = ["tuner", "governance", "ui", "bridge", "fun-line", "starter", "autoswitch", "hardware", "decisions", "blocker"]
     required = [
         "next_owner_click:",
         "claim_classes.governance_docs:",
+        "component_claims.deploy_ready:",
         "decision_scoring.evidence_quality:",
         "rollback_action.command:",
         "source_commit:",
@@ -100,9 +101,10 @@ def render_report(results: list[CheckResult], out_path: Path) -> None:
         "## Executed checks",
         "1. report generation",
         "2. next-owner-click enforcement",
-        "3. source registry lint",
-        "4. SI branch-scope guard",
-        "5. one-click field presence sweep",
+        "3. component claim consistency check",
+        "4. source registry lint",
+        "5. SI branch-scope guard",
+        "6. one-click field presence sweep",
     ])
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -115,6 +117,7 @@ def main() -> int:
     checks = [
         run(f"python3 tools/governance/generate_status_reports_v1.py --repo-root . --out-dir reports/status --generated-at {timestamp}", root),
         run("python3 tools/governance/status_next_owner_click_enforcement_v1.py", root),
+        run("python3 tools/governance/component_claim_consistency_check_v1.py", root),
         run("python3 tools/governance/governance_source_registry_lint_v1.py", root),
         run("bash -lc \"printf 'contracts/repo/owner_decision_scoring_and_rollback_contract_v1.md\\n' > /tmp/changed_files_guard.txt && python3 tools/governance/si_branch_scope_guard_v1.py --branch si/governance-integration-check-v1 --changed-files /tmp/changed_files_guard.txt --enforce true\"", root),
         one_click_presence(root),

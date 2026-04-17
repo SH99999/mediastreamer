@@ -27,7 +27,7 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - tuner deploy and rollback are validated on the target Pi through the manual lock-aware workflow lane
   - bridge and tuner are both enabled in the autonomous delivery support matrix
 - what partially works:
-  - autonomous delivery remains support-matrix gated, now including Bridge, Tuner, and Fun Line while other components remain unsupported
+  - autonomous delivery remains support-matrix gated, currently including Bridge and Tuner while Fun Line and other components remain unsupported until evidence-led claims are completed
   - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
   - tuner deploy normalization is intentionally scoped to overlay/runtime/service while source-selection behavior remains hardware-governed (encoder short/long press) until full integration
 - what is broken:
@@ -134,6 +134,7 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 - next manual validation target with repo deploy lane ready:
   - Fun Line overlay lane (`current`)
 - delivery support matrix on `main` now supports Bridge, Tuner, and Fun Line for autonomous dispatch
+- delivery support matrix on `main` now supports Bridge and Tuner for autonomous dispatch; Fun Line is explicitly held non-autonomous pending target-Pi deploy/rollback evidence
 - autonomous deploy line remains partial at repository scope because other components are still unsupported
 - owner remains the final onsite acceptance gate before stable truth is merged to `main`
 - source-project artifacts remain temporarily out of deploy-lane scope and are controlled via hardware interaction rules (encoder short/long press) until full integration

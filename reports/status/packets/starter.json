@@ -1,0 +1,50 @@
+{
+  "schema": "status_packet_v1",
+  "component": "starter",
+  "canonical_status": "functional_acceptance_open",
+  "evidence_links": [
+    "/workspace/mediastreamer/journals/scale-radio-starter/current_state_v1.md",
+    "/workspace/mediastreamer/journals/scale-radio-starter/stream_v1.md"
+  ],
+  "blockers": [
+    "exact repo component-path and payload normalization still need confirmation against Git truth",
+    "exact stable asset inventory for `v0.2.2 stable` remains uncertain in the surviving context",
+    "later appliance/direct-now-playing lines are explicitly nonleading and should remain archived/experimental only",
+    "deep idle, FPS cap, and render-throttling must remain unresolved here unless grounded by another specialist lane"
+  ],
+  "recommended_owner_action": "changes-requested",
+  "next_owner_click": "request_changes",
+  "decision_scoring": {
+    "evidence_quality": 2,
+    "rollback_readiness": 2,
+    "blast_radius": "medium",
+    "confidence": 68
+  },
+  "rollback_action": {
+    "enabled": true,
+    "command": "git revert <merge_commit_for_starter>",
+    "verification": [
+      "rerun governance/report checks",
+      "confirm owner action contract fields still render"
+    ]
+  },
+  "claim_classes": {
+    "governance_docs": "accepted",
+    "runtime_validation": "not_claimed",
+    "autonomy_eligibility": "not_claimed"
+  },
+  "component_claims": {
+    "repo_ready_payload_present": false,
+    "deploy_ready": false,
+    "tested_on_target": false,
+    "rollback_verified": false,
+    "runtime_validated": false,
+    "autonomy_eligible": false,
+    "tested_scope": "legacy accepted baseline documented; repo deploy/rollback evidence not normalized",
+    "evidence_path": "journals/scale-radio-starter/current_state_v1.md; journals/scale-radio-starter/stream_v1.md",
+    "rollback_path": "not-yet-defined (deploy lane unresolved)",
+    "source_ref": "reports/status/packets/starter.json"
+  },
+  "timestamp": "2026-04-16T00:00:00+00:00",
+  "source_commit": "c4ec33b112570bd8b52368e66e866a8c254c84bf"
+}
