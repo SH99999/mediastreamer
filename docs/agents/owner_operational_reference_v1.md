@@ -3,6 +3,9 @@
 ## Purpose
 This is the single owner-facing page for decisions, onboarding links, governance operations, and review workflow.
 
+## Owner policy (one-line)
+Discuss in chat, ship to Codex, review only repo-ready output, merge only after ChatGPT `pre-ok`; all routing, decomposition, documentation, closeout, and truth maintenance are execution-lane responsibilities, not owner work.
+
 ## Owner role boundary (non-negotiable)
 - Owner is expected to decide, not to execute PR mechanics.
 - Agents/chats/Codex lanes must create/update branches and PRs and deliver decision-ready packets.
