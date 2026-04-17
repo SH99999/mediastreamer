@@ -1,6 +1,6 @@
 # codex-trigger-and-materialized-chat-protocol intake v1
 
-status: ready-for-codex
+status: closed
 actor: chatgpt
 
 ## source/context
@@ -78,5 +78,5 @@ actor: chatgpt
 - chatgpt_review_result: pending
 - owner_review_override: no
 - owner_override_note:
-- governance_closeout_status: pending
-- next_owner_click: review now
+- governance_closeout_status: done
+- next_owner_click: none (closed; merged work already present on main)
