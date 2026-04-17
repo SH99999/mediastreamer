@@ -56,7 +56,7 @@ def main() -> int:
         return 0
 
     if promote:
-        print("action-required: promote-live-session-to-demand")
+        print("action-required: ship-to-codex (internal chatok promotion)")
         for path in promote:
             print(path.relative_to(REPO_ROOT))
 
@@ -66,7 +66,7 @@ def main() -> int:
             print(path.relative_to(REPO_ROOT))
 
     if promote and not ready:
-        print("next-step: run promotion then set demand status ready-for-codex")
+        print("next-step: run ship-to-codex promotion helper to set demand status ready-for-codex")
     elif ready:
         print("next-step: run codex execution from listed ready-for-codex artifacts")
     return 0

@@ -4,6 +4,13 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/owner-minimal-chat-handoff-v1 / owner-minimal handoff hardening
+- made owner-visible handoff command set minimal (`governed mode on`, `ship to codex`, merge after `pre-ok`) while internalizing `chatok` promotion semantics
+- removed owner-visible manual closure requirement and added automated demand closure workflow/script based on merged PR + `pre-ok` + `governance_closeout_status=done`
+- added demand lifecycle tracking fields and surfaced `pre-ok` / `ready-for-owner` rows (with PR link + next click) in existing owner action/decision boards
+- clarified Codex-owned routing/decomposition and durable truth update obligations in canonical exchange governance docs
+- purpose: reduce owner friction without adding new visual/meta surfaces or parallel exchange systems
+
 ### 2026-04-17 / si/chat-governed-mode-and-repo-continuity-v1 / governed-mode activation + live continuity
 - added governed chat mode activation (`governed mode on`) with a canonical live-session artifact path `exchange/chatgpt/sessions/<topic>__live_v1.md`
 - standardized continuity SLA so governed chat deltas must be persisted to Git within 5 minutes and added required live-session fields including `last_material_update_utc`

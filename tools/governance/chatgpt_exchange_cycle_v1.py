@@ -120,7 +120,7 @@ def main() -> int:
             f"- demand: `{demand_rel}`\n"
             f"- branch plan: `{args.branch_plan}`\n"
             f"- owner decision needed: `accept | changes-requested | reject`\n"
-            f"- status transition: `live -> chatok -> ready-for-codex`\n"
+            f"- status transition: `live -> ship-to-codex (internal chatok) -> ready-for-codex`\n"
         )
 
     print(f"initialized cycle: {cycle_id}")

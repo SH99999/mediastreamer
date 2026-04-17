@@ -10,20 +10,20 @@ Provide a standard path for two-lane collaboration (ChatGPT + Codex) using Git a
    - `governed mode on`
 3. Create/update live session continuity artifact first:
    - `exchange/chatgpt/sessions/<topic>__live_v1.md`
-4. Promote with `chatok` into demand intake:
-   - `exchange/chatgpt/demands/<topic>__intake_v1.md` -> `ready-for-codex` (`ship to codex`)
-   - helper: `python3 tools/governance/chatgpt_promote_live_to_demand_v1.py --topic \"<topic>\"`
+4. Promote with `ship to codex` into demand intake:
+   - `exchange/chatgpt/demands/<topic>__intake_v1.md` -> `ready-for-codex` (internal `chatok`)
+   - helper: `python3 tools/governance/chatgpt_promote_live_to_demand_v1.py --topic \"<topic>\" --ship-to-codex`
 5. Codex executes from demand + repo artifacts (not chat memory):
    - `in-execution` -> `ready-for-chatgpt-review`
 6. ChatGPT review gate:
    - set `pre-ok` or `changes-requested`
 7. Owner-ready handoff:
    - `ready-for-owner` with PR + rollback + next owner click
-8. Mark `closed` after owner decision path completes (`close demand`).
+8. Demand is auto-closed after owner merge + governance closeout completion.
 
 ## Max-delta continuity rule
 No relevant chat decision/risk/request/blocker/non-loss requirement may remain chat-only for more than 5 minutes.
-If durable truth update is not ready, live session capture is mandatory and demand promotion follows at `chatok`.
+If durable truth update is not ready, live session capture is mandatory and demand promotion follows at `ship to codex`.
 
 ## Autonomous cycle init
 Use:

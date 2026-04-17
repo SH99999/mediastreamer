@@ -250,3 +250,13 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: exchange lifecycle semantics, watcher routing, live-to-demand promotion, and owner command surface.
 - What it explicitly does NOT affect: addition of dashboards/boards/html surfaces or creation of a second exchange system.
 - Follow-up needed: keep session template, promotion helper, and protocol statuses aligned as exchange tooling evolves.
+
+
+### DEC-system_integration_normalization-40
+- Status: locked
+- Decision: owner-minimal governed chat handoff uses only `governed mode on` and `ship to codex` before merge-after-`pre-ok`; `chatok` is internalized and demand closure is automated after merged PR + pre-ok + closeout-done conditions.
+- Date context: owner-minimal chat handoff hardening phase
+- Why this was chosen: owner should not execute internal lifecycle commands or manually close demand artifacts.
+- What it affects: exchange lifecycle wording, live->demand promotion helper, demand auto-close automation, and owner boards/index visibility of `pre-ok` / `ready-for-owner`.
+- What it explicitly does NOT affect: addition of new dashboards/boards/html surfaces or manual owner routing/decomposition work.
+- Follow-up needed: keep demand lifecycle tracking fields populated (`source_pr_url`, `chatgpt_review_result`, `governance_closeout_status`, `next_owner_click`) so auto-close remains reliable.

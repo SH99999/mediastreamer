@@ -12,6 +12,7 @@ MANUAL = ROOT / 'reports' / 'owner' / 'owner_manual_tasks_v1.json'
 ACTION_OUT = ROOT / 'reports' / 'owner' / 'owner_action_board_v1.html'
 DECISION_OUT = ROOT / 'reports' / 'owner' / 'owner_decision_board_v1.html'
 OUTBOX = ROOT / 'exchange' / 'chatgpt' / 'outbox'
+DEMANDS = ROOT / 'exchange' / 'chatgpt' / 'demands'
 
 
 def branch() -> str:
@@ -128,6 +129,42 @@ def load_owner_packets(br: str) -> list[dict]:
     return items
 
 
+def load_demand_review_items(br: str) -> list[dict]:
+    items: list[dict] = []
+    for p in sorted(DEMANDS.glob('*__intake_v*.md')):
+        if p.name.startswith('TEMPLATE__'):
+            continue
+        meta: dict[str, str] = {}
+        status_value = 'missing'
+        for line in p.read_text(encoding='utf-8').splitlines():
+            stripped = line.strip()
+            if stripped.startswith('status:'):
+                status_value = stripped.split(':', 1)[1].strip().lower()
+            if stripped.startswith('- ') and ':' in stripped:
+                key, value = stripped[2:].split(':', 1)
+                meta[key.strip().lower().replace(' ', '_')] = value.strip()
+
+        if status_value not in {'pre-ok', 'ready-for-owner'}:
+            continue
+
+        pr_url = meta.get('source_pr_url', '')
+        review = meta.get('chatgpt_review_result', 'pending')
+        next_click = meta.get('next_owner_click', 'merge after pre-ok')
+        action_url = pr_url or blob_url(str(p.relative_to(ROOT)), br)
+
+        items.append({
+            'type': 'chat-review',
+            'title': p.name.replace('__intake_v1.md', '').replace('-', ' '),
+            'needed_from_owner': next_click,
+            'details': f"ChatGPT review={review}; demand_status={status_value}",
+            'action_url': action_url,
+            'where_to_act': 'Confirm pre-ok, open PR link, then merge to main if accepted',
+            'source': str(p.relative_to(ROOT)),
+            'added_on': file_added_on(p),
+        })
+    return items
+
+
 def load_manual() -> list[dict]:
     if not MANUAL.exists():
         return []
@@ -166,10 +203,11 @@ def main() -> int:
     br = branch()
     packet_items = load_packet_items(br)
     owner_packets = load_owner_packets(br)
+    demand_items = load_demand_review_items(br)
     manual = load_manual()
     ACTION_OUT.parent.mkdir(parents=True, exist_ok=True)
-    ACTION_OUT.write_text(render('Owner Action Board v1', 'Open owner needs (decision/input/task/feedback).', owner_packets + packet_items + manual), encoding='utf-8')
-    DECISION_OUT.write_text(render('Owner Decision Board v1', 'Decision-focused view from status packets and owner packets.', owner_packets + packet_items), encoding='utf-8')
+    ACTION_OUT.write_text(render('Owner Action Board v1', 'Open owner needs (decision/input/task/feedback).', demand_items + owner_packets + packet_items + manual), encoding='utf-8')
+    DECISION_OUT.write_text(render('Owner Decision Board v1', 'Decision-focused view from status packets and owner packets.', demand_items + owner_packets + packet_items), encoding='utf-8')
     print(ACTION_OUT.relative_to(ROOT))
     print(DECISION_OUT.relative_to(ROOT))
     return 0

@@ -26,18 +26,18 @@ Each active exchange artifact must contain one status marker line:
 - `status: <allowed-status>`
 
 ## Handshake order
-`chat -> governed mode on -> live session artifact on git -> chatok -> demand intake -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
+`chat -> governed mode on -> live session artifact on git -> ship to codex -> (internal chatok) -> demand intake -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
 
 Detailed behavior:
 1. ChatGPT activates the thread using `governed mode on`.
 2. ChatGPT captures relevant outcome in a live session file (`status: live`).
-3. ChatGPT sets `status: chatok` to lock the live session for promotion.
-4. `chatok` promotes to demand intake with `status: ready-for-codex` (or command `ship to codex`).
+3. Owner requests `ship to codex`.
+4. Codex internalizes `chatok` and promotes to demand intake with `status: ready-for-codex`.
 5. Codex executes from demand + repo artifacts and marks `status: in-execution`.
 6. Codex marks `status: ready-for-chatgpt-review` after documented output + PR are prepared.
 7. ChatGPT reviews against demand + repo truth; set `status: pre-ok` or `status: changes-requested`.
 8. Codex prepares owner packet and sets `status: ready-for-owner` only after pre-ok path is satisfied.
-9. After owner decision/merge, mark `status: closed` (or command `close demand`).
+9. After owner decision/merge and governance closeout completion, demand status is auto-moved to `closed`.
 
 ## Continuity rule
 No relevant chat information may remain chat-only for more than 5 minutes.
@@ -49,6 +49,7 @@ Minimum persistence layer before full durable truth updates:
 - promotion target: `exchange/chatgpt/demands/<topic>__intake_v1.md`
 - promotion status result: `ready-for-codex`
 - live session remains the continuity artifact
+- owner-facing command remains `ship to codex`; `chatok` is an internal lifecycle step
 
 ## Channel separation (required)
 - Internal ChatGPT↔Codex exchange artifacts may be compact or machine-oriented.

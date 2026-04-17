@@ -16,6 +16,15 @@ Prompt aliases:
 - `owner capture-prompt` -> [ChatGPT Capture-to-Demand Prompt](../../docs/agents/chatgpt_capture_to_demand_prompt_v1.md)
 - `owner governed-intake` -> [ChatGPT Governed Intake Prompt](../../docs/agents/chatgpt_governed_intake_prompt_v1.md)
 
+Owner minimal command set:
+- `governed mode on`
+- `ship to codex`
+- merge to `main` after `pre-ok`
+
+Where to check chat review state:
+- [Owner action board](../owner/owner_action_board_v1.html)
+- [Owner decision board](../owner/owner_decision_board_v1.html)
+
 Status packet JSON artifacts:
 - [tuner](./packets/tuner.json)
 - [governance](./packets/governance.json)

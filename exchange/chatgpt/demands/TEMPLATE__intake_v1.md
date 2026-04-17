@@ -32,3 +32,9 @@ actor: chatgpt
 ## execution request for Codex
 - execution branch: si/<topic>
 - required output: PR to `main` + decision-ready packet + rollback command + next owner click
+
+## lifecycle tracking
+- source_pr_url:
+- chatgpt_review_result: pending
+- governance_closeout_status: pending
+- next_owner_click: merge after pre-ok

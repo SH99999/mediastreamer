@@ -5,9 +5,7 @@ Governed-mode live continuity artifacts:
 
 ## Activation and minimal command surface
 - `governed mode on`
-- `chatok`
 - `ship to codex`
-- `close demand`
 
 ## Required live-session fields
 - source/context

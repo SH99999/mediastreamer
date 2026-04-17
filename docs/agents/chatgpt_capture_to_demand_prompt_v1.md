@@ -15,7 +15,7 @@ Use this when the chat contains any of the following:
 1. Activate governed mode in chat: `governed mode on`.
 2. Persist live continuity to:
    - `exchange/chatgpt/sessions/<topic>__live_v1.md`
-3. Promote with `chatok` to demand intake:
+3. Promote with `ship to codex` to demand intake:
    - `exchange/chatgpt/demands/<topic>__intake_v1.md`
 
 ## Capture prompt
@@ -33,17 +33,16 @@ Requirements:
 - include source/context, current objective, locked decisions, open decisions, active implementation asks, active risks/blockers, non-loss requirements, lifecycle status, last_material_update_utc
 
 When execution-ready:
-- run chatok promotion into exchange/chatgpt/demands/<topic>__intake_v1.md
-- set demand status to ready-for-codex (ship to codex)
+- run ship-to-codex promotion into exchange/chatgpt/demands/<topic>__intake_v1.md
+- set demand status to ready-for-codex (internal `chatok` is handled by Codex)
 
 Then follow lifecycle:
 in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed
 
 Owner command surface must stay minimal:
 - governed mode on
-- chatok
 - ship to codex
-- close demand
+- merge after pre-ok
 ```
 
 ## Owner handoff rule

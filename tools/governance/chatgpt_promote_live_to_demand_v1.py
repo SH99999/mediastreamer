@@ -54,7 +54,12 @@ def replace_status(text: str, new_status: str) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--topic", required=True)
-    parser.add_argument("--force", action="store_true", help="allow promotion even when live status is not chatok")
+    parser.add_argument("--force", action="store_true", help="allow promotion even when live status is not chatok/live")
+    parser.add_argument(
+        "--ship-to-codex",
+        action="store_true",
+        help="owner-minimal handoff command; internalizes chatok and promotes to ready-for-codex",
+    )
     args = parser.parse_args()
 
     topic = slugify(args.topic)
@@ -69,8 +74,11 @@ def main() -> int:
 
     live_text = live_path.read_text(encoding="utf-8")
     live_status = extract_status(live_text)
-    if live_status != "chatok" and not args.force:
-        raise SystemExit("live session status must be chatok for promotion (or use --force)")
+    if live_status not in {"chatok", "live"} and not args.force:
+        raise SystemExit("live session status must be live|chatok for promotion (or use --force)")
+    if args.ship_to_codex and live_status == "live":
+        live_text = replace_status(live_text, "chatok")
+        live_status = "chatok"
 
     demand_template = DEMAND_TEMPLATE.read_text(encoding="utf-8")
     demand_text = demand_template.replace("<topic>", topic)
@@ -109,6 +117,8 @@ def main() -> int:
 
     print(f"promoted: {live_path.relative_to(REPO_ROOT)} -> {demand_path.relative_to(REPO_ROOT)}")
     print("demand_status=ready-for-codex")
+    if args.ship_to_codex:
+        print("owner_command=ship-to-codex")
     return 0
 
 
