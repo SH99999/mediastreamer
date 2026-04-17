@@ -125,8 +125,8 @@ Interpretation:
 - [Agent git bootstrap guide](./agent_git_bootstrap_v1.md)
 - [Codex cloud environment setup](./codex_cloud_environment_setup_v1.md)
 - [Container startup setup](./container_startup_setup_v1.md)
-- [Chat-to-Git delivery process](./chat_to_git_delivery_process_v1.md)
-- [Connector-blocked fallback manual](./fallback_connector_blocked_manual_v1.md)
+- [ChatGPT Git exchange playbook](./chatgpt_git_exchange_playbook_v1.md)
+- [Protected-main replacement-file operating model](../../contracts/repo/protected_main_truth_maintenance_operating_model_v1.md)
 - [Status prompt/report automation guide](./status_prompt_reports_v1.md)
 
 ### Intake and governance automation
