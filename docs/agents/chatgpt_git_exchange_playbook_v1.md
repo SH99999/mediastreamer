@@ -10,9 +10,11 @@ Provide a standard path for two-lane collaboration (ChatGPT + Codex) using Git a
    - `governed mode on`
 3. Create/update live session continuity artifact first:
    - `exchange/chatgpt/sessions/<topic>__live_v1.md`
+   - optional (recommended): initialize/refresh materialized protocol artifact `exchange/chatgpt/sessions/<topic>__protocol_v1.md`
 4. Promote with `ship to codex` into demand intake:
    - `exchange/chatgpt/demands/<topic>__intake_v1.md` -> `ready-for-codex` (internal `chatok`)
    - helper: `python3 tools/governance/chatgpt_promote_live_to_demand_v1.py --topic \"<topic>\" --ship-to-codex`
+   - materialized protocol helper: `python3 tools/governance/chatgpt_materialize_protocol_v1.py --topic \"<topic>\" --event-type ship-to-codex-promotion --summary \"owner requested ship to codex\"`
 5. Codex executes from demand + repo artifacts (not chat memory):
    - `in-execution` -> `ready-for-chatgpt-review`
 6. ChatGPT review gate:
@@ -80,6 +82,10 @@ Template:
 ## Live session contract
 Live session must include continuity fields and timestamp:
 - `exchange/chatgpt/sessions/TEMPLATE__live_v1.md`
+
+## Materialized protocol contract
+Materialized protocol must stay compact/event-based:
+- `exchange/chatgpt/sessions/TEMPLATE__protocol_v1.md`
 
 ## Operating rule
 Prefer short, structured artifacts over narrative text blocks.

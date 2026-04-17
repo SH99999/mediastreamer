@@ -32,7 +32,7 @@ Detailed behavior:
 1. ChatGPT activates the thread using `governed mode on`.
 2. ChatGPT captures relevant outcome in a live session file (`status: live`).
 3. Owner requests `ship to codex`.
-4. Codex internalizes `chatok` and promotes to demand intake with `status: ready-for-codex`.
+4. Codex internalizes `chatok`, promotes to demand intake with `status: ready-for-codex`, and writes/updates a materialized protocol artifact (`<topic>__protocol_v1.md`).
 5. Codex executes from demand + repo artifacts and marks `status: in-execution`.
 6. Codex marks `status: ready-for-chatgpt-review` as the single review-ready handoff marker after documented output + PR are prepared.
    - required demand fields at this point:
@@ -79,6 +79,18 @@ Index-vs-truth:
 - promotion status result: `ready-for-codex`
 - live session remains the continuity artifact
 - owner-facing command remains `ship to codex`; `chatok` is an internal lifecycle step
+- promotion metadata must include `codex_trigger: ship-to-codex` and `materialized_protocol` path
+
+## Materialized protocol artifact (canonical)
+- path: `exchange/chatgpt/sessions/<topic>__protocol_v1.md`
+- template: `exchange/chatgpt/sessions/TEMPLATE__protocol_v1.md`
+- role: compact event ledger for durable chat rationale (no raw full transcript)
+- each event must preserve:
+  - decisions
+  - open questions
+  - risks/blockers
+  - execution requests
+  - links to related Git objects (live session, demand intake, branch, PR/review artifacts)
 
 ## Owner review pickup command
 - owner command: `review now`

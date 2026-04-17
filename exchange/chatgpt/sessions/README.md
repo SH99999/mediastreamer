@@ -2,6 +2,7 @@
 
 Governed-mode live continuity artifacts:
 - `<topic>__live_v1.md`
+- `<topic>__protocol_v1.md` (materialized event protocol)
 
 ## Activation and minimal command surface
 - `governed mode on`
@@ -20,3 +21,11 @@ Governed-mode live continuity artifacts:
 
 ## Continuity SLA
 After governed mode is active, no relevant chat delta may remain chat-only for more than 5 minutes.
+
+## Materialized protocol rule
+- keep the protocol artifact compact and event-based (no raw full transcript)
+- protocol events must preserve: decisions, open questions, risks/blockers, execution asks, and links to related Git objects
+- whenever `ship to codex` promotion happens, append a protocol event linking:
+  - live session artifact
+  - demand intake artifact
+  - execution branch hint

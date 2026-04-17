@@ -41,13 +41,23 @@ def extract_status(path: Path) -> str:
     return m.group(1).strip().lower() if m else "missing"
 
 
+def has_codex_trigger(path: Path) -> bool:
+    text = path.read_text(encoding="utf-8").lower()
+    return "codex_trigger: ship-to-codex" in text
+
+
 def main() -> int:
     promote = []
     ready = []
     for path in watched_files():
         status = extract_status(path)
         if "/sessions/" in str(path) and status == "chatok":
-            promote.append(path)
+            topic = path.stem.replace("__live_v1", "")
+            demand = REPO_ROOT / "exchange" / "chatgpt" / "demands" / f"{topic}__intake_v1.md"
+            if demand.exists() and extract_status(demand) == "ready-for-codex":
+                pass
+            else:
+                promote.append(path)
         if status == "ready-for-codex":
             ready.append(path)
 
@@ -64,6 +74,8 @@ def main() -> int:
         print("action-required: codex-execution")
         for path in ready:
             print(path.relative_to(REPO_ROOT))
+            if "/demands/" in str(path) and not has_codex_trigger(path):
+                print(f"warning: missing codex_trigger marker in {path.relative_to(REPO_ROOT)}")
 
     if promote and not ready:
         print("next-step: run ship-to-codex promotion helper to set demand status ready-for-codex")

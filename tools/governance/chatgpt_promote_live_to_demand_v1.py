@@ -12,7 +12,9 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SESSIONS = REPO_ROOT / "exchange" / "chatgpt" / "sessions"
 DEMANDS = REPO_ROOT / "exchange" / "chatgpt" / "demands"
 DEMAND_TEMPLATE = DEMANDS / "TEMPLATE__intake_v1.md"
+PROTOCOL_TEMPLATE = SESSIONS / "TEMPLATE__protocol_v1.md"
 STATUS_RE = re.compile(r"^status:\s*(.+)$", re.IGNORECASE | re.MULTILINE)
+EVENT_RE = re.compile(r"^### event (\d+)$", re.MULTILINE)
 
 
 def slugify(value: str) -> str:
@@ -49,6 +51,56 @@ def replace_status(text: str, new_status: str) -> str:
     if STATUS_RE.search(text):
         return STATUS_RE.sub(f"status: {new_status}", text, count=1)
     return f"status: {new_status}\n" + text
+
+
+def next_event_id(text: str) -> int:
+    found = [int(m.group(1)) for m in EVENT_RE.finditer(text)]
+    return (max(found) + 1) if found else 1
+
+
+def ensure_protocol(topic: str) -> Path:
+    protocol_path = SESSIONS / f"{topic}__protocol_v1.md"
+    if protocol_path.exists():
+        return protocol_path
+    template = PROTOCOL_TEMPLATE.read_text(encoding="utf-8").replace("<topic>", topic)
+    protocol_path.write_text(template + "\n", encoding="utf-8")
+    return protocol_path
+
+
+def append_protocol_event(topic: str, now_iso: str, live_path: Path, demand_path: Path) -> Path:
+    protocol_path = ensure_protocol(topic)
+    text = protocol_path.read_text(encoding="utf-8")
+    event_id = next_event_id(text)
+    event_block = "\n".join(
+        [
+            f"### event {event_id:03d}",
+            f"- event_utc: {now_iso}",
+            "- event_type: ship-to-codex-promotion",
+            "- actor: codex",
+            "- summary: promotion from live session to ready-for-codex demand intake completed",
+            "- decisions:",
+            "  1. owner-visible trigger remains `ship to codex`.",
+            "- open_questions:",
+            "  1. none recorded in this event.",
+            "- risks_blockers:",
+            "  1. none recorded in this event.",
+            "- execution_requests:",
+            "  1. execute demand on declared SI branch and prepare PR to main.",
+            "- related_git_objects:",
+            f"  - live_session: {live_path.relative_to(REPO_ROOT)}",
+            f"  - demand_intake: {demand_path.relative_to(REPO_ROOT)}",
+            "  - source_branch:",
+            "  - source_pr_url:",
+            "  - review_target_artifacts:",
+            "",
+        ]
+    )
+    if not text.endswith("\n"):
+        text += "\n"
+    text += event_block
+    text = re.sub(r"^last_event_utc:\s*.*$", f"last_event_utc: {now_iso}", text, count=1, flags=re.MULTILINE)
+    protocol_path.write_text(text, encoding="utf-8")
+    return protocol_path
 
 
 def main() -> int:
@@ -110,12 +162,21 @@ def main() -> int:
     out = "\n".join(lines) + "\n"
     out = replace_status(out, "ready-for-codex")
     now = datetime.now(timezone.utc).isoformat()
-    out += f"\n## promotion metadata\n- promoted_from_live: `{live_path.relative_to(REPO_ROOT)}`\n- promoted_at_utc: `{now}`\n- promotion_trigger: `chatok`\n"
+    protocol_path = append_protocol_event(topic, now, live_path, demand_path)
+    out += (
+        "\n## promotion metadata\n"
+        f"- promoted_from_live: `{live_path.relative_to(REPO_ROOT)}`\n"
+        f"- promoted_at_utc: `{now}`\n"
+        "- codex_trigger: `ship-to-codex`\n"
+        "- promotion_trigger: `chatok`\n"
+        f"- materialized_protocol: `{protocol_path.relative_to(REPO_ROOT)}`\n"
+    )
 
     demand_path.write_text(out, encoding="utf-8")
     live_path.write_text(replace_status(live_text, "chatok"), encoding="utf-8")
 
     print(f"promoted: {live_path.relative_to(REPO_ROOT)} -> {demand_path.relative_to(REPO_ROOT)}")
+    print(f"materialized_protocol={protocol_path.relative_to(REPO_ROOT)}")
     print("demand_status=ready-for-codex")
     if args.ship_to_codex:
         print("owner_command=ship-to-codex")

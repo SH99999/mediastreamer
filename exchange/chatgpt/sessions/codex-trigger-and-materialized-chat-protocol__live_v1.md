@@ -1,6 +1,6 @@
 # codex-trigger-and-materialized-chat-protocol live v1
 
-status: live
+status: chatok
 actor: chatgpt
 
 ## source/context
@@ -41,7 +41,7 @@ actor: chatgpt
 3. owner should not need to restate prior chat history to a new agent/chat
 
 ## current lifecycle status
-- live
+- chatok
 
 ## last material update timestamp
-- 2026-04-17T00:00:00Z
+- 2026-04-17T09:55:26Z
