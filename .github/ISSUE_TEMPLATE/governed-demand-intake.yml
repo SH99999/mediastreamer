@@ -33,12 +33,12 @@ body:
     id: component
     attributes:
       label: Primary component suffix
-      description: Example: bridge, tuner, starter, autoswitch, fun-line, hardware, system-integration
+      description: "Example: bridge, tuner, starter, autoswitch, fun-line, hardware, system-integration"
   - type: input
     id: agent
     attributes:
       label: Preferred agent lane
-      description: Example: system-integration, bridge, tuner, ux
+      description: "Example: system-integration, bridge, tuner, ux"
   - type: textarea
     id: summary
     attributes:
