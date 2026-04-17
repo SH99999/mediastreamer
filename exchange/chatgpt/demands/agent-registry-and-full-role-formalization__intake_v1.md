@@ -63,6 +63,7 @@ actor: chatgpt
 - label_truth_rule: labels route/query only; repo sections in this file remain canonical detailed truth
 
 ## lifecycle tracking
+- codex_trigger: ship-to-codex
 - source_pr_url:
 - source_branch:
 - review_target_artifacts:
