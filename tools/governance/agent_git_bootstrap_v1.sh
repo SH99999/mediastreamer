@@ -67,6 +67,32 @@ if [[ "${CONTEXT_MODE}" != "classic" && "${CONTEXT_MODE}" != "mode-b" ]]; then
   exit 1
 fi
 
+if [[ -z "${REQUESTED_BRANCH}" ]]; then
+  case "${ROLE_HINT}" in
+    tuner)
+      REQUESTED_BRANCH="dev/tuner"
+      ;;
+    bridge)
+      REQUESTED_BRANCH="dev/bridge"
+      ;;
+    hardware)
+      REQUESTED_BRANCH="dev/hardware"
+      ;;
+    fun-line|fun_line|funline)
+      REQUESTED_BRANCH="dev/fun-line"
+      ;;
+    autoswitch|auto-switch|auto_switch)
+      REQUESTED_BRANCH="dev/autoswitch"
+      ;;
+    ux|ui-ux|uiux)
+      REQUESTED_BRANCH="dev/ux"
+      ;;
+    generic)
+      REQUESTED_BRANCH="dev/generic"
+      ;;
+  esac
+fi
+
 role_bootstrap_lines() {
   local role="$1"
   local mode="$2"
@@ -98,7 +124,7 @@ role_bootstrap_lines() {
       ;;
     ux|ui-ux|uiux)
       echo "- role profile: ux"
-      echo "- branch hint: si/<topic> or dev/<component>"
+      echo "- branch hint: dev/ux"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; contracts/repo/ui_gui_governance_standard_v1.md"
       ;;
     si|system-integration|governance)
@@ -173,17 +199,29 @@ if [[ -n "${REQUESTED_BRANCH}" ]]; then
       BRANCH_PREP_DETAIL="already on requested branch"
     else
       if git show-ref --verify --quiet "refs/remotes/${REMOTE_NAME}/${REQUESTED_BRANCH}"; then
-        git checkout -B "${REQUESTED_BRANCH}" "${REMOTE_NAME}/${REQUESTED_BRANCH}" >/dev/null 2>&1
-        BRANCH_PREP_STATUS="ok"
-        BRANCH_PREP_DETAIL="checked out ${REQUESTED_BRANCH} from ${REMOTE_NAME}/${REQUESTED_BRANCH}"
+        if git checkout -B "${REQUESTED_BRANCH}" "${REMOTE_NAME}/${REQUESTED_BRANCH}" >/dev/null 2>&1; then
+          BRANCH_PREP_STATUS="ok"
+          BRANCH_PREP_DETAIL="checked out ${REQUESTED_BRANCH} from ${REMOTE_NAME}/${REQUESTED_BRANCH}"
+        else
+          BRANCH_PREP_STATUS="blocked"
+          BRANCH_PREP_DETAIL="could not checkout ${REQUESTED_BRANCH} from ${REMOTE_NAME}/${REQUESTED_BRANCH} (clean/stash working tree)"
+        fi
       elif git fetch "${REMOTE_NAME}" "${BASE_BRANCH}" >/dev/null 2>&1 && git show-ref --verify --quiet "refs/remotes/${REMOTE_NAME}/${BASE_BRANCH}"; then
-        git checkout -B "${REQUESTED_BRANCH}" "${REMOTE_NAME}/${BASE_BRANCH}" >/dev/null 2>&1
-        BRANCH_PREP_STATUS="ok"
-        BRANCH_PREP_DETAIL="created ${REQUESTED_BRANCH} from ${REMOTE_NAME}/${BASE_BRANCH}"
+        if git checkout -B "${REQUESTED_BRANCH}" "${REMOTE_NAME}/${BASE_BRANCH}" >/dev/null 2>&1; then
+          BRANCH_PREP_STATUS="ok"
+          BRANCH_PREP_DETAIL="created ${REQUESTED_BRANCH} from ${REMOTE_NAME}/${BASE_BRANCH}"
+        else
+          BRANCH_PREP_STATUS="blocked"
+          BRANCH_PREP_DETAIL="could not create ${REQUESTED_BRANCH} from ${REMOTE_NAME}/${BASE_BRANCH} (clean/stash working tree)"
+        fi
       elif git show-ref --verify --quiet "refs/heads/${REQUESTED_BRANCH}"; then
-        git checkout "${REQUESTED_BRANCH}" >/dev/null 2>&1
-        BRANCH_PREP_STATUS="ok"
-        BRANCH_PREP_DETAIL="checked out existing local branch"
+        if git checkout "${REQUESTED_BRANCH}" >/dev/null 2>&1; then
+          BRANCH_PREP_STATUS="ok"
+          BRANCH_PREP_DETAIL="checked out existing local branch"
+        else
+          BRANCH_PREP_STATUS="blocked"
+          BRANCH_PREP_DETAIL="could not checkout existing local branch ${REQUESTED_BRANCH} (clean/stash working tree)"
+        fi
       else
         BRANCH_PREP_STATUS="blocked"
         BRANCH_PREP_DETAIL="could not create or checkout requested branch"
