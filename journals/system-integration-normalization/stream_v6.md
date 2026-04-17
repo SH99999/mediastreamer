@@ -4,6 +4,13 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/chatgpt-zip-bundle-intake-and-codex-manifest-v1 / ZIP intake + Codex canonical manifest + sequential distribution contract
+- defined raw ZIP intake as optional ChatGPT handoff input under existing exchange root (`exchange/chatgpt/bundles/`) and explicitly marked ZIP/hints non-canonical for branch mapping truth
+- defined Codex-generated canonical distribution manifest contract with required identity/source/target/check/rollback/result-report fields
+- defined deterministic sequential branch distribution behavior (single working tree, per-target branch checkout/copy/check/commit/push/PR update) and required one distribution result report artifact
+- added bundle templates for raw ZIP intake, Codex distribution manifest, and distribution result report without creating dashboard/board/html surfaces
+- purpose: allow one ZIP handoff while keeping canonical mapping/execution truth Codex-owned and owner workflow minimal
+
 ### 2026-04-17 / si/chatgpt-preok-optional-owner-repo-truth-v1 / owner decision path inversion
 - updated canonical exchange/owner docs so ChatGPT `pre-ok` is optional advisory input instead of a required merge gate
 - aligned protocol, exchange operating standard, owner quickstart/reference, SI governance index wording, and demand template next-owner-click guidance with repo-truth-first owner decisioning

@@ -102,6 +102,15 @@ Index-vs-truth:
 - materialized protocol: durable compact history for new chat/agent continuity
 - demand: execution-oriented structured truth
 - main inbox snapshot: canonical pickup trigger on `main`
+- optional raw ZIP bundle: concrete payload input only (non-canonical mapping)
+- Codex-generated manifest: canonical branch/path execution plan
+- distribution result report: execution outcome truth
+
+## Raw ZIP + Codex manifest rule
+- ChatGPT may provide one raw ZIP bundle and optional mapping hints under `exchange/chatgpt/bundles/`.
+- ChatGPT ZIP/hints are input only and must not become canonical branch mapping truth.
+- Codex must generate one canonical manifest from ZIP + demand + protocol + repo truth before any multi-lane distribution.
+- Codex executes manifest targets sequentially in one working tree and publishes one result report.
 
 ## Owner review pickup command
 - owner command: `review now`
