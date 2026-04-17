@@ -1,6 +1,6 @@
 # owner-minimal-chat-handoff live v1
 
-status: live
+status: closed
 actor: chatgpt
 
 ## source/context
@@ -41,7 +41,13 @@ actor: chatgpt
 3. repo truth should be recoverable by any fresh chat with minimal lag
 
 ## current lifecycle status
-- live
+- closed
+
+## close metadata
+- close_reason: merged-on-main
+- closed_by_prs: #133, #136
+- governance_closeout_status: done
+- next_owner_click: none
 
 ## last material update timestamp
 - 2026-04-17T00:00:00Z
