@@ -6,21 +6,24 @@ Provide a standard path for two-lane collaboration (ChatGPT + Codex) using Git a
 ## Quick start
 1. Run bootstrap on dedicated branch:
    - `bash tools/governance/agent_git_bootstrap_v1.sh --role si --mode mode-b si/chatgpt-git-exchange-<topic>`
-2. Create demand intake first:
-   - `exchange/chatgpt/demands/<topic>__intake_v1.md`
-3. Set demand status progression:
-   - `draft` -> `chatok` -> `ready-for-codex`
-4. Codex executes from demand + repo artifacts (not chat memory):
+2. Activate governed mode:
+   - `governed mode on`
+3. Create/update live session continuity artifact first:
+   - `exchange/chatgpt/sessions/<topic>__live_v1.md`
+4. Promote with `chatok` into demand intake:
+   - `exchange/chatgpt/demands/<topic>__intake_v1.md` -> `ready-for-codex` (`ship to codex`)
+   - helper: `python3 tools/governance/chatgpt_promote_live_to_demand_v1.py --topic \"<topic>\"`
+5. Codex executes from demand + repo artifacts (not chat memory):
    - `in-execution` -> `ready-for-chatgpt-review`
-5. ChatGPT review gate:
+6. ChatGPT review gate:
    - set `pre-ok` or `changes-requested`
-6. Owner-ready handoff:
+7. Owner-ready handoff:
    - `ready-for-owner` with PR + rollback + next owner click
-7. Mark `closed` after owner decision path completes.
+8. Mark `closed` after owner decision path completes (`close demand`).
 
 ## Max-delta continuity rule
 No relevant chat decision/risk/request/blocker/non-loss requirement may remain chat-only for more than 5 minutes.
-If durable truth update is not ready, demand intake capture is mandatory.
+If durable truth update is not ready, live session capture is mandatory and demand promotion follows at `chatok`.
 
 ## Autonomous cycle init
 Use:
@@ -62,6 +65,10 @@ Demand intake must include:
 Template:
 - `exchange/chatgpt/demands/TEMPLATE__intake_v1.md`
 
+## Live session contract
+Live session must include continuity fields and timestamp:
+- `exchange/chatgpt/sessions/TEMPLATE__live_v1.md`
+
 ## Operating rule
 Prefer short, structured artifacts over narrative text blocks.
 
@@ -69,6 +76,7 @@ Prefer short, structured artifacts over narrative text blocks.
 Use:
 - `docs/agents/chatgpt_start_prompt_git_exchange_v3.md`
 - `docs/agents/chatgpt_start_prompt_idea_channel_v1.md`
+- `docs/agents/chatgpt_capture_to_demand_prompt_v1.md`
 
 ## No-shell / GUI-only mode (single-file handoff)
 If ChatGPT cannot use terminal/shell or requires repeated file permission prompts:

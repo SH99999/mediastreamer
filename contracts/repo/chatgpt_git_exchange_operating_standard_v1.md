@@ -21,13 +21,23 @@ This standard governs:
 - branch for this capability bootstrap: `si/chatgpt-git-exchange-v1`
 - reusable future branch pattern: `si/chatgpt-git-exchange-<topic>`
 - canonical exchange root: `exchange/chatgpt/`
+  - `exchange/chatgpt/sessions/`
   - `exchange/chatgpt/audit_basis/`
   - `exchange/chatgpt/inbox/`
   - `exchange/chatgpt/outbox/`
   - `exchange/chatgpt/demands/`
 
+## Governed chat mode activation (mandatory)
+Activation phrase:
+- `governed mode on`
+
+After activation:
+- relevant chat deltas must be persisted to Git through a live session artifact
+- owner should not need repeated long prompts/process re-explanations
+- codex execution handoff must route through governed demand artifacts
+
 ## End-to-end governed chain (mandatory)
-`chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
+`chat -> governed mode on -> live session artifact on git -> chatok -> demand intake -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
 
 Rules:
 - Codex executes from demand artifacts stored in Git.
@@ -35,7 +45,7 @@ Rules:
 - Chat outcomes that materially affect repo truth (status/decisions/current-state/streams) must be copied into canonical repo truth files within the implementation package.
 
 ## Continuity rule (max knowledge-loss delta)
-No relevant information may exist only in chat memory for more than 5 minutes.
+Once governed mode is active, no relevant information may exist only in chat memory for more than 5 minutes.
 
 Relevant information includes:
 - decisions and locked constraints
@@ -45,19 +55,33 @@ Relevant information includes:
 - explicit non-loss requirements
 
 Minimum acceptable persistence if durable truth updates are not yet ready:
-- create/update `exchange/chatgpt/demands/<topic>__intake_v1.md` with `status: draft|chatok|ready-for-codex`.
+- create/update `exchange/chatgpt/sessions/<topic>__live_v1.md` with lifecycle status + `last_material_update_utc`
+- then promote to demand intake when `chatok` is declared
 
 ## Required exchange artifacts
-1. `audit_basis/current_audit_basis_v1.md` (active basis file)
-2. `inbox/<topic>__request_vN.md` (ChatGPT-origin input package)
-3. `outbox/<topic>__response_vN.md` (Codex response with implementation plan)
-4. `demands/<topic>__intake_vN.md` (ChatGPT demand intake contract)
-5. optional sidecar metadata: `<same_name>.json` with fields:
+1. `sessions/<topic>__live_vN.md` (governed live session continuity artifact)
+2. `audit_basis/current_audit_basis_v1.md` (active basis file)
+3. `inbox/<topic>__request_vN.md` (ChatGPT-origin input package)
+4. `outbox/<topic>__response_vN.md` (Codex response with implementation plan)
+5. `demands/<topic>__intake_vN.md` (ChatGPT demand intake contract)
+6. optional sidecar metadata: `<same_name>.json` with fields:
    - `topic`
    - `source_chat_uri` (if available)
    - `owner_decision_needed`
    - `next_owner_click`
    - `status`
+
+## Live session artifact contract (mandatory fields)
+Each live session file under `exchange/chatgpt/sessions/` must include:
+- source/context
+- current objective
+- locked decisions so far
+- open decisions
+- active implementation asks
+- active risks/blockers
+- non-loss requirements
+- current lifecycle status
+- last material update timestamp
 
 ## Demand artifact contract (mandatory fields)
 Each demand intake file under `exchange/chatgpt/demands/` must include:
@@ -74,7 +98,7 @@ Each demand intake file under `exchange/chatgpt/demands/` must include:
 
 ## Demand lifecycle statuses (canonical)
 Allowed statuses are:
-- `draft`
+- `live`
 - `chatok`
 - `ready-for-codex`
 - `in-execution`
@@ -85,14 +109,15 @@ Allowed statuses are:
 - `closed`
 
 ## Standard exchange loop (minimal owner path)
-1. ChatGPT writes/updates demand intake in `exchange/chatgpt/demands/`.
-2. ChatGPT sets `status: chatok` when the demand is accurate.
-3. ChatGPT/Codex transitions demand to `status: ready-for-codex`.
-4. Codex marks `status: in-execution` while implementing governed repo changes.
-5. Codex marks `status: ready-for-chatgpt-review` after implementation artifacts + PR are prepared.
-6. ChatGPT reviews against demand + repo truth and sets `status: pre-ok` or `status: changes-requested`.
-7. Codex updates owner packet and sets `status: ready-for-owner` when pre-ok is satisfied.
-8. Owner decides/merges; cycle is then marked `status: closed`.
+1. ChatGPT activates governed mode with `governed mode on`.
+2. ChatGPT writes/updates live session artifact in `exchange/chatgpt/sessions/` (`status: live`).
+3. ChatGPT sets `chatok` to promote live context into `exchange/chatgpt/demands/<topic>__intake_v1.md`.
+4. Demand is moved to `status: ready-for-codex` (or owner command: `ship to codex`).
+5. Codex marks `status: in-execution` while implementing governed repo changes.
+6. Codex marks `status: ready-for-chatgpt-review` after implementation artifacts + PR are prepared.
+7. ChatGPT reviews against demand + repo truth and sets `status: pre-ok` or `status: changes-requested`.
+8. Codex updates owner packet and sets `status: ready-for-owner` when pre-ok is satisfied.
+9. Owner decides/merges; cycle is then marked `status: closed` (or owner command: `close demand`).
 
 ## Living exchange stream (mandatory)
 - active stream file: `exchange/chatgpt/streams/stream_v1.md`
@@ -117,7 +142,14 @@ Allowed statuses are:
 ## Review/evaluation trigger detection
 - watcher script: `tools/governance/chatgpt_exchange_watch_v1.py`
 - rule: Codex evaluates when status marker `ready-for-codex` is present in watched demand/request/basis artifacts
-- the watcher must ignore `draft|chatok` artifacts and report actionable `ready-for-codex` paths only
+- the watcher must report live session `chatok` artifacts as promotion-required and report `ready-for-codex` artifacts as codex-actionable
+
+## Promotion rule: `chatok` live session -> demand intake
+- promotion source: `exchange/chatgpt/sessions/<topic>__live_v1.md` with `status: chatok`
+- promotion target: `exchange/chatgpt/demands/<topic>__intake_v1.md`
+- demand status after promotion: `ready-for-codex`
+- live artifact remains continuity memory and must continue tracking material updates
+- promotion helper: `tools/governance/chatgpt_promote_live_to_demand_v1.py --topic <topic>`
 
 ## ChatGPT review/pre-ok gate
 - Codex implementation output must include documented branch/PR/rollback path.
@@ -139,6 +171,7 @@ Allowed statuses are:
 - all protected truth still merges via PR to `main`
 - if connector/auth is blocked, produce explicit blocker + one owner action
 - no new dashboards/boards/html surfaces are required by this standard
+- owner command surface should remain minimal: `governed mode on`, `chatok`, `ship to codex`, `close demand`
 
 ## Success condition
 - ChatGPT exchange is reproducible from Git history alone

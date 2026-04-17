@@ -15,8 +15,9 @@ Impacted components: <comma-separated component suffixes>
 Decision needed from owner: <single sentence>
 Options: <opt-a>; <opt-b>; <opt-c>
 Recommended option: <opt-a|opt-b|opt-c>
-Create/update demand intake at exchange/chatgpt/demands/<topic>__intake_v1.md within 5 minutes and set status progression draft->chatok->ready-for-codex.
-Do the full governance flow: prepare documented Codex job via git, execute on si/<topic>, update required governance/journal truth, move demand through in-execution->ready-for-chatgpt-review->pre-ok->ready-for-owner->closed, push branch, open PR to main, and report only final approval action for owner.
+Run `governed mode on`, then create/update live session at exchange/chatgpt/sessions/<topic>__live_v1.md within 5 minutes for every material delta.
+Use `chatok` to promote into exchange/chatgpt/demands/<topic>__intake_v1.md and set demand `ready-for-codex` (`ship to codex`).
+Do the full governance flow: prepare documented Codex job via git, execute on si/<topic>, update required governance/journal truth, move demand through in-execution->ready-for-chatgpt-review->pre-ok->ready-for-owner->closed (`close demand`), push branch, open PR to main, and report only final approval action for owner.
 ```
 
 ## Owner prompt (strict form)
@@ -57,4 +58,4 @@ The agent should return:
 
 ## Notes
 - `source_proposal_uri` can be a GitHub file URL, gist URL, issue comment URL, or an existing repo path.
-- If the proposal exists only in another chat, capture it into `exchange/chatgpt/demands/<topic>__intake_v1.md` first, then continue with governed execution.
+- If the proposal exists only in another chat, capture it into `exchange/chatgpt/sessions/<topic>__live_v1.md` first, then promote with `chatok`.

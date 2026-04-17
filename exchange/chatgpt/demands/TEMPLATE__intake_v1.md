@@ -1,6 +1,6 @@
 # <topic> intake v1
 
-status: draft
+status: ready-for-codex
 actor: chatgpt
 
 ## source/context

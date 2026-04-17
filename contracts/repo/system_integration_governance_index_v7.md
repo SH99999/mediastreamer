@@ -44,6 +44,7 @@ Core Tier-1 references:
 6. `docs/agents/si_merge_request_executive_summary_v1.md`
 7. `contracts/repo/chatgpt_git_exchange_operating_standard_v1.md`
 8. `docs/agents/chatgpt_git_exchange_playbook_v1.md`
+9. `docs/agents/chatgpt_capture_to_demand_prompt_v1.md`
 
 Tier-2 deep-history references are read-only and listed in:
 - `contracts/repo/superseded_documents_index_v1.md`
@@ -59,7 +60,7 @@ Tier-2 deep-history references are read-only and listed in:
 - delivery expectation is `local -> github.com branch -> PR to main` prepared by agents/chats/Codex so owner can use one-click decision flow
 - SI handoff must include a prepared merge-request executive summary comment with executive summary + risk level + rollback command + next owner click
 - ChatGPT exchange for audit/demand loops should use the governed exchange root `exchange/chatgpt/` with inbox/outbox artifact flow
-- Chat-to-demand continuity is mandatory: relevant chat outcomes must be captured to `exchange/chatgpt/demands/` within 5 minutes when durable truth updates are not yet complete
+- Chat-to-demand continuity is mandatory: relevant chat outcomes must be captured to `exchange/chatgpt/sessions/` within 5 minutes, then promoted to `exchange/chatgpt/demands/` at `chatok`
 - agent status reporting should emit `status_packet_v1` payloads and render markdown from packet data for owner-facing views
 - `next_owner_click` should be present in all generated status views and validated by enforcement checks
 - decision scoring fields and rollback one-click action contract should be present in decision/status packets (`evidence_quality`, `rollback_readiness`, `blast_radius`, `confidence`, `rollback_action`)

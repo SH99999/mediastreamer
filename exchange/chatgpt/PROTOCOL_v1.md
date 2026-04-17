@@ -4,9 +4,14 @@
 - `chatgpt`
 - `codex`
 
+## Governed mode activation
+- activation phrase: `governed mode on`
+- after activation, persist relevant chat deltas to `exchange/chatgpt/sessions/<topic>__live_v1.md`
+- max chat-only continuity window: 5 minutes
+
 ## Status model (canonical)
 Allowed statuses:
-- `draft`
+- `live`
 - `chatok`
 - `ready-for-codex`
 - `in-execution`
@@ -21,22 +26,29 @@ Each active exchange artifact must contain one status marker line:
 - `status: <allowed-status>`
 
 ## Handshake order
-`chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
+`chat -> governed mode on -> live session artifact on git -> chatok -> demand intake -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
 
 Detailed behavior:
-1. ChatGPT captures relevant outcome in a demand intake file.
-2. ChatGPT sets `status: chatok` once demand content is accurate.
-3. ChatGPT/Codex sets `status: ready-for-codex` when execution can start.
-4. Codex executes from repo artifacts and marks `status: in-execution`.
-5. Codex marks `status: ready-for-chatgpt-review` after documented output + PR are prepared.
-6. ChatGPT reviews against demand + repo truth; set `status: pre-ok` or `status: changes-requested`.
-7. Codex prepares owner packet and sets `status: ready-for-owner` only after pre-ok path is satisfied.
-8. After owner decision/merge, mark `status: closed`.
+1. ChatGPT activates the thread using `governed mode on`.
+2. ChatGPT captures relevant outcome in a live session file (`status: live`).
+3. ChatGPT sets `status: chatok` to lock the live session for promotion.
+4. `chatok` promotes to demand intake with `status: ready-for-codex` (or command `ship to codex`).
+5. Codex executes from demand + repo artifacts and marks `status: in-execution`.
+6. Codex marks `status: ready-for-chatgpt-review` after documented output + PR are prepared.
+7. ChatGPT reviews against demand + repo truth; set `status: pre-ok` or `status: changes-requested`.
+8. Codex prepares owner packet and sets `status: ready-for-owner` only after pre-ok path is satisfied.
+9. After owner decision/merge, mark `status: closed` (or command `close demand`).
 
 ## Continuity rule
 No relevant chat information may remain chat-only for more than 5 minutes.
 Minimum persistence layer before full durable truth updates:
-- `exchange/chatgpt/demands/<topic>__intake_v1.md`
+- `exchange/chatgpt/sessions/<topic>__live_v1.md`
+
+## Promotion rule (`chatok`)
+- promotion source: `exchange/chatgpt/sessions/<topic>__live_v1.md`
+- promotion target: `exchange/chatgpt/demands/<topic>__intake_v1.md`
+- promotion status result: `ready-for-codex`
+- live session remains the continuity artifact
 
 ## Channel separation (required)
 - Internal ChatGPT↔Codex exchange artifacts may be compact or machine-oriented.

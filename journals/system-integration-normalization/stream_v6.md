@@ -4,6 +4,13 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/chat-governed-mode-and-repo-continuity-v1 / governed-mode activation + live continuity
+- added governed chat mode activation (`governed mode on`) with a canonical live-session artifact path `exchange/chatgpt/sessions/<topic>__live_v1.md`
+- standardized continuity SLA so governed chat deltas must be persisted to Git within 5 minutes and added required live-session fields including `last_material_update_utc`
+- defined explicit `chatok` promotion rule from live session to demand intake (`ready-for-codex`) and added promotion helper `tools/governance/chatgpt_promote_live_to_demand_v1.py`
+- aligned protocol/playbook/intake prompts and watcher/cycle tooling to the lifecycle `live -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
+- purpose: reduce owner prompt repetition and enforce durable repo continuity without creating a parallel exchange system
+
 ### 2026-04-17 / si/chat-to-demand-autoroute-and-repo-continuity-v1 / chat-to-demand autoroute + continuity
 - standardized governed chat-to-demand lifecycle (`chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`) in canonical exchange contract and protocol docs
 - added explicit 5-minute max chat-only continuity rule and required demand intake persistence contract for decisions/risks/blockers/non-loss requirements

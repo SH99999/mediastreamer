@@ -240,3 +240,13 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: exchange demand artifacts, watcher automation, playbook/start prompts, and owner handoff sequencing.
 - What it explicitly does NOT affect: creation of new dashboards/boards/html surfaces or parallel exchange systems outside `exchange/chatgpt/`.
 - Follow-up needed: keep demand artifact contract, status lifecycle, and watch automation aligned as exchange tooling evolves.
+
+
+### DEC-system_integration_normalization-39
+- Status: locked
+- Decision: governed chat mode is activated by `governed mode on`; after activation, relevant chat deltas must be persisted to `exchange/chatgpt/sessions/<topic>__live_v1.md` within 5 minutes and promoted at `chatok` to `exchange/chatgpt/demands/<topic>__intake_v1.md` with `ready-for-codex`.
+- Date context: chat governed-mode and repo continuity hardening phase
+- Why this was chosen: owner repetition and chat-memory-only drift remain high without a one-time activation model and live continuity artifact.
+- What it affects: exchange lifecycle semantics, watcher routing, live-to-demand promotion, and owner command surface.
+- What it explicitly does NOT affect: addition of dashboards/boards/html surfaces or creation of a second exchange system.
+- Follow-up needed: keep session template, promotion helper, and protocol statuses aligned as exchange tooling evolves.

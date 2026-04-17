@@ -7,6 +7,7 @@ Protocol:
 - `exchange/chatgpt/PROTOCOL_v1.md`
 
 ## Subdirectories
+- `sessions/` governed live-session continuity artifacts
 - `audit_basis/` active audit baseline documents
 - `inbox/` ChatGPT-origin requests/findings
 - `outbox/` Codex responses + implementation proposals
@@ -17,6 +18,7 @@ Protocol:
 ## Naming convention
 - requests: `<topic>__request_vN.md`
 - responses: `<topic>__response_vN.md`
+- live session: `<topic>__live_vN.md`
 - demand intake: `<demand-id>__intake_vN.md`
 
 - `ideas/` = idea channel intake + two-round alignment artifacts

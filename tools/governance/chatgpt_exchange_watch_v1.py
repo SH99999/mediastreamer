@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Detect ChatGPT exchange artifacts that are ready for Codex execution.
+Detect ChatGPT exchange artifacts that are ready for promotion or Codex execution.
 """
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ def watched_files() -> Iterable[Path]:
         yield basis
 
     patterns = [
+        REPO_ROOT / "exchange" / "chatgpt" / "sessions",
         REPO_ROOT / "exchange" / "chatgpt" / "inbox",
         REPO_ROOT / "exchange" / "chatgpt" / "outbox",
         REPO_ROOT / "exchange" / "chatgpt" / "demands",
@@ -41,19 +42,33 @@ def extract_status(path: Path) -> str:
 
 
 def main() -> int:
+    promote = []
     ready = []
     for path in watched_files():
         status = extract_status(path)
+        if "/sessions/" in str(path) and status == "chatok":
+            promote.append(path)
         if status == "ready-for-codex":
             ready.append(path)
 
-    if not ready:
-        print("no-action: no artifact with status ready-for-codex")
+    if not ready and not promote:
+        print("no-action: no artifact with status chatok or ready-for-codex")
         return 0
 
-    print("action-required: codex-execution")
-    for path in ready:
-        print(path.relative_to(REPO_ROOT))
+    if promote:
+        print("action-required: promote-live-session-to-demand")
+        for path in promote:
+            print(path.relative_to(REPO_ROOT))
+
+    if ready:
+        print("action-required: codex-execution")
+        for path in ready:
+            print(path.relative_to(REPO_ROOT))
+
+    if promote and not ready:
+        print("next-step: run promotion then set demand status ready-for-codex")
+    elif ready:
+        print("next-step: run codex execution from listed ready-for-codex artifacts")
     return 0
 
 
