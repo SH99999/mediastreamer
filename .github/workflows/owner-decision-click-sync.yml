@@ -17,6 +17,9 @@ on:
       docs_journals_complete:
         description: "yes | no"
         required: true
+      review_override:
+        description: "yes | no"
+        required: false
 
 permissions:
   contents: read
@@ -39,10 +42,11 @@ jobs:
           INPUT_DECISION: ${{ inputs.decision }}
           INPUT_MERGE: ${{ inputs.merge_authorization }}
           INPUT_DOCS: ${{ inputs.docs_journals_complete }}
+          INPUT_OVERRIDE: ${{ inputs.review_override }}
           OWNER_DECISION_AUTOMATION_ENABLED: ${{ vars.OWNER_DECISION_AUTOMATION_ENABLED }}
         run: |
           python3 - <<'PY'
-          import json, os, re, urllib.request
+          import json, os, re, urllib.request, urllib.error
 
           repo = os.environ['GITHUB_REPOSITORY']
           token = os.environ['GITHUB_TOKEN']
@@ -64,6 +68,13 @@ jobs:
               raw = resp.read().decode('utf-8')
               return json.loads(raw) if raw else None
 
+          def ensure_label(name, color, description):
+            try:
+              req('POST', '/labels', {'name': name, 'color': color, 'description': description})
+            except urllib.error.HTTPError as e:
+              if e.code != 422:
+                raise
+
           enabled = (os.environ.get('OWNER_DECISION_AUTOMATION_ENABLED') or 'true').strip().lower()
           if enabled in ('false', '0', 'no', 'off'):
             print('automation_disabled=true')
@@ -74,12 +85,14 @@ jobs:
           decision = None
           merge_auth = None
           docs_done = None
+          review_override = 'no'
 
           if event_name == 'workflow_dispatch':
             pr_number = (os.environ.get('INPUT_PR_NUMBER') or '').strip()
             decision = (os.environ.get('INPUT_DECISION') or '').strip().lower()
             merge_auth = (os.environ.get('INPUT_MERGE') or '').strip().lower()
             docs_done = (os.environ.get('INPUT_DOCS') or '').strip().lower()
+            review_override = (os.environ.get('INPUT_OVERRIDE') or 'no').strip().lower() or 'no'
           else:
             issue_number = (os.environ.get('EVENT_ISSUE_NUMBER') or '').strip()
             is_pr = (os.environ.get('EVENT_IS_PR') or '').strip()
@@ -97,6 +110,7 @@ jobs:
             decision = pick('decision')
             merge_auth = pick('merge_authorization')
             docs_done = pick('docs_journals_complete')
+            review_override = pick('review_override') or 'no'
 
           if not pr_number:
             raise SystemExit(0)
@@ -104,7 +118,7 @@ jobs:
           valid_decisions = {'accept', 'changes-requested', 'reject'}
           valid_yesno = {'yes', 'no'}
 
-          if decision not in valid_decisions or merge_auth not in valid_yesno or docs_done not in valid_yesno:
+          if decision not in valid_decisions or merge_auth not in valid_yesno or docs_done not in valid_yesno or review_override not in valid_yesno:
             marker = '<!-- owner-decision-sync:blocker -->'
             msg = '\n'.join([
               marker,
@@ -114,6 +128,7 @@ jobs:
               '- decision: accept | changes-requested | reject',
               '- merge_authorization: yes | no',
               '- docs_journals_complete: yes | no',
+              '- review_override: yes | no (optional; default no)',
             ])
             req('POST', f'/issues/{pr_number}/comments', {'body': msg})
             raise SystemExit(0)
@@ -134,6 +149,9 @@ jobs:
 
           labels.append(state)
           labels.append('source:owner-click-decision')
+          if review_override == 'yes':
+            ensure_label('source:owner-review-override', 'bfdadc', 'Owner explicitly proceeded without ChatGPT pre-ok')
+            labels.append('source:owner-review-override')
           req('PATCH', f'/issues/{pr_number}', {'labels': sorted(set(labels))})
 
           summary = '\n'.join([
@@ -142,6 +160,7 @@ jobs:
             f'- decision: `{decision}`',
             f'- merge_authorization: `{merge_auth}`',
             f'- docs_journals_complete: `{docs_done}`',
+            f'- review_override: `{review_override}`',
             f'- resulting state label: `{state}`'
           ])
           req('POST', f'/issues/{pr_number}/comments', {'body': summary})

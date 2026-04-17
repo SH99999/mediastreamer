@@ -56,5 +56,7 @@ actor: chatgpt
 - source_branch:
 - review_target_artifacts:
 - chatgpt_review_result: pending
+- owner_review_override: no
+- owner_override_note:
 - governance_closeout_status: pending
 - next_owner_click: merge after pre-ok

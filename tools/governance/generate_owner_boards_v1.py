@@ -152,6 +152,7 @@ def load_demand_review_items(br: str) -> list[dict]:
         source_branch = meta.get('source_branch', '')
         review_targets = meta.get('review_target_artifacts', '')
         review = meta.get('chatgpt_review_result', 'pending')
+        override = meta.get('owner_review_override', 'no')
         next_click = meta.get('next_owner_click', 'review now' if status_value == 'ready-for-chatgpt-review' else 'merge after pre-ok')
         action_url = pr_url or blob_url(str(p.relative_to(ROOT)), br)
         needed = 'review now' if status_value == 'ready-for-chatgpt-review' else next_click
@@ -167,7 +168,8 @@ def load_demand_review_items(br: str) -> list[dict]:
             'needed_from_owner': needed,
             'details': (
                 f"ChatGPT review={review}; demand_status={status_value}; "
-                f"source_branch={source_branch or '-'}; review_target_artifacts={review_targets or '-'}"
+                f"owner_review_override={override}; source_branch={source_branch or '-'}; "
+                f"review_target_artifacts={review_targets or '-'}"
             ),
             'action_url': action_url,
             'where_to_act': where,

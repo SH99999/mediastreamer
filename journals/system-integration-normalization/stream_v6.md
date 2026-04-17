@@ -4,6 +4,12 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/owner-override-and-label-first-decision-flow-v1 / label-first decision path + explicit owner override
+- degraded Project custom fields from critical path to optional convenience; canonical owner decision path is structured PR decision marker + synchronized labels/state
+- added explicit owner override path for proceeding without ChatGPT `pre-ok` (`review_override: yes` with demand override markers) while keeping auditability and non-pre-ok truth
+- aligned lifecycle docs/templates and automation hooks so `ready-for-owner` and demand auto-close work under both paths (pre-ok or explicit owner override)
+- purpose: preserve owner-minimal flow, remove custom-field dependency, and keep truthful/auditable lifecycle transitions
+
 ### 2026-04-17 / si/review-ready-handoff-marker-and-governance-freeze-v1 / review-ready marker + governance freeze
 - tightened lifecycle semantics so `ready-for-chatgpt-review` is the single canonical repo-visible handoff marker for review pickup
 - required review refs on ready-for-review demand artifacts: `source_pr_url`, `source_branch`, `review_target_artifacts`

@@ -297,3 +297,21 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: SI governance package acceptance scope and future change triage.
 - What it explicitly does NOT affect: required fixes to existing governance paths when regressions/defects are found.
 - Follow-up needed: reject or defer non-exception governance/meta expansion proposals.
+
+### DEC-system_integration_normalization-45
+- Status: locked
+- Decision: canonical owner decision path is structured repo-visible markers (structured PR decision comment + synchronized labels/state), with Project custom fields reduced to optional convenience only.
+- Date context: owner-override and label-first decision flow package
+- Why this was chosen: owner progression must not depend on project custom-field availability and must remain auditable in repo-visible state.
+- What it affects: owner decision automation standard, owner operational reference, decision sync workflow behavior, and label catalog/source-label routing.
+- What it explicitly does NOT affect: owner merge authority boundaries, protected-main gating, or requirement for truthful closeout conditions.
+- Follow-up needed: keep decision block parser and label synchronization aligned when owner decision fields evolve.
+
+### DEC-system_integration_normalization-46
+- Status: locked
+- Decision: owner may proceed without ChatGPT `pre-ok` only through explicit override markers (`review_override: yes` + demand `chatgpt_review_result: owner-override` + `owner_review_override: yes`); override must be auditable and must not be rewritten as `pre-ok`.
+- Date context: owner-override and label-first decision flow package
+- Why this was chosen: some packages need intentional owner continuation while preserving truthful lifecycle semantics and auditability.
+- What it affects: exchange lifecycle rules, demand template fields, owner decision sync automation, and demand auto-close eligibility logic.
+- What it explicitly does NOT affect: normal review path (`pre-ok`) or closeout requirements for merged source PR + governance closeout done.
+- Follow-up needed: ensure ready-for-owner and auto-close flows remain distinguishable between pre-ok and owner-override paths.

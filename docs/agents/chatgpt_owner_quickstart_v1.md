@@ -22,6 +22,7 @@ Required references in the same demand:
 ## Owner action intent
 - `review now` means ChatGPT should pick up demands marked `ready-for-chatgpt-review` and review against listed source refs.
 - `chatok` and demand closeout remain internal automation/lifecycle mechanics.
+- if owner intentionally proceeds without ChatGPT `pre-ok`, use structured decision block with `review_override: yes` (explicit, auditable, not `pre-ok`).
 
 ## Guardrails
 - no new dashboard/board/html surfaces are required for this flow

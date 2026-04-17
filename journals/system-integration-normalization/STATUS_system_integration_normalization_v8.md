@@ -32,6 +32,8 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - owner repo-truth query model is now explicitly label-indexed (`gate:now|gate:quick-win|gate:backlog`, `state:blocked`, `state:needs-decision|state:awaiting-owner`, `component:<x>`) while canonical detail remains in demand/idea/journal/decision artifacts
   - review-ready pickup is now explicitly anchored to demand `status: ready-for-chatgpt-review` with required refs (`source_pr_url`, `source_branch`, `review_target_artifacts`)
   - owner command surface is now explicitly `governed mode on | ship to codex | review now | merge after pre-ok`
+  - canonical owner decision progression now uses structured repo-visible decision markers; project custom fields are optional convenience only
+  - explicit owner override path is available without ChatGPT `pre-ok` using `review_override: yes` + demand override markers, with auditable non-pre-ok semantics
   - governance/process expansion is frozen to exception-only fixes and direct delivery-support work
   - owner-minimal chat handoff now uses only `governed mode on` and `ship to codex` before merge-after-pre-ok; internal `chatok` and demand closure are automation-owned
   - governed chat mode can now persist live session continuity artifacts under `exchange/chatgpt/sessions/` and promote `chatok` sessions into `ready-for-codex` demand artifacts
@@ -158,3 +160,4 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 8. keep owner-facing portfolio visibility synchronized for `now|quick_win|backlog` rows in existing owner boards
 9. keep owner query answers link-first (direct Git object links + optional label-filter URLs) and avoid introducing new dashboard/HTML surfaces for queryability
 10. enforce governance freeze scope during SI package intake (allow only bugfix/regression/small-correction/direct-delivery exceptions)
+11. keep owner decision sync and demand lifecycle automation aligned for both `pre-ok` and explicit owner-override closeout paths

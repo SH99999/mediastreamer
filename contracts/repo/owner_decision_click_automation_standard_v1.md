@@ -4,7 +4,8 @@
 This standard reduces owner comment overhead by introducing a structured click/selection decision path for PR governance outcomes.
 
 ## Core model
-Owner decisions should be captured through structured fields (Project custom fields or fallback structured comment) and synchronized into governed PR labels.
+Owner decisions are captured through structured repo-visible markers (structured PR comment block and synchronized labels/state).
+Project custom fields are optional convenience only and must not be a critical-path dependency.
 PR creation and PR updates are execution responsibilities of agents/chats/Codex lanes, not the owner.
 
 ## One-click ownership operating contract (mandatory)
@@ -29,6 +30,7 @@ Minimum required fields:
 Optional fields:
 - `scope`
 - `followup_note`
+- `review_override`: `yes | no` (explicit owner continuation without ChatGPT `pre-ok`)
 
 Decision scoring fields (mandatory for decision packets/views):
 - `evidence_quality`: `0..3`
@@ -37,8 +39,12 @@ Decision scoring fields (mandatory for decision packets/views):
 - `confidence`: `0..100`
 
 ## Click-path precedence
-1. Project custom fields on the owner queue item (preferred click-path).
-2. Structured PR comment block with marker `<!-- owner-decision-v1 -->` (fallback when project-field API bridge is unavailable).
+1. Structured PR comment block with marker `<!-- owner-decision-v1 -->` (canonical path).
+2. Project custom fields (optional convenience mirror; never required for progression).
+
+Override rule:
+- if `review_override: yes`, owner explicitly accepts proceeding without ChatGPT `pre-ok`
+- this override must be recorded in repo-visible structured fields/labels and must not be rewritten as `pre-ok`
 
 ## SI merge-request packet requirement
 For SI/governance changes, agents/chats/Codex must provide a prepared **SI Merge Request executive summary** packet with:

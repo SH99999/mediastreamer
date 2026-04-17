@@ -71,17 +71,20 @@ def maybe_close(path: Path, token: str, dry_run: bool) -> bool:
         return False
 
     review = meta.get("chatgpt_review_result", "pending").lower()
+    override = meta.get("owner_review_override", "no").lower()
     closeout = meta.get("governance_closeout_status", "pending").lower()
     source_pr = meta.get("source_pr_url", "")
 
-    if review != "pre-ok" or closeout != "done" or not source_pr:
+    review_ok = review == "pre-ok" or (review == "owner-override" and override == "yes")
+    if not review_ok or closeout != "done" or not source_pr:
         return False
     if not pr_merged(source_pr, token):
         return False
 
     out = replace_status(text, "closed")
     stamp = datetime.now(timezone.utc).isoformat()
-    out += f"\n- auto_closed_at_utc: {stamp}\n- auto_close_trigger: merged_pr+pre_ok+closeout_done\n"
+    trigger = "merged_pr+pre_ok+closeout_done" if review == "pre-ok" else "merged_pr+owner_override+closeout_done"
+    out += f"\n- auto_closed_at_utc: {stamp}\n- auto_close_trigger: {trigger}\n"
 
     if not dry_run:
         path.write_text(out, encoding="utf-8")

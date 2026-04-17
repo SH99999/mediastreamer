@@ -22,6 +22,8 @@ Owner minimal command set:
 - `ship to codex`
 - `review now`
 - merge to `main` after `pre-ok`
+- optional owner override (explicit): structured owner decision block with `review_override: yes`
+- project custom fields are optional convenience; structured repo-visible decision markers are canonical
 
 Where to check chat review state:
 - [Owner action board](../owner/owner_action_board_v1.html)

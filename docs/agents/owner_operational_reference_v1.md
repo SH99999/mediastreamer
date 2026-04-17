@@ -27,19 +27,24 @@ Use this short format in chat or PR comment:
 - `merge authorization: yes | no`
 
 
-## Click-based owner decision (project/custom-field compatible)
-Preferred: set decision via project custom fields.
-Fallback: post this structured PR comment block:
+## Click-based owner decision (canonical repo-visible path)
+Canonical: post this structured PR comment block:
 
 ```text
 <!-- owner-decision-v1 -->
 decision: accept
 merge_authorization: yes
 docs_journals_complete: yes
+review_override: no
 ```
 
-Automation syncs labels/state from this block through `owner-decision-click-sync.yml`.
+Project custom fields may be used as optional convenience only.
+Automation syncs labels/state from the structured PR comment through `owner-decision-click-sync.yml`.
 Rollback switch: set repository variable `OWNER_DECISION_AUTOMATION_ENABLED=false` to disable automation and return to manual labeling/comments.
+
+Owner override path (explicit):
+- set `review_override: yes` only when intentionally proceeding without ChatGPT `pre-ok`
+- this path is auditable and must not be represented as `pre-ok`
 
 ## Are we ready to develop? (YES/NO gate)
 Answer **YES** only if all are true:

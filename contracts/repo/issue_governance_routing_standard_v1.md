@@ -87,6 +87,7 @@ Execution-gate governance rule:
 - `source:journal-monitor`
 - `source:manual`
 - `source:pr-review`
+- `source:owner-review-override`
 
 ## Default routing logic
 - `impact:system-wide` must also carry `agent:system-integration`

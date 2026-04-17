@@ -41,6 +41,7 @@
     {"name": "source:branch-monitor", "color": "bfdadc", "description": "Created or updated from the branch drift monitor"},
     {"name": "source:journal-monitor", "color": "bfdadc", "description": "Created or updated from the journal freshness monitor"},
     {"name": "source:manual", "color": "bfdadc", "description": "Created or updated manually"},
-    {"name": "source:pr-review", "color": "bfdadc", "description": "Created or updated from PR governance review"}
+    {"name": "source:pr-review", "color": "bfdadc", "description": "Created or updated from PR governance review"},
+    {"name": "source:owner-review-override", "color": "bfdadc", "description": "Owner explicitly proceeded without ChatGPT pre-ok"}
   ]
 }
