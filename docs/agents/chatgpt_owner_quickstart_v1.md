@@ -4,12 +4,11 @@
 Provide the minimum owner command path for governed ChatGPT↔Codex operation.
 
 ## Canonical owner command sequence
-1. discussion
-2. `ship to codex`
-3. `review now`
-4. merge to `main` when PR is decision-ready on repo truth (`pre-ok` optional advisory)
-
-`governed mode on` is a ChatGPT-side activation step and not required as an owner command.
+1. `governed mode on`
+2. discussion
+3. `ship to codex`
+4. `review now`
+5. merge to `main` when PR is decision-ready on repo truth (`pre-ok` optional advisory)
 
 ## Review pickup marker (single source)
 Use demand artifacts under `exchange/chatgpt/demands/` and locate:
