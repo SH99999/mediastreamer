@@ -4,7 +4,7 @@
 This is the single owner-facing page for decisions, onboarding links, governance operations, and review workflow.
 
 ## Owner policy (one-line)
-Discuss in chat, ship to Codex, review only repo-ready output, merge only after ChatGPT `pre-ok`; all routing, decomposition, documentation, closeout, and truth maintenance are execution-lane responsibilities, not owner work.
+Discuss in chat, ship to Codex, review repo-ready output, and decide merge on repo truth; ChatGPT `pre-ok` is optional advisory input, while routing/decomposition/documentation/closeout/truth maintenance remain execution-lane responsibilities.
 
 ## Owner role boundary (non-negotiable)
 - Owner is expected to decide, not to execute PR mechanics.
@@ -45,9 +45,9 @@ Project custom fields may be used as optional convenience only.
 Automation syncs labels/state from the structured PR comment through `owner-decision-click-sync.yml`.
 Rollback switch: set repository variable `OWNER_DECISION_AUTOMATION_ENABLED=false` to disable automation and return to manual labeling/comments.
 
-Owner override path (explicit):
-- set `review_override: yes` only when intentionally proceeding without ChatGPT `pre-ok`
-- this path is auditable and must not be represented as `pre-ok`
+ChatGPT review path (optional):
+- `review_override` remains available for explicit audit signaling but is not required for owner progression.
+- owner merge decision remains repo-truth based even when no ChatGPT `pre-ok` is present.
 
 ## Are we ready to develop? (YES/NO gate)
 Answer **YES** only if all are true:
@@ -88,7 +88,7 @@ Packet contract:
 - `governed mode on`
 - `ship to codex`
 - `review now`
-- merge to `main` after ChatGPT `pre-ok`
+- merge to `main` when PR is decision-ready on repo truth (`pre-ok` optional)
 
 Review-ready pickup marker:
 - demand `status: ready-for-chatgpt-review`

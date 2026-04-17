@@ -67,7 +67,7 @@ Tier-2 deep-history references are read-only and listed in:
 - Chat-to-demand continuity is mandatory: relevant chat outcomes must be captured to `exchange/chatgpt/sessions/` within 5 minutes, then promoted to `exchange/chatgpt/demands/` at owner command `ship to codex` (internal `chatok`)
 - owner review pickup command is `review now`, resolved from demand artifacts marked `ready-for-chatgpt-review`
 - structured repo-visible decision markers are canonical; Project custom fields are optional convenience only
-- owner override without ChatGPT pre-ok is allowed only via explicit auditable override markers and must not be represented as pre-ok
+- ChatGPT `pre-ok` is optional advisory; owner decision remains repo-truth based, and any override markers used must stay explicit/auditable and must not be represented as pre-ok
 - SI delegation must use canonical agent registry availability (`docs/agents/agent_registry_v1.md` / `tools/governance/agent_registry_v1.json`) before assigning work
 - Chat execution-gate classification is mandatory for demand/idea items: `now | quick_win | backlog` with promotion rationale and related outputs preserved in repo truth
 - execution-gate labels are standardized for owner query/indexing: `gate:now`, `gate:quick-win`, `gate:backlog`

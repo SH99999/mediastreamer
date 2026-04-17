@@ -26,7 +26,7 @@ Each active exchange artifact must contain one status marker line:
 - `status: <allowed-status>`
 
 ## Handshake order
-`chat -> governed mode on -> live session artifact -> ship to codex -> demand ready-for-codex + protocol-main update + inbox-main snapshot(pickup-ready) -> codex pickup from main inbox -> in-execution -> ready-for-chatgpt-review -> (pre-ok OR owner-override) -> ready-for-owner -> closed`
+`chat -> governed mode on -> live session artifact -> ship to codex -> demand ready-for-codex + protocol-main update + inbox-main snapshot(pickup-ready) -> codex pickup from main inbox -> in-execution -> ready-for-chatgpt-review -> (optional pre-ok/changes-requested) -> ready-for-owner -> closed`
 
 Detailed behavior:
 1. ChatGPT activates the thread using `governed mode on`.
@@ -39,14 +39,12 @@ Detailed behavior:
      - `source_pr_url`
      - `source_branch`
      - `review_target_artifacts`
-7. ChatGPT reviews against demand + repo truth; set `status: pre-ok` or `status: changes-requested`.
-8. Codex prepares owner packet and sets `status: ready-for-owner` when either:
-   - `chatgpt_review_result: pre-ok`
-   - explicit owner override is recorded (`chatgpt_review_result: owner-override` and `owner_review_override: yes`)
+7. ChatGPT review is optional advisory input; if performed, set `status: pre-ok` or `status: changes-requested`.
+8. Codex prepares owner packet and sets `status: ready-for-owner` once PR + rollback + evidence + next_owner_click are ready in repo truth (independent of ChatGPT review presence).
 9. After owner decision/merge and governance closeout completion, demand status is auto-moved to `closed`.
 
 Override constraints:
-- override is explicit and auditable
+- if override markers are used, they remain explicit and auditable
 - override must not be represented as `pre-ok`
 
 ## Continuity rule

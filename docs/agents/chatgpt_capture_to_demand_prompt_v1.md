@@ -46,7 +46,7 @@ in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed
 Owner command surface must stay minimal:
 - governed mode on
 - ship to codex
-- merge after pre-ok
+- merge when PR is decision-ready on repo truth (`pre-ok` optional advisory)
 ```
 
 ## Owner handoff rule

@@ -62,4 +62,4 @@ actor: chatgpt
 - owner_review_override: no
 - owner_override_note:
 - governance_closeout_status: pending
-- next_owner_click: merge after pre-ok
+- next_owner_click: review decision-ready PR packet and merge if accepted (`pre-ok` optional advisory)

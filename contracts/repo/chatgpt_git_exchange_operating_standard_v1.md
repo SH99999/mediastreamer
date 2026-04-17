@@ -39,7 +39,7 @@ After activation:
 - codex execution handoff must route through governed demand artifacts
 
 ## End-to-end governed chain (mandatory)
-`chat -> governed mode on -> live session artifact -> ship to codex -> ready-for-codex demand + protocol-main update + inbox-main pickup snapshot -> codex pickup from main inbox -> in-execution -> ready-for-chatgpt-review -> (pre-ok OR owner-override) -> ready-for-owner -> closed`
+`chat -> governed mode on -> live session artifact -> ship to codex -> ready-for-codex demand + protocol-main update + inbox-main pickup snapshot -> codex pickup from main inbox -> in-execution -> ready-for-chatgpt-review -> (optional pre-ok/changes-requested) -> ready-for-owner -> closed`
 
 Rules:
 - Codex executes from demand artifacts stored in Git.
@@ -162,10 +162,8 @@ Required companion fields:
 4. Demand is moved to `status: ready-for-codex`.
 5. Codex marks `status: in-execution` while implementing governed repo changes.
 6. Codex marks `status: ready-for-chatgpt-review` after implementation artifacts + PR are prepared.
-7. ChatGPT reviews against demand + repo truth and sets `status: pre-ok` or `status: changes-requested`.
-8. Codex updates owner packet and sets `status: ready-for-owner` when either:
-   - ChatGPT path: `chatgpt_review_result: pre-ok`
-   - Owner override path: `chatgpt_review_result: owner-override` and `owner_review_override: yes`
+7. ChatGPT review is optional advisory input; when performed, set `status: pre-ok` or `status: changes-requested`.
+8. Codex updates owner packet and sets `status: ready-for-owner` when PR + rollback + evidence + next_owner_click are ready in repo truth (with or without ChatGPT review).
 9. Owner decides/merges; demand closes automatically after merge + governance closeout completion.
 
 ## Living exchange stream (mandatory)
@@ -204,17 +202,17 @@ Required companion fields:
   - `materialized_protocol: exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`
   - `main_inbox_snapshot: exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md`
 
-## ChatGPT review/pre-ok gate
+## ChatGPT review/pre-ok (optional advisory)
 - Codex implementation output must include documented branch/PR/rollback path.
 - demand artifacts in `ready-for-chatgpt-review` must include `source_pr_url`, `source_branch`, and `review_target_artifacts`.
 - ChatGPT review compares implementation output against demand + repo truth.
-- Demand lifecycle must not advance to `ready-for-owner` without either `pre-ok` or explicit owner override markers (`chatgpt_review_result: owner-override` + `owner_review_override: yes`).
+- Demand lifecycle may advance to `ready-for-owner` without `pre-ok` if repo-truth owner packet requirements are satisfied.
 - Existing owner-facing surfaces (owner action board / owner decision board / status index / owner dashboard) must expose `pre-ok`, `ready-for-owner`, PR link, and next owner click without requiring owner lifecycle reconstruction.
 
 ## Canonical owner decision markers (label/artifact first)
 - canonical progression uses structured repo-visible markers (demand fields + structured PR decision comment + synchronized labels/state)
 - Project custom fields are optional convenience and must not be required for progression
-- owner override without ChatGPT `pre-ok` is allowed only via explicit marker path and must remain auditable
+- if owner override markers are used, they remain explicit/auditable and must not be represented as `pre-ok`
 
 Structured decision comment fields (canonical):
 - `decision`
@@ -303,7 +301,7 @@ Execution packages must update durable repo truth when impacted:
 - all protected truth still merges via PR to `main`
 - if connector/auth is blocked, produce explicit blocker + one owner action
 - no new dashboards/boards/html surfaces are required by this standard
-- owner command surface should remain minimal: `governed mode on`, `ship to codex`, `review now`, `merge after pre-ok`
+- owner command surface should remain minimal: `governed mode on`, `ship to codex`, `review now`, `merge when repo-ready` (`pre-ok` optional advisory)
 
 ## Governance freeze rule (post-package)
 After this package, governance/process expansion is frozen.
