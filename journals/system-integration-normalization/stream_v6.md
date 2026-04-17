@@ -4,6 +4,13 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / owner/gov_cleanout / target operating model v2 preparation (cleanout + fast delivery baseline)
+- prepared `docs/agents/si_target_operating_model_v2.md` to preserve only required operational knowledge classes (component execution truth, repo/process truth, governance runtime model, execution continuity)
+- defined cleanout doctrine to move historical/redundant noise out of active startup dependency while retaining audit history
+- defined fast specialist startup model (Tier A/B/C), explicit SI orchestration/dependency role, and backlog-preservation rules for deferred demand/idea items
+- preserved one-click owner decision model and autonomous delivery boundaries while keeping governance integrity intact
+- purpose: streamline startup and delivery speed without weakening branch/process/governance doctrine
+
 ### 2026-04-17 / si/chatgpt-zip-bundle-intake-and-codex-manifest-v1 / ZIP intake + Codex canonical manifest + sequential distribution contract
 - defined raw ZIP intake as optional ChatGPT handoff input under existing exchange root (`exchange/chatgpt/bundles/`) and explicitly marked ZIP/hints non-canonical for branch mapping truth
 - defined Codex-generated canonical distribution manifest contract with required identity/source/target/check/rollback/result-report fields
