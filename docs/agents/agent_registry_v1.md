@@ -21,6 +21,16 @@ Each agent entry must provide:
 - `escalates_to`
 - `can_receive_work_from_si` (`yes | no`)
 
+Required baseline agent ids:
+- `si`
+- `dev-tuner`
+- `dev-bridge`
+- `dev-generic`
+- `dev-hardware`
+- `dev-fun-line`
+- `dev-autoswitch`
+- `dev-ux`
+
 ## Active registry table
 | agent_id | status | role | branch_hint | owned_components | startup_prompt_path | bootstrap_command | can_receive_work_from_si |
 |---|---|---|---|---|---|---|---|
@@ -48,3 +58,4 @@ If required role is unavailable/planned:
 - list: `python3 tools/governance/agent_registry_helper_v1.py --list`
 - one start command: `python3 tools/governance/agent_registry_helper_v1.py --start-command <agent_id>`
 - validation: `python3 tools/governance/agent_registry_helper_v1.py --validate`
+  - validates required baseline ids, required fields, startup prompt anchor existence, bootstrap command format, and role-profile markers for available agents

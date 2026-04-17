@@ -4,6 +4,12 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/agent-registry-delegation-and-startup-v1 / registry guardrails + SI delegation checklist hardening
+- tightened canonical agent-registry contract by documenting required baseline agent ids (`si`, `dev-tuner`, `dev-bridge`, `dev-generic`, `dev-hardware`, `dev-fun-line`, `dev-autoswitch`, `dev-ux`)
+- extended `tools/governance/agent_registry_helper_v1.py --validate` to enforce required baseline ids and available-agent startup/role-profile alignment checks
+- added explicit SI repo-driven delegation checklist to onboarding v7 so delegation decisions always derive from registry truth + helper output
+- purpose: keep agent identity/availability/delegation/startup inspectable and deterministic from one registry chain without adding dashboard/board/html surfaces
+
 ### 2026-04-17 / si/agent-registry-and-role-availability-v1 / canonical registry + hardware role formalization
 - added canonical agent registry in markdown/json (`docs/agents/agent_registry_v1.md`, `tools/governance/agent_registry_v1.json`) with identity, availability, role, scope, startup prompt, bootstrap command, and SI delegation eligibility fields
 - added owner-facing startup index (`docs/agents/agent_start_index_v1.md`) and linked existing owner-visible surfaces to registry/index paths
