@@ -410,6 +410,9 @@ ControllerRadioScaleOverlayBridge.prototype.pollOnce = function() {
   if (this.fetchInFlight) { return; }
   this.fetchInFlight = true;
   fetch('http://127.0.0.1:3000/api/v1/getState', { timeout: 5000 }).then(function(res) {
+    if (!res || !res.ok) {
+      throw new Error('Volumio state HTTP ' + ((res && res.status) || 'unknown'));
+    }
     return res.json();
   }).then(function(state) {
     self.handleVolumioState(state);
@@ -464,24 +467,28 @@ ControllerRadioScaleOverlayBridge.prototype.parseRadioTitle = function(rawTitle)
 };
 
 ControllerRadioScaleOverlayBridge.prototype.handleVolumioState = function(state) {
-  this.state.volumioState = state || {};
-  this.state.lastUpdatedAt = Date.now();
-  var normalized = this.normalizeTrack(state || {});
-  var previousKey = this.state.track && this.state.track.key;
-  this.state.track = normalized;
-  if (normalized) {
-    this.state.playback.trackKey = normalized.key;
-    this.state.playback.anchorTs = Date.now();
-    this.state.playback.positionMs = state.seek || 0;
-    this.state.playback.status = state.status || '';
-    if (normalized.key !== previousKey) {
-      this.fetchLyrics(normalized);
-      this.scheduleSpotifyLookup(normalized, true);
+  try {
+    this.state.volumioState = state || {};
+    this.state.lastUpdatedAt = Date.now();
+    var normalized = this.normalizeTrack(state || {});
+    var previousKey = this.state.track && this.state.track.key;
+    this.state.track = normalized;
+    if (normalized) {
+      this.state.playback.trackKey = normalized.key;
+      this.state.playback.anchorTs = Date.now();
+      this.state.playback.positionMs = state.seek || 0;
+      this.state.playback.status = state.status || '';
+      if (normalized.key !== previousKey) {
+        this.fetchLyrics(normalized);
+        this.scheduleSpotifyLookup(normalized, true);
+      } else {
+        this.updateActiveLyricsIndex();
+      }
     } else {
-      this.updateActiveLyricsIndex();
+      this.state.spotify.match = null;
     }
-  } else {
-    this.state.spotify.match = null;
+  } catch (error) {
+    this.log('warn', 'State handling failed: ' + (error && error.message ? error.message : String(error)));
   }
 };
 
@@ -501,9 +508,12 @@ ControllerRadioScaleOverlayBridge.prototype.fetchLyrics = function(track) {
   }
   var url = 'https://lrclib.net/api/search?track_name=' + encodeURIComponent(track.title) + '&artist_name=' + encodeURIComponent(track.artist || '');
   fetch(url, { timeout: 6000, headers: { 'User-Agent': 'RSOB/0.2.2-c2' } }).then(function(res) {
+    if (!res || !res.ok) {
+      throw new Error('Lyrics HTTP ' + ((res && res.status) || 'unknown'));
+    }
     return res.json();
   }).then(function(items) {
-    var lyrics = self.pickLyrics(items || []);
+    var lyrics = self.pickLyrics(Array.isArray(items) ? items : []);
     self.state.lyrics = lyrics;
     self.cache.lyrics.set(cacheKey, { ts: Date.now(), value: JSON.parse(JSON.stringify(lyrics)) });
     self.updateActiveLyricsIndex();
@@ -728,6 +738,7 @@ ControllerRadioScaleOverlayBridge.prototype.performSpotifyLookup = async functio
 };
 ControllerRadioScaleOverlayBridge.prototype.buildSpotifyQueries = function(track) {
   var title = this.stripTitleDecorations(track.title || '');
+  if (!title) { return []; }
   var artist = track.artist || '';
   var list = [];
   function add(q) { if (q && list.indexOf(q) === -1) list.push(q); }
