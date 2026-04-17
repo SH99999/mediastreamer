@@ -398,3 +398,10 @@ Priority rule:
 - owner can see `now`, `quick_win`, and `backlog` inventory from existing Git surfaces
 - implementation suggestions are explicit, ranked, and branchable
 - exchange cycles can be initialized and watched automatically through existing exchange scripts
+
+## Operational clarification — ChatGPT write branch for `ship to codex`
+- for ChatGPT-authored exchange artifact writes, the operational write branch is `integration/chatgpt`
+- this applies to live session artifacts, demand promotions, materialized protocol snapshots, inbox-main pickup snapshots, and raw ZIP handoff artifacts authored by ChatGPT
+- do not create a new `si/*` branch solely to perform a routine ChatGPT `ship to codex` handoff
+- `exchange/chatgpt/inbox-main/` remains the canonical pickup artifact namespace/contract; Codex owns any downstream normalization, promotion, target-branch fan-out, and PR preparation required by its workflow
+- historical/bootstrap references to `si/chatgpt-git-exchange-*` are retained for history/bootstrap context and are not the routine write path for current ChatGPT-authored handoffs
