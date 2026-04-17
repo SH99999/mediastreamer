@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-echo "Uninstalling AS5600 Angle Tester"
+echo "Uninstalling Rotary Encoder II Angle Bridge"
 exit 0

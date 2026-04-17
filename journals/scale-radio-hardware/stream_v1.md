@@ -7,3 +7,5 @@
 - 2026-04-13: Standalone Volumio validation plugin requirement recorded as a locked hardware-track rule.
 - 2026-04-13: Component remains dev-only pending repo source normalization and target-Pi validation.
 - 2026-04-16: Added an explicit evidence-led claim ledger so hardware lane remains clearly non-deploy/non-autonomy until target-Pi evidence is available.
+- 2026-04-17: Added repo-native `current_dev` plugin source for "Rotary Encoder II Angle Bridge" with GUI sections for AS5600 angle sensing, calibration, live actions, and Rotary Encoder II style button mapping.
+- 2026-04-17: Added manual GUI button simulation methods (`prev`, `select`, `next`) to verify mapping before physical GPIO interrupt capture is introduced.

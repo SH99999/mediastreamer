@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 
-echo "Installing AS5600 Angle Tester dependencies"
+echo "Installing Rotary Encoder II Angle Bridge dependencies"
 exit 0

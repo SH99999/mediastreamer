@@ -6,7 +6,7 @@ const io = require('socket.io-client');
 const i2c = require('i2c-bus');
 const VConf = require('v-conf');
 
-const PLUGIN_NAME = 'AS5600 Angle Tester';
+const PLUGIN_NAME = 'Rotary Encoder II Angle Bridge';
 const SOCKET_URL = 'http://localhost:3000';
 const MAX_ANGLE = 4095;
 const REG = {
@@ -14,13 +14,12 @@ const REG = {
   RAW_ANGLE: 0x0C
 };
 
-module.exports = ControllerAS5600AngleTester;
+module.exports = ControllerRotaryEncoderIIAngleBridge;
 
-function ControllerAS5600AngleTester(context) {
+function ControllerRotaryEncoderIIAngleBridge(context) {
   this.context = context;
   this.commandRouter = context.coreCommand;
   this.logger = context.logger;
-  this.configManager = context.configManager;
 
   this.config = null;
   this.socket = null;
@@ -31,8 +30,7 @@ function ControllerAS5600AngleTester(context) {
   this.lastBucket = null;
   this.lastVolume = null;
   this.lastToastAt = 0;
-  this.magnetWarningShown = false;
-  this.sensorErrorShown = false;
+  this.lastButtonAt = 0;
 
   this.currentState = {
     available: false,
@@ -47,11 +45,15 @@ function ControllerAS5600AngleTester(context) {
       rawMin: 0,
       rawMax: MAX_ANGLE,
       invertDirection: false
+    },
+    buttons: {
+      enabled: false,
+      lastButton: null
     }
   };
 }
 
-ControllerAS5600AngleTester.prototype.onVolumioStart = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.onVolumioStart = function() {
   const configFile = this.commandRouter.pluginManager.getConfigurationFile(this.context, 'config.json');
   this.config = new VConf();
   this.config.loadFile(configFile);
@@ -59,49 +61,43 @@ ControllerAS5600AngleTester.prototype.onVolumioStart = function() {
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.onStart = function() {
-  const self = this;
-  const defer = libQ.defer();
-
+ControllerRotaryEncoderIIAngleBridge.prototype.onStart = function() {
   try {
-    self.connectSocket();
-    if (self.config.get('enabled')) {
-      self.startPolling();
+    this.connectSocket();
+    if (this.config.get('enabled')) {
+      this.startPolling();
     }
-    defer.resolve();
   }
   catch (error) {
-    self.logger.error(PLUGIN_NAME + ': onStart failed: ' + error.message);
-    defer.resolve();
+    this.logger.error(PLUGIN_NAME + ': onStart failed: ' + error.message);
   }
-
-  return defer.promise;
+  return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.onStop = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.onStop = function() {
   this.stopPolling();
   this.disconnectSocket();
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.onRestart = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.onRestart = function() {
   this.restartRuntime();
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.onInstall = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.onInstall = function() {
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.onUninstall = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.onUninstall = function() {
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.getConfigurationFiles = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.getConfigurationFiles = function() {
   return ['config.json'];
 };
 
-ControllerAS5600AngleTester.prototype.getUIConfig = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.getUIConfig = function() {
   const defer = libQ.defer();
   const self = this;
   const langCode = self.commandRouter.sharedVars.get('language_code') || 'en';
@@ -124,7 +120,7 @@ ControllerAS5600AngleTester.prototype.getUIConfig = function() {
     uiconf.sections[1].content[2].value = self.getIntConfig('rawMax', MAX_ANGLE);
     uiconf.sections[1].content[3].value = self.getIntConfig('resolutionSteps', 20);
 
-    // Action section
+    // Angle action section
     const actionType = String(self.config.get('actionType') || 'toast_percent');
     uiconf.sections[2].content[0].value = self.selectValue(actionType, self.getActionLabel(actionType));
     uiconf.sections[2].content[1].value = self.getIntConfig('toastCooldownMs', 350);
@@ -132,6 +128,15 @@ ControllerAS5600AngleTester.prototype.getUIConfig = function() {
     uiconf.sections[2].content[3].value = String(self.config.get('emitEndpoint') || '');
     uiconf.sections[2].content[4].value = String(self.config.get('emitMethod') || '');
     uiconf.sections[2].content[5].value = String(self.config.get('emitData') || '{}');
+
+    // Button section
+    const buttonActionType = String(self.config.get('buttonActionType') || 'transport');
+    uiconf.sections[3].content[0].value = !!self.config.get('buttonsEnabled');
+    uiconf.sections[3].content[1].value = self.selectValue(buttonActionType, self.getButtonActionLabel(buttonActionType));
+    uiconf.sections[3].content[2].value = self.getIntConfig('buttonDebounceMs', 120);
+    uiconf.sections[3].content[3].value = String(self.config.get('buttonEndpoint') || '');
+    uiconf.sections[3].content[4].value = String(self.config.get('buttonMethod') || '');
+    uiconf.sections[3].content[5].value = String(self.config.get('buttonData') || '{}');
 
     defer.resolve(uiconf);
   }).fail(function(error) {
@@ -142,7 +147,7 @@ ControllerAS5600AngleTester.prototype.getUIConfig = function() {
   return defer.promise;
 };
 
-ControllerAS5600AngleTester.prototype.saveSensorConfig = function(data) {
+ControllerRotaryEncoderIIAngleBridge.prototype.saveSensorConfig = function(data) {
   this.config.set('enabled', !!data.enabled);
   this.config.set('i2cBus', this.extractSelectedValue(data.i2cBus, 1));
   this.config.set('i2cAddress', String(data.i2cAddress || '0x36').trim());
@@ -154,7 +159,7 @@ ControllerAS5600AngleTester.prototype.saveSensorConfig = function(data) {
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.saveCalibrationConfig = function(data) {
+ControllerRotaryEncoderIIAngleBridge.prototype.saveCalibrationConfig = function(data) {
   this.config.set('invertDirection', !!data.invertDirection);
   this.config.set('rawMin', this.clamp(this.parseIntSafe(data.rawMin, 0), 0, MAX_ANGLE));
   this.config.set('rawMax', this.clamp(this.parseIntSafe(data.rawMax, MAX_ANGLE), 0, MAX_ANGLE));
@@ -165,7 +170,7 @@ ControllerAS5600AngleTester.prototype.saveCalibrationConfig = function(data) {
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.saveActionConfig = function(data) {
+ControllerRotaryEncoderIIAngleBridge.prototype.saveActionConfig = function(data) {
   this.config.set('actionType', this.extractSelectedValue(data.actionType, 'toast_percent'));
   this.config.set('toastCooldownMs', this.clamp(this.parseIntSafe(data.toastCooldownMs, 350), 0, 5000));
   this.config.set('volumeStepPercent', this.clamp(this.parseIntSafe(data.volumeStepPercent, 2), 1, 20));
@@ -174,11 +179,22 @@ ControllerAS5600AngleTester.prototype.saveActionConfig = function(data) {
   this.config.set('emitData', String(data.emitData || '{}').trim() || '{}');
 
   this.resetLiveState();
-  this.commandRouter.pushToastMessage('success', PLUGIN_NAME, 'Action settings saved');
+  this.commandRouter.pushToastMessage('success', PLUGIN_NAME, 'Angle action settings saved');
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.probeSensor = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.saveButtonConfig = function(data) {
+  this.config.set('buttonsEnabled', !!data.buttonsEnabled);
+  this.config.set('buttonActionType', this.extractSelectedValue(data.buttonActionType, 'transport'));
+  this.config.set('buttonDebounceMs', this.clamp(this.parseIntSafe(data.buttonDebounceMs, 120), 40, 1000));
+  this.config.set('buttonEndpoint', String(data.buttonEndpoint || '').trim());
+  this.config.set('buttonMethod', String(data.buttonMethod || '').trim());
+  this.config.set('buttonData', String(data.buttonData || '{}').trim() || '{}');
+  this.commandRouter.pushToastMessage('success', PLUGIN_NAME, 'Button settings saved');
+  return libQ.resolve();
+};
+
+ControllerRotaryEncoderIIAngleBridge.prototype.probeSensor = function() {
   try {
     const frame = this.readSensorFrame();
     const state = this.processFrame(frame, true);
@@ -199,37 +215,43 @@ ControllerAS5600AngleTester.prototype.probeSensor = function() {
   }
 };
 
-ControllerAS5600AngleTester.prototype.captureMin = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.captureMin = function() {
   return this.captureCalibrationValue('rawMin', 'Minimum');
 };
 
-ControllerAS5600AngleTester.prototype.captureMax = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.captureMax = function() {
   return this.captureCalibrationValue('rawMax', 'Maximum');
 };
 
-ControllerAS5600AngleTester.prototype.resetCalibration = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.resetCalibration = function() {
   this.config.set('rawMin', 0);
   this.config.set('rawMax', MAX_ANGLE);
   this.resetLiveState();
-  this.commandRouter.pushToastMessage('success', PLUGIN_NAME, 'Calibration reset to 0–4095');
+  this.commandRouter.pushToastMessage('success', PLUGIN_NAME, 'Calibration reset to 0-4095');
   return libQ.resolve();
 };
 
-ControllerAS5600AngleTester.prototype.showCurrentState = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.showCurrentState = function() {
   const state = this.currentState || {};
   const message = state.available
     ? ('RAW ' + state.rawAngle + ' | ' + state.percent + '% | bucket ' + state.bucket)
-    : 'No processed state yet. Use "Probe sensor now" or enable live polling.';
+    : 'No processed state yet. Use probe or enable live polling.';
 
   this.commandRouter.pushToastMessage('info', PLUGIN_NAME, message);
   return libQ.resolve(state);
 };
 
-ControllerAS5600AngleTester.prototype.getCurrentState = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.simulateButtonPress = function(data) {
+  const button = String((data && data.button) || 'select').trim().toLowerCase();
+  this.handleButtonPress(button, true);
+  return libQ.resolve({ ok: true, button: button });
+};
+
+ControllerRotaryEncoderIIAngleBridge.prototype.getCurrentState = function() {
   return libQ.resolve(this.currentState);
 };
 
-ControllerAS5600AngleTester.prototype.captureCalibrationValue = function(configKey, label) {
+ControllerRotaryEncoderIIAngleBridge.prototype.captureCalibrationValue = function(configKey, label) {
   try {
     const frame = this.readSensorFrame();
     const raw = frame.rawAngle;
@@ -244,7 +266,7 @@ ControllerAS5600AngleTester.prototype.captureCalibrationValue = function(configK
   }
 };
 
-ControllerAS5600AngleTester.prototype.ensureDefaultConfig = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.ensureDefaultConfig = function() {
   const defaults = {
     enabled: false,
     i2cBus: 1,
@@ -260,6 +282,12 @@ ControllerAS5600AngleTester.prototype.ensureDefaultConfig = function() {
     emitEndpoint: '',
     emitMethod: '',
     emitData: '{}',
+    buttonsEnabled: false,
+    buttonActionType: 'transport',
+    buttonDebounceMs: 120,
+    buttonEndpoint: '',
+    buttonMethod: '',
+    buttonData: '{}',
     startupToast: true,
     lastProbeRaw: 0,
     lastProbePercent: 0,
@@ -273,7 +301,7 @@ ControllerAS5600AngleTester.prototype.ensureDefaultConfig = function() {
   });
 };
 
-ControllerAS5600AngleTester.prototype.connectSocket = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.connectSocket = function() {
   if (this.socket) {
     return;
   }
@@ -282,17 +310,9 @@ ControllerAS5600AngleTester.prototype.connectSocket = function() {
     reconnection: true,
     forceNew: false
   });
-
-  this.socket.on('connect', () => {
-    this.logger.info(PLUGIN_NAME + ': socket connected');
-  });
-
-  this.socket.on('connect_error', (error) => {
-    this.logger.warn(PLUGIN_NAME + ': socket connect error: ' + (error && error.message ? error.message : error));
-  });
 };
 
-ControllerAS5600AngleTester.prototype.disconnectSocket = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.disconnectSocket = function() {
   if (this.socket) {
     try {
       this.socket.disconnect();
@@ -304,7 +324,7 @@ ControllerAS5600AngleTester.prototype.disconnectSocket = function() {
   }
 };
 
-ControllerAS5600AngleTester.prototype.startPolling = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.startPolling = function() {
   this.stopPolling();
   this.openBus();
 
@@ -313,24 +333,19 @@ ControllerAS5600AngleTester.prototype.startPolling = function() {
     try {
       const frame = this.readSensorFrame();
       const state = this.processFrame(frame, false);
-      this.executeAction(state);
-      this.sensorErrorShown = false;
+      this.executeAngleAction(state);
     }
     catch (error) {
       this.logger.error(PLUGIN_NAME + ': poll error: ' + error.message);
-      if (!this.sensorErrorShown && this.config.get('startupToast')) {
-        this.commandRouter.pushToastMessage('error', PLUGIN_NAME, error.message);
-        this.sensorErrorShown = true;
-      }
     }
   }, pollIntervalMs);
 
   if (this.config.get('startupToast')) {
-    this.commandRouter.pushToastMessage('success', PLUGIN_NAME, 'Live polling started on I²C bus ' + this.getIntConfig('i2cBus', 1));
+    this.commandRouter.pushToastMessage('success', PLUGIN_NAME, 'Live polling started on I2C bus ' + this.getIntConfig('i2cBus', 1));
   }
 };
 
-ControllerAS5600AngleTester.prototype.stopPolling = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.stopPolling = function() {
   if (this.pollTimer) {
     clearInterval(this.pollTimer);
     this.pollTimer = null;
@@ -338,7 +353,7 @@ ControllerAS5600AngleTester.prototype.stopPolling = function() {
   this.closeBus();
 };
 
-ControllerAS5600AngleTester.prototype.restartRuntime = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.restartRuntime = function() {
   this.stopPolling();
   this.resetLiveState();
 
@@ -347,25 +362,23 @@ ControllerAS5600AngleTester.prototype.restartRuntime = function() {
       this.startPolling();
     }
     catch (error) {
-      this.logger.error(PLUGIN_NAME + ': restartRuntime failed: ' + error.message);
       this.commandRouter.pushToastMessage('error', PLUGIN_NAME, error.message);
     }
   }
 };
 
-ControllerAS5600AngleTester.prototype.resetLiveState = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.resetLiveState = function() {
   this.lastBucket = null;
   this.lastVolume = null;
   this.lastToastAt = 0;
-  this.magnetWarningShown = false;
 };
 
-ControllerAS5600AngleTester.prototype.openBus = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.openBus = function() {
   const busNumber = this.getIntConfig('i2cBus', 1);
   const devicePath = '/dev/i2c-' + busNumber;
 
   if (!fs.existsSync(devicePath)) {
-    throw new Error('I²C bus ' + busNumber + ' not found (' + devicePath + '). Enable I²C first.');
+    throw new Error('I2C bus ' + busNumber + ' not found (' + devicePath + '). Enable I2C first.');
   }
 
   if (this.i2cHandle && this.i2cHandleBus === busNumber) {
@@ -377,7 +390,7 @@ ControllerAS5600AngleTester.prototype.openBus = function() {
   this.i2cHandleBus = busNumber;
 };
 
-ControllerAS5600AngleTester.prototype.closeBus = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.closeBus = function() {
   if (this.i2cHandle) {
     try {
       this.i2cHandle.closeSync();
@@ -390,7 +403,7 @@ ControllerAS5600AngleTester.prototype.closeBus = function() {
   }
 };
 
-ControllerAS5600AngleTester.prototype.readSensorFrame = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.readSensorFrame = function() {
   this.openBus();
 
   const address = this.getAddress();
@@ -409,7 +422,7 @@ ControllerAS5600AngleTester.prototype.readSensorFrame = function() {
   };
 };
 
-ControllerAS5600AngleTester.prototype.processFrame = function(frame, manualOnly) {
+ControllerRotaryEncoderIIAngleBridge.prototype.processFrame = function(frame, manualOnly) {
   const normalized = this.mapRawToNormalized(frame.rawAngle);
   const percent = Math.round(normalized * 100);
   const bucket = this.getBucket(normalized);
@@ -428,24 +441,22 @@ ControllerAS5600AngleTester.prototype.processFrame = function(frame, manualOnly)
       rawMin: this.getIntConfig('rawMin', 0),
       rawMax: this.getIntConfig('rawMax', MAX_ANGLE),
       invertDirection: !!this.config.get('invertDirection')
+    },
+    buttons: {
+      enabled: !!this.config.get('buttonsEnabled'),
+      lastButton: this.currentState && this.currentState.buttons ? this.currentState.buttons.lastButton : null
     }
   };
 
   return this.currentState;
 };
 
-ControllerAS5600AngleTester.prototype.executeAction = function(state) {
+ControllerRotaryEncoderIIAngleBridge.prototype.executeAngleAction = function(state) {
   const actionType = String(this.config.get('actionType') || 'toast_percent');
 
   if (!state.magnetDetected) {
-    if (!this.magnetWarningShown) {
-      this.commandRouter.pushToastMessage('warning', PLUGIN_NAME, 'Magnet not detected');
-      this.magnetWarningShown = true;
-    }
     return;
   }
-
-  this.magnetWarningShown = false;
 
   switch (actionType) {
     case 'none':
@@ -464,18 +475,18 @@ ControllerAS5600AngleTester.prototype.executeAction = function(state) {
   }
 };
 
-ControllerAS5600AngleTester.prototype.toastPercent = function(state) {
+ControllerRotaryEncoderIIAngleBridge.prototype.toastPercent = function(state) {
   const now = Date.now();
   const cooldownMs = this.getIntConfig('toastCooldownMs', 350);
 
   if (this.lastBucket !== state.bucket && now - this.lastToastAt >= cooldownMs) {
-    this.commandRouter.pushToastMessage('info', PLUGIN_NAME, 'Position ' + state.percent + '% (raw ' + state.rawAngle + ')');
+    this.commandRouter.pushToastMessage('info', PLUGIN_NAME, 'Angle ' + state.percent + '% (raw ' + state.rawAngle + ')');
     this.lastBucket = state.bucket;
     this.lastToastAt = now;
   }
 };
 
-ControllerAS5600AngleTester.prototype.mapToVolume = function(state) {
+ControllerRotaryEncoderIIAngleBridge.prototype.mapToVolume = function(state) {
   if (!this.socket) {
     return;
   }
@@ -490,33 +501,20 @@ ControllerAS5600AngleTester.prototype.mapToVolume = function(state) {
   }
 };
 
-ControllerAS5600AngleTester.prototype.customEmit = function(state) {
-  if (!this.socket) {
-    return;
-  }
-
-  if (this.lastBucket === state.bucket) {
+ControllerRotaryEncoderIIAngleBridge.prototype.customEmit = function(state) {
+  if (!this.socket || this.lastBucket === state.bucket) {
     return;
   }
 
   const endpoint = String(this.config.get('emitEndpoint') || '').trim();
   const method = String(this.config.get('emitMethod') || '').trim();
-  const extraDataString = String(this.config.get('emitData') || '{}').trim() || '{}';
+  const extraData = this.parseJsonConfig('emitData');
 
-  if (!endpoint || !method) {
+  if (!endpoint || !method || !extraData) {
     return;
   }
 
-  let extraData = {};
-  try {
-    extraData = JSON.parse(extraDataString);
-  }
-  catch (error) {
-    this.commandRouter.pushToastMessage('error', PLUGIN_NAME, 'Invalid custom JSON payload');
-    return;
-  }
-
-  const payload = {
+  this.socket.emit('callMethod', {
     endpoint: endpoint,
     method: method,
     data: Object.assign({}, extraData, {
@@ -530,13 +528,99 @@ ControllerAS5600AngleTester.prototype.customEmit = function(state) {
         magnetTooStrong: state.magnetTooStrong
       }
     })
-  };
+  });
 
-  this.socket.emit('callMethod', payload);
   this.lastBucket = state.bucket;
 };
 
-ControllerAS5600AngleTester.prototype.mapRawToNormalized = function(raw) {
+ControllerRotaryEncoderIIAngleBridge.prototype.handleButtonPress = function(button, fromGui) {
+  if (!this.config.get('buttonsEnabled')) {
+    this.commandRouter.pushToastMessage('warning', PLUGIN_NAME, 'Buttons are disabled in settings');
+    return;
+  }
+
+  const now = Date.now();
+  const debounceMs = this.getIntConfig('buttonDebounceMs', 120);
+  if (now - this.lastButtonAt < debounceMs) {
+    return;
+  }
+  this.lastButtonAt = now;
+
+  const mode = String(this.config.get('buttonActionType') || 'transport');
+  if (mode === 'transport') {
+    this.emitTransport(button);
+  }
+  else if (mode === 'volume_step') {
+    this.emitVolumeStep(button);
+  }
+  else if (mode === 'custom_emit') {
+    this.emitButtonCustom(button);
+  }
+
+  if (!this.currentState.buttons) {
+    this.currentState.buttons = {};
+  }
+  this.currentState.buttons.lastButton = button;
+
+  if (fromGui) {
+    this.commandRouter.pushToastMessage('info', PLUGIN_NAME, 'Button simulated: ' + button);
+  }
+};
+
+ControllerRotaryEncoderIIAngleBridge.prototype.emitTransport = function(button) {
+  if (!this.socket) {
+    return;
+  }
+  if (button === 'prev') {
+    this.socket.emit('prev');
+  }
+  else if (button === 'next') {
+    this.socket.emit('next');
+  }
+  else {
+    this.socket.emit('pause');
+  }
+};
+
+ControllerRotaryEncoderIIAngleBridge.prototype.emitVolumeStep = function(button) {
+  if (!this.socket) {
+    return;
+  }
+
+  const state = this.currentState || {};
+  const basePercent = Number.isFinite(state.percent) ? state.percent : 50;
+  const delta = button === 'next' ? 5 : (button === 'prev' ? -5 : 0);
+  const nextVolume = this.clamp(basePercent + delta, 0, 100);
+  this.socket.emit('volume', nextVolume);
+};
+
+ControllerRotaryEncoderIIAngleBridge.prototype.emitButtonCustom = function(button) {
+  if (!this.socket) {
+    return;
+  }
+
+  const endpoint = String(this.config.get('buttonEndpoint') || '').trim();
+  const method = String(this.config.get('buttonMethod') || '').trim();
+  const extraData = this.parseJsonConfig('buttonData');
+
+  if (!endpoint || !method || !extraData) {
+    return;
+  }
+
+  this.socket.emit('callMethod', {
+    endpoint: endpoint,
+    method: method,
+    data: Object.assign({}, extraData, {
+      button: button,
+      sensor: {
+        rawAngle: this.currentState.rawAngle,
+        percent: this.currentState.percent
+      }
+    })
+  });
+};
+
+ControllerRotaryEncoderIIAngleBridge.prototype.mapRawToNormalized = function(raw) {
   const rawMin = this.clamp(this.getIntConfig('rawMin', 0), 0, MAX_ANGLE);
   const rawMax = this.clamp(this.getIntConfig('rawMax', MAX_ANGLE), 0, MAX_ANGLE);
   let normalized;
@@ -565,22 +649,22 @@ ControllerAS5600AngleTester.prototype.mapRawToNormalized = function(raw) {
   return this.clamp(normalized, 0, 1);
 };
 
-ControllerAS5600AngleTester.prototype.circularDistance = function(a, b) {
+ControllerRotaryEncoderIIAngleBridge.prototype.circularDistance = function(a, b) {
   const forward = (a - b + 4096) % 4096;
   const backward = (b - a + 4096) % 4096;
   return Math.min(forward, backward);
 };
 
-ControllerAS5600AngleTester.prototype.getBucket = function(normalized) {
+ControllerRotaryEncoderIIAngleBridge.prototype.getBucket = function(normalized) {
   const steps = this.clamp(this.getIntConfig('resolutionSteps', 20), 2, 200);
   return this.clamp(Math.round(normalized * (steps - 1)), 0, steps - 1);
 };
 
-ControllerAS5600AngleTester.prototype.getAddress = function() {
+ControllerRotaryEncoderIIAngleBridge.prototype.getAddress = function() {
   return this.parseAddress(this.config.get('i2cAddress') || '0x36');
 };
 
-ControllerAS5600AngleTester.prototype.parseAddress = function(value) {
+ControllerRotaryEncoderIIAngleBridge.prototype.parseAddress = function(value) {
   if (typeof value === 'number') {
     return value;
   }
@@ -592,7 +676,7 @@ ControllerAS5600AngleTester.prototype.parseAddress = function(value) {
   return parseInt(stringValue, 10);
 };
 
-ControllerAS5600AngleTester.prototype.extractSelectedValue = function(value, fallback) {
+ControllerRotaryEncoderIIAngleBridge.prototype.extractSelectedValue = function(value, fallback) {
   if (value && typeof value === 'object' && value.value !== undefined) {
     return value.value;
   }
@@ -602,14 +686,11 @@ ControllerAS5600AngleTester.prototype.extractSelectedValue = function(value, fal
   return fallback;
 };
 
-ControllerAS5600AngleTester.prototype.selectValue = function(value, label) {
-  return {
-    value: value,
-    label: label
-  };
+ControllerRotaryEncoderIIAngleBridge.prototype.selectValue = function(value, label) {
+  return { value: value, label: label };
 };
 
-ControllerAS5600AngleTester.prototype.getActionLabel = function(actionType) {
+ControllerRotaryEncoderIIAngleBridge.prototype.getActionLabel = function(actionType) {
   switch (actionType) {
     case 'none':
       return 'Do nothing (monitor only)';
@@ -624,15 +705,39 @@ ControllerAS5600AngleTester.prototype.getActionLabel = function(actionType) {
   }
 };
 
-ControllerAS5600AngleTester.prototype.getIntConfig = function(key, fallback) {
+ControllerRotaryEncoderIIAngleBridge.prototype.getButtonActionLabel = function(actionType) {
+  switch (actionType) {
+    case 'transport':
+      return 'Volumio transport';
+    case 'volume_step':
+      return 'Volume step';
+    case 'custom_emit':
+      return 'Call another plugin method';
+    default:
+      return String(actionType);
+  }
+};
+
+ControllerRotaryEncoderIIAngleBridge.prototype.parseJsonConfig = function(key) {
+  const raw = String(this.config.get(key) || '{}').trim() || '{}';
+  try {
+    return JSON.parse(raw);
+  }
+  catch (error) {
+    this.commandRouter.pushToastMessage('error', PLUGIN_NAME, 'Invalid JSON in ' + key);
+    return null;
+  }
+};
+
+ControllerRotaryEncoderIIAngleBridge.prototype.getIntConfig = function(key, fallback) {
   return this.parseIntSafe(this.config.get(key), fallback);
 };
 
-ControllerAS5600AngleTester.prototype.parseIntSafe = function(value, fallback) {
+ControllerRotaryEncoderIIAngleBridge.prototype.parseIntSafe = function(value, fallback) {
   const parsed = parseInt(value, 10);
   return Number.isNaN(parsed) ? fallback : parsed;
 };
 
-ControllerAS5600AngleTester.prototype.clamp = function(value, min, max) {
+ControllerRotaryEncoderIIAngleBridge.prototype.clamp = function(value, min, max) {
   return Math.max(min, Math.min(max, value));
 };
