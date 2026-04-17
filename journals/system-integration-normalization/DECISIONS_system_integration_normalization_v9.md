@@ -230,3 +230,13 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: SI governance index, onboarding v7, role bootstrap references/profiles, and startup prompt wording.
 - What it explicitly does NOT affect: preservation of historical stream generations and superseded docs for forensic review.
 - Follow-up needed: keep active startup references anchored to the authority chain and treat any missing startup-referenced file as a repo-truth defect.
+
+
+### DEC-system_integration_normalization-38
+- Status: locked
+- Decision: the governed ChatGPT->Codex lifecycle is `chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`, with a maximum 5-minute chat-only continuity window for relevant outcomes.
+- Date context: chat-to-demand autoroute and repo-continuity hardening phase
+- Why this was chosen: execution drift and knowledge loss increase when decisions remain in chat memory instead of durable repo artifacts.
+- What it affects: exchange demand artifacts, watcher automation, playbook/start prompts, and owner handoff sequencing.
+- What it explicitly does NOT affect: creation of new dashboards/boards/html surfaces or parallel exchange systems outside `exchange/chatgpt/`.
+- Follow-up needed: keep demand artifact contract, status lifecycle, and watch automation aligned as exchange tooling evolves.

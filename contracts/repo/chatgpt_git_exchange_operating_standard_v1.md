@@ -1,19 +1,21 @@
 # CHATGPT GIT EXCHANGE OPERATING STANDARD V1
 
 ## Purpose
-Define a governed, low-friction Git-native exchange lane for ChatGPT <-> Codex collaboration so owner overhead stays minimal.
+Define a governed, low-friction Git-native exchange lane for ChatGPT <-> Codex collaboration so owner overhead stays minimal and relevant chat outcomes become durable repo truth quickly.
 
 ## Scope
 This standard governs:
 - audit-finding exchange
 - demand intake exchange from external ChatGPT sessions
 - structured proposal/response loops
+- continuity guarantees between chat outcomes and Git artifacts
 
 ## Core model
 1. Exchange happens via repository artifacts (markdown + optional JSON metadata), not chat memory.
 2. One dedicated SI branch carries each packaged exchange cycle (`si/chatgpt-git-exchange-<topic>`).
 3. Owner role remains decision/merge authority only.
 4. Agent/Codex lanes prepare branch, artifacts, PR, and response bundle.
+5. Relevant chat outcomes must be captured to Git within 5 minutes.
 
 ## Canonical branch and path model
 - branch for this capability bootstrap: `si/chatgpt-git-exchange-v1`
@@ -24,22 +26,73 @@ This standard governs:
   - `exchange/chatgpt/outbox/`
   - `exchange/chatgpt/demands/`
 
+## End-to-end governed chain (mandatory)
+`chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
+
+Rules:
+- Codex executes from demand artifacts stored in Git.
+- Codex must not reconstruct execution scope from chat memory alone.
+- Chat outcomes that materially affect repo truth (status/decisions/current-state/streams) must be copied into canonical repo truth files within the implementation package.
+
+## Continuity rule (max knowledge-loss delta)
+No relevant information may exist only in chat memory for more than 5 minutes.
+
+Relevant information includes:
+- decisions and locked constraints
+- risks and blockers
+- implementation requests
+- owner decision framing
+- explicit non-loss requirements
+
+Minimum acceptable persistence if durable truth updates are not yet ready:
+- create/update `exchange/chatgpt/demands/<topic>__intake_v1.md` with `status: draft|chatok|ready-for-codex`.
+
 ## Required exchange artifacts
 1. `audit_basis/current_audit_basis_v1.md` (active basis file)
 2. `inbox/<topic>__request_vN.md` (ChatGPT-origin input package)
 3. `outbox/<topic>__response_vN.md` (Codex response with implementation plan)
-4. optional sidecar metadata: `<same_name>.json` with fields:
+4. `demands/<topic>__intake_vN.md` (ChatGPT demand intake contract)
+5. optional sidecar metadata: `<same_name>.json` with fields:
    - `topic`
    - `source_chat_uri` (if available)
    - `owner_decision_needed`
    - `next_owner_click`
    - `status`
 
+## Demand artifact contract (mandatory fields)
+Each demand intake file under `exchange/chatgpt/demands/` must include:
+- source/context
+- objective
+- locked decisions
+- open decisions
+- required implementation
+- required governance updates
+- risks
+- non-loss requirements
+- execution request for Codex
+- status marker
+
+## Demand lifecycle statuses (canonical)
+Allowed statuses are:
+- `draft`
+- `chatok`
+- `ready-for-codex`
+- `in-execution`
+- `ready-for-chatgpt-review`
+- `pre-ok`
+- `ready-for-owner`
+- `changes-requested`
+- `closed`
+
 ## Standard exchange loop (minimal owner path)
-1. ChatGPT-side findings/proposals are placed in `exchange/chatgpt/inbox/`.
-2. Codex lane converts to governed response in `exchange/chatgpt/outbox/` with concrete implementation list.
-3. If repo mutation is required, Codex executes on dedicated SI/dev branches and opens/updates PR(s).
-4. Owner receives one decision-ready summary and approves/rejects.
+1. ChatGPT writes/updates demand intake in `exchange/chatgpt/demands/`.
+2. ChatGPT sets `status: chatok` when the demand is accurate.
+3. ChatGPT/Codex transitions demand to `status: ready-for-codex`.
+4. Codex marks `status: in-execution` while implementing governed repo changes.
+5. Codex marks `status: ready-for-chatgpt-review` after implementation artifacts + PR are prepared.
+6. ChatGPT reviews against demand + repo truth and sets `status: pre-ok` or `status: changes-requested`.
+7. Codex updates owner packet and sets `status: ready-for-owner` when pre-ok is satisfied.
+8. Owner decides/merges; cycle is then marked `status: closed`.
 
 ## Living exchange stream (mandatory)
 - active stream file: `exchange/chatgpt/streams/stream_v1.md`
@@ -48,19 +101,28 @@ This standard governs:
   - cycle id
   - source request file
   - response file
+  - demand file (when applicable)
   - proposed implementation branch(es)
   - owner decision needed
+  - status transition
 
 ## Autonomous cycle bootstrap
 - script: `tools/governance/chatgpt_exchange_cycle_v1.py`
 - intent:
   1. generate new inbox/outbox files from templates
-  2. append cycle entry to `exchange/chatgpt/streams/stream_v1.md`
-  3. keep repeatable no-memory exchange flow
+  2. optionally generate demand intake file from template
+  3. append cycle entry to `exchange/chatgpt/streams/stream_v1.md`
+  4. keep repeatable no-memory exchange flow
 
 ## Review/evaluation trigger detection
 - watcher script: `tools/governance/chatgpt_exchange_watch_v1.py`
-- rule: Codex evaluates when status marker `ready-for-codex` is present in basis/request artifacts
+- rule: Codex evaluates when status marker `ready-for-codex` is present in watched demand/request/basis artifacts
+- the watcher must ignore `draft|chatok` artifacts and report actionable `ready-for-codex` paths only
+
+## ChatGPT review/pre-ok gate
+- Codex implementation output must include documented branch/PR/rollback path.
+- ChatGPT review compares implementation output against demand + repo truth.
+- Demand lifecycle must not advance to `ready-for-owner` without `pre-ok` or explicit `changes-requested` handling.
 
 ## ChatGPT start prompt artifact
 - canonical prompt file: `docs/agents/chatgpt_start_prompt_git_exchange_v1.md`
@@ -72,18 +134,15 @@ This standard governs:
 - output: `exchange/chatgpt/bundles/current_context_bundle_v1.md`
 - intent: one-file upload path for ChatGPT GUI sessions with restrictive file-access prompts
 
-## Demand intake extension
-Demands produced in ChatGPT should be captured under:
-- `exchange/chatgpt/demands/<demand-id>__intake_v1.md`
-and then routed into governed issue/branch flows.
-
 ## Safety rules
-- do not treat inbox/outbox files as deployment approval by themselves
+- do not treat inbox/outbox/demand files as deployment approval by themselves
 - all protected truth still merges via PR to `main`
 - if connector/auth is blocked, produce explicit blocker + one owner action
+- no new dashboards/boards/html surfaces are required by this standard
 
 ## Success condition
 - ChatGPT exchange is reproducible from Git history alone
+- relevant chat outcomes are captured to repo artifacts within 5 minutes
 - owner can follow and decide with minimal additional steps
 - implementation suggestions are explicit, ranked, and branchable
-- exchange cycles can be initialized automatically through the cycle bootstrap script
+- exchange cycles can be initialized and watched automatically through existing exchange scripts

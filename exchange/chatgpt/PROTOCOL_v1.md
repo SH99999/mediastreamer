@@ -4,22 +4,39 @@
 - `chatgpt`
 - `codex`
 
-## Required status markers
-Each active file must contain one status marker line:
-- `status: draft`
-- `status: ready-for-codex`
-- `status: in-review-by-codex`
-- `status: ready-for-chatgpt`
-- `status: ready-for-owner`
-- `status: closed`
+## Status model (canonical)
+Allowed statuses:
+- `draft`
+- `chatok`
+- `ready-for-codex`
+- `in-execution`
+- `ready-for-chatgpt-review`
+- `pre-ok`
+- `ready-for-owner`
+- `changes-requested`
+- `closed`
+
+## Required status marker
+Each active exchange artifact must contain one status marker line:
+- `status: <allowed-status>`
 
 ## Handshake order
-1. ChatGPT starts with `exchange/chatgpt/audit_basis/current_audit_basis_v1.md`
-2. ChatGPT sets `status: ready-for-codex`
-3. Codex reviews/evaluates and writes next request/response artifact if needed
-4. Codex updates stream with actor and status transition
-5. for decision rounds, both sides provide agreement scores and Codex derives owner decision draft
-6. Codex publishes one human-readable owner packet in `exchange/chatgpt/outbox/*__owner_decision_packet_v1.md`
+`chat -> demand -> chatok -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed`
+
+Detailed behavior:
+1. ChatGPT captures relevant outcome in a demand intake file.
+2. ChatGPT sets `status: chatok` once demand content is accurate.
+3. ChatGPT/Codex sets `status: ready-for-codex` when execution can start.
+4. Codex executes from repo artifacts and marks `status: in-execution`.
+5. Codex marks `status: ready-for-chatgpt-review` after documented output + PR are prepared.
+6. ChatGPT reviews against demand + repo truth; set `status: pre-ok` or `status: changes-requested`.
+7. Codex prepares owner packet and sets `status: ready-for-owner` only after pre-ok path is satisfied.
+8. After owner decision/merge, mark `status: closed`.
+
+## Continuity rule
+No relevant chat information may remain chat-only for more than 5 minutes.
+Minimum persistence layer before full durable truth updates:
+- `exchange/chatgpt/demands/<topic>__intake_v1.md`
 
 ## Channel separation (required)
 - Internal ChatGPT↔Codex exchange artifacts may be compact or machine-oriented.
@@ -31,7 +48,7 @@ Every stream entry must include:
 - actor (`chatgpt` or `codex`)
 - source file
 - resulting status
-
+- branch/PR path when implementation is requested
 
 ## Idea channel (two-round alignment)
 1. ChatGPT creates `exchange/chatgpt/ideas/<topic>__idea_seed_v1.md` and sets `status: ready-for-codex`.
