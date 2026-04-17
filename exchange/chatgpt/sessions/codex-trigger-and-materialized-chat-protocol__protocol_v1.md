@@ -4,7 +4,7 @@ status: active
 actor: chatgpt-codex
 source_live_session: exchange/chatgpt/sessions/codex-trigger-and-materialized-chat-protocol__live_v1.md
 source_demand_intake: exchange/chatgpt/demands/codex-trigger-and-materialized-chat-protocol__intake_v1.md
-last_event_utc: 2026-04-17T09:56:06Z
+last_event_utc: 2026-04-17T09:57:22Z
 
 ## purpose
 - compact event protocol preserving the codex-trigger rationale and durable pickup context without transcript sprawl
@@ -89,4 +89,23 @@ last_event_utc: 2026-04-17T09:56:06Z
   - demand_intake: exchange/chatgpt/demands/codex-trigger-and-materialized-chat-protocol__intake_v1.md
   - source_branch: si/codex-trigger-and-materialized-chat-protocol-v1
   - source_pr_url: 
+  - review_target_artifacts:
+### event 005
+- event_utc: 2026-04-17T09:57:22Z
+- event_type: review-ready
+- actor: codex
+- summary: PR opened for codex-trigger/materialized-protocol implementation
+- decisions:
+  1.
+- open_questions:
+  1.
+- risks_blockers:
+  1.
+- execution_requests:
+  1.
+- related_git_objects:
+  - live_session: exchange/chatgpt/sessions/codex-trigger-and-materialized-chat-protocol__live_v1.md
+  - demand_intake: exchange/chatgpt/demands/codex-trigger-and-materialized-chat-protocol__intake_v1.md
+  - source_branch: si/codex-trigger-and-materialized-chat-protocol-v1
+  - source_pr_url: https://github.com/SH99999/mediastreamer/pull/142
   - review_target_artifacts:

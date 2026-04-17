@@ -71,11 +71,11 @@ actor: chatgpt
 ## lifecycle tracking
 - codex_trigger: ship-to-codex
 - materialized_protocol: exchange/chatgpt/sessions/codex-trigger-and-materialized-chat-protocol__protocol_v1.md
-- source_pr_url:
-- source_branch:
-- review_target_artifacts:
+- source_pr_url: https://github.com/SH99999/mediastreamer/pull/142
+- source_branch: si/codex-trigger-and-materialized-chat-protocol-v1
+- review_target_artifacts: exchange/chatgpt/PROTOCOL_v1.md; contracts/repo/chatgpt_git_exchange_operating_standard_v1.md; docs/agents/chatgpt_git_exchange_playbook_v1.md; docs/agents/chatgpt_capture_to_demand_prompt_v1.md; exchange/chatgpt/sessions/TEMPLATE__protocol_v1.md; tools/governance/chatgpt_materialize_protocol_v1.py
 - chatgpt_review_result: pending
 - owner_review_override: no
 - owner_override_note:
 - governance_closeout_status: pending
-- next_owner_click: wait for Codex PR and ChatGPT review
+- next_owner_click: review now
