@@ -37,12 +37,15 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - canonical agent registry now defines available/planned roles, startup prompt paths, bootstrap commands, and SI delegation eligibility
   - hardware is now formalized as a first-class role (`dev-hardware`) with explicit startup profile and command guidance
   - governance/process expansion is frozen to exception-only fixes and direct delivery-support work
+  - governance review follow-up path is now explicit for system-wide control-plane PRs: SI truth journals must be updated with impact statements even when no deploy/rollback/runtime payload changes occur
   - owner-minimal chat handoff now uses only `governed mode on` and `ship to codex` before merge-after-pre-ok; internal `chatok` and demand closure are automation-owned
   - governed chat mode can now persist live session continuity artifacts under `exchange/chatgpt/sessions/` and promote `chatok` sessions into `ready-for-codex` demand artifacts
   - chat-to-demand exchange lane remains active under `exchange/chatgpt/` with watcher support for `ready-for-codex` artifacts
   - autonomous delivery remains support-matrix gated, currently including Bridge and Tuner while Fun Line and other components remain unsupported until evidence-led claims are completed
   - top-level truth-file mutation through the current connector surface remains limited, so replacement artifacts may still be required in some cases
   - tuner deploy normalization is intentionally scoped to overlay/runtime/service while source-selection behavior remains hardware-governed (encoder short/long press) until full integration
+- latest governance control-plane impact note:
+  - PR #167 (chat backup-only/pre-ok optional/registry bootstrap follow-up) is classified as governance-only and system-wide; deploy and rollback workflows are unaffected
 - what is broken:
   - unsupported components still cannot use autonomous delivery and must still escalate or no-op safely
 - what was tested:

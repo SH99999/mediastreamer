@@ -4,6 +4,12 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/inline-comments-followup-v1 / governance review follow-up and SI truth closure
+- addressed governance review follow-up for PR #167 by recording explicit SI journal truth for the package and confirming it is a control-plane/governance change set
+- documented impact classification as governance-only/system-wide with no deploy workflow, rollback workflow, or runtime payload-path changes
+- added a locked SI decision requiring SI journal updates whenever a system-wide governance PR changes control-plane truth, even when no component payload changes occur
+- purpose: close review ambiguity about journal obligations and keep governance packages self-describing in canonical SI truth artifacts
+
 ### 2026-04-17 / si/chatgpt-zip-bundle-intake-and-codex-manifest-v1 / ZIP intake + Codex canonical manifest + sequential distribution contract
 - defined raw ZIP intake as optional ChatGPT handoff input under existing exchange root (`exchange/chatgpt/bundles/`) and explicitly marked ZIP/hints non-canonical for branch mapping truth
 - defined Codex-generated canonical distribution manifest contract with required identity/source/target/check/rollback/result-report fields

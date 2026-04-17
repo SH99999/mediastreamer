@@ -333,3 +333,13 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: role bootstrap profiles, role start prompts, SI delegation model, and owner startup index.
 - What it explicitly does NOT affect: hardware runtime delivery scope or unsupported component autonomy rules.
 - Follow-up needed: keep hardware role status aligned with branch and current-state truth.
+
+### DEC-system_integration_normalization-49
+- Status: locked
+- Decision: any system-wide SI/governance PR that mutates control-plane truth must include SI journal updates (`stream_v6.md` and, when impact posture changes, `STATUS_system_integration_normalization_v8.md`) even when no component payload paths are changed.
+- Date context: governance review follow-up for PR #167
+- Why this was chosen: governance review reported missing journal updates on a control-plane package, which created avoidable ambiguity about deploy/rollback impact and closure readiness.
+- What it affects: SI packaging discipline, governance review closeout, and traceability for control-plane-only changes.
+- What it explicitly does NOT affect: component-level journal triggers for payload/runtime/deploy changes, which remain governed by component journal policy.
+- Follow-up needed: enforce this rule in SI packaging checklists and keep impact statements explicit in SI truth files.
+
