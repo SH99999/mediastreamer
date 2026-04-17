@@ -564,3 +564,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - marked SI stream generations `stream_v1.md` through `stream_v5.md` as explicit historical/read-only and tightened superseded-doc handling for deep-history-only use
 - updated SI status and decisions with locked authority-compression rule (`DEC-system_integration_normalization-34`)
 - purpose: reduce startup read burden and ambiguity without introducing new dashboards/boards/html/prompt sprawl
+
+### 2026-04-17 / si/main-truth-tag-rollback-clarity-v1 / simplified main-truth and rollback-tag clarification
+- clarified naming/release contracts that `main` is the single accepted software truth and tags are the governed rollback anchor
+- documented that `dev/*` remains in-progress only and is not a second truth line
+- documented that mutable payload pointers (`current_dev`, `current`) are optional and only required when payload-folder switching is still operationally needed
+- purpose: reduce release-model ambiguity while keeping deterministic, auditable rollback

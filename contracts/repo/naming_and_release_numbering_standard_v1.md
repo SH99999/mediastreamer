@@ -53,6 +53,17 @@ Use these reserved names only:
 New normalized governed releases should use:
 - `vMAJOR.MINOR.PATCH`
 
+## Minimum operational model (main + tags)
+For repositories running a streamlined delivery model:
+- `main` is the single protected truth for accepted software state.
+- release rollback anchors should be represented with Git tags.
+- extra mutable payload pointers (`current_dev`, `current`) are optional and only required when a component still uses payload-folder switching in active operations.
+
+This means the distinction is intentionally minimal:
+- branch truth: `main`
+- rollback anchor: governed tag
+- optional branch lanes: `dev/*` only for not-yet-accepted work
+
 Examples:
 - `v0.1.0`
 - `v1.0.0`

@@ -40,6 +40,16 @@ The existing payload rules still apply:
 
 Git tags are the governed repository marker for accepted baselines, not the only naming mechanism.
 
+## Main-truth clarification
+Git principle applies here: `main` carries current accepted truth, and rollback is anchored by tags.
+
+Operational minimum for streamlined teams:
+- keep accepted runtime/software truth on `main`
+- create governed tags for stable and rollback anchors
+- use mutable payload pointers only where the component still needs folder-pointer operations
+
+This avoids unnecessary parallel release chains while preserving deterministic rollback.
+
 ## When to tag
 Tag when all of these are true:
 1. the component baseline has a clear release number

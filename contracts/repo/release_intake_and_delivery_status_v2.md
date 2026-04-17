@@ -65,6 +65,14 @@ A release is not considered real unless it contains:
 - stable/current truth may live on `main`
 - evolving or not-yet-accepted work lives on `dev/<component>`
 
+## Simplified release/rollback rule
+Minimum operational model for this repository family:
+- `main` is the single accepted software truth branch.
+- rollback should use governed Git tags that point to accepted baselines.
+- `dev/*` branches are for in-progress work only and should not be treated as a second truth line.
+
+If a component no longer depends on payload-folder pointer switching, tag-based rollback is the preferred mechanism.
+
 ## Current rollout order
 1. bridge and tuner first
 2. autoswitch, starter, fun-line, hardware staged behind them
