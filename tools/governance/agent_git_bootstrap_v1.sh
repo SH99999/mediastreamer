@@ -18,7 +18,7 @@ Usage:
 
 Options:
   --branch <name>   Explicit branch prep target.
-  --role <name>     Role profile hint (tuner | bridge | hardware | fun-line | autoswitch | ux | si | governance | generic).
+  --role <name>     Role profile hint (tuner | bridge | starter | hardware | fun-line | autoswitch | ux | si | governance | generic).
   --mode <name>     Context mode:
                     - classic (existing behavior)
                     - mode-b  (need-to-know startup + deferred references)
@@ -75,6 +75,9 @@ if [[ -z "${REQUESTED_BRANCH}" ]]; then
     bridge)
       REQUESTED_BRANCH="dev/bridge"
       ;;
+    starter)
+      REQUESTED_BRANCH="dev/starter"
+      ;;
     hardware)
       REQUESTED_BRANCH="dev/hardware"
       ;;
@@ -106,6 +109,11 @@ role_bootstrap_lines() {
       echo "- role profile: bridge"
       echo "- branch hint: dev/bridge"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-bridge/current_state_v1.md"
+      ;;
+    starter)
+      echo "- role profile: starter"
+      echo "- branch hint: dev/starter"
+      echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-starter/current_state_v1.md"
       ;;
     hardware)
       echo "- role profile: hardware"

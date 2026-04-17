@@ -33,6 +33,14 @@ Mode-B is optimization only. It does not relax branch doctrine, protected-`main`
   - `journals/scale-radio-bridge/stream_v1.md`
   - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`
 
+### starter
+- branch hint: `dev/starter`
+- startup add-on:
+  - `journals/scale-radio-starter/current_state_v1.md`
+- deferred packet:
+  - `journals/scale-radio-starter/stream_v1.md`
+  - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`
+
 ### hardware
 - branch hint: `dev/hardware`
 - startup add-on:
@@ -58,7 +66,7 @@ Mode-B is optimization only. It does not relax branch doctrine, protected-`main`
   - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`
 
 ### ux
-- branch hint: `si/<topic>` or `dev/<component>`
+- branch hint: `dev/ux`
 - startup add-on:
   - `contracts/repo/ui_gui_governance_standard_v1.md`
 - deferred packet:

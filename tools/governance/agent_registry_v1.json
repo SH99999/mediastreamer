@@ -35,7 +35,7 @@
     {
       "agent_id": "dev-bridge",
       "display_name": "Developer Bridge",
-      "status": "unavailable",
+      "status": "available",
       "role": "component-developer",
       "branch_hint": "dev/bridge",
       "scope": "bridge overlay/runtime and rollback-safe changes",
@@ -45,7 +45,7 @@
       "startup_prompt_path": "docs/agents/agent_role_start_prompts_v1.md#dev-bridge-role",
       "bootstrap_command": "bash tools/governance/agent_git_bootstrap_v1.sh --role bridge --mode mode-b",
       "escalates_to": "si",
-      "can_receive_work_from_si": "no"
+      "can_receive_work_from_si": "yes"
     },
     {
       "agent_id": "dev-generic",
@@ -93,17 +93,17 @@
     {
       "agent_id": "dev-starter",
       "display_name": "Developer Starter",
-      "status": "unavailable",
+      "status": "available",
       "role": "component-developer",
       "branch_hint": "dev/starter",
       "scope": "starter component delivery lane",
       "owned_components": [
         "starter"
       ],
-      "startup_prompt_path": "docs/agents/agent_role_start_prompts_v1.md#generic-developer-role",
-      "bootstrap_command": "bash tools/governance/agent_git_bootstrap_v1.sh --mode mode-b",
+      "startup_prompt_path": "docs/agents/agent_role_start_prompts_v1.md#dev-starter-role",
+      "bootstrap_command": "bash tools/governance/agent_git_bootstrap_v1.sh --role starter --mode mode-b",
       "escalates_to": "si",
-      "can_receive_work_from_si": "no"
+      "can_receive_work_from_si": "yes"
     },
     {
       "agent_id": "dev-autoswitch",

@@ -26,7 +26,6 @@ Required baseline agent ids:
 
 Archived/non-running ids may remain listed for restart traceability:
 - `dev-tuner`
-- `dev-bridge`
 - `dev-generic`
 - `dev-hardware`
 - `dev-fun-line`
@@ -38,11 +37,11 @@ Archived/non-running ids may remain listed for restart traceability:
 |---|---|---|---|---|---|---|---|
 | si | available | system-integration | si/<topic> | system-integration | docs/agents/agent_role_start_prompts_v1.md#si-role | bash tools/governance/agent_git_bootstrap_v1.sh --role si --mode mode-b | no |
 | dev-tuner | unavailable | component-developer | dev/tuner | tuner | docs/agents/agent_role_start_prompts_v1.md#dev-tuner-role | bash tools/governance/agent_git_bootstrap_v1.sh --role tuner --mode mode-b | no |
-| dev-bridge | unavailable | component-developer | dev/bridge | bridge | docs/agents/agent_role_start_prompts_v1.md#dev-bridge-role | bash tools/governance/agent_git_bootstrap_v1.sh --role bridge --mode mode-b | no |
+| dev-bridge | available | component-developer | dev/bridge | bridge | docs/agents/agent_role_start_prompts_v1.md#dev-bridge-role | bash tools/governance/agent_git_bootstrap_v1.sh --role bridge --mode mode-b | yes |
 | dev-generic | unavailable | generic-developer | dev/<component> or si/<topic> | - | docs/agents/agent_role_start_prompts_v1.md#generic-developer-role | bash tools/governance/agent_git_bootstrap_v1.sh --mode mode-b | no |
 | dev-hardware | unavailable | hardware-developer | dev/hardware | hardware | docs/agents/agent_role_start_prompts_v1.md#dev-hardware-role | bash tools/governance/agent_git_bootstrap_v1.sh --role hardware --mode mode-b | no |
 | dev-fun-line | unavailable | component-developer | dev/fun-line | fun-line | docs/agents/agent_role_start_prompts_v1.md#dev-fun-line-role | bash tools/governance/agent_git_bootstrap_v1.sh --role fun-line --mode mode-b | no |
-| dev-starter | unavailable | component-developer | dev/starter | starter | docs/agents/agent_role_start_prompts_v1.md#generic-developer-role | bash tools/governance/agent_git_bootstrap_v1.sh --mode mode-b | no |
+| dev-starter | available | component-developer | dev/starter | starter | docs/agents/agent_role_start_prompts_v1.md#dev-starter-role | bash tools/governance/agent_git_bootstrap_v1.sh --role starter --mode mode-b | yes |
 | dev-autoswitch | unavailable | component-developer | dev/autoswitch | autoswitch | docs/agents/agent_role_start_prompts_v1.md#dev-autoswitch-role | bash tools/governance/agent_git_bootstrap_v1.sh --role autoswitch --mode mode-b | no |
 | dev-ux | unavailable | ux-developer | dev/ux | ui | docs/agents/agent_role_start_prompts_v1.md#dev-ux-role | bash tools/governance/agent_git_bootstrap_v1.sh --role ux --mode mode-b | no |
 

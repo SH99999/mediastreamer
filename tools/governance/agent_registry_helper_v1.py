@@ -30,6 +30,7 @@ ROLE_MARKERS = {
     "si": "### system-integration / governance",
     "dev-tuner": "### tuner",
     "dev-bridge": "### bridge",
+    "dev-starter": "### starter",
     "dev-generic": "### generic",
     "dev-hardware": "### hardware",
     "dev-fun-line": "### fun-line",
