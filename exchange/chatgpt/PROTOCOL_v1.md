@@ -26,14 +26,14 @@ Each active exchange artifact must contain one status marker line:
 - `status: <allowed-status>`
 
 ## Handshake order
-`chat -> governed mode on -> live session artifact on git -> ship to codex -> (internal chatok) -> demand intake -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> (pre-ok OR owner-override) -> ready-for-owner -> closed`
+`chat -> governed mode on -> live session artifact -> ship to codex -> demand ready-for-codex + protocol-main update + inbox-main snapshot(pickup-ready) -> codex pickup from main inbox -> in-execution -> ready-for-chatgpt-review -> (pre-ok OR owner-override) -> ready-for-owner -> closed`
 
 Detailed behavior:
 1. ChatGPT activates the thread using `governed mode on`.
 2. ChatGPT captures relevant outcome in a live session file (`status: live`).
 3. Owner requests `ship to codex`.
-4. Codex internalizes `chatok`, promotes to demand intake with `status: ready-for-codex`, and writes/updates a materialized protocol artifact (`<topic>__protocol_v1.md`).
-5. Codex executes from demand + repo artifacts and marks `status: in-execution`.
+4. Codex internalizes `chatok`, promotes to demand intake (`status: ready-for-codex`), updates compact protocol under `exchange/chatgpt/protocol-main/`, and publishes an append-only intake snapshot under `exchange/chatgpt/inbox-main/` (`status: pickup-ready`).
+5. Codex executes from canonical main inbox snapshot + linked artifacts and marks `status: in-execution`.
 6. Codex marks `status: ready-for-chatgpt-review` as the single review-ready handoff marker after documented output + PR are prepared.
    - required demand fields at this point:
      - `source_pr_url`
@@ -80,10 +80,17 @@ Index-vs-truth:
 - live session remains the continuity artifact
 - owner-facing command remains `ship to codex`; `chatok` is an internal lifecycle step
 - promotion metadata must include `codex_trigger: ship-to-codex` and `materialized_protocol` path
+- promotion metadata must include `main_inbox_snapshot` path
+
+## Canonical main intake trigger path
+- path: `exchange/chatgpt/inbox-main/`
+- append-only, trigger-facing, owner/chat-facing
+- safe to read from `main`
+- canonical Codex pickup source after `ship to codex`
 
 ## Materialized protocol artifact (canonical)
-- path: `exchange/chatgpt/sessions/<topic>__protocol_v1.md`
-- template: `exchange/chatgpt/sessions/TEMPLATE__protocol_v1.md`
+- path: `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`
+- template: `exchange/chatgpt/protocol-main/TEMPLATE__protocol_snapshot_v1.md`
 - role: compact event ledger for durable chat rationale (no raw full transcript)
 - each event must preserve:
   - decisions
@@ -91,6 +98,12 @@ Index-vs-truth:
   - risks/blockers
   - execution requests
   - links to related Git objects (live session, demand intake, branch, PR/review artifacts)
+
+## Artifact responsibility split
+- live session: active-chat continuity artifact during discussion
+- materialized protocol: durable compact history for new chat/agent continuity
+- demand: execution-oriented structured truth
+- main inbox snapshot: canonical pickup trigger on `main`
 
 ## Owner review pickup command
 - owner command: `review now`

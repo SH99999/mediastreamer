@@ -22,6 +22,8 @@ This standard governs:
 - reusable future branch pattern: `si/chatgpt-git-exchange-<topic>`
 - canonical exchange root: `exchange/chatgpt/`
   - `exchange/chatgpt/sessions/`
+  - `exchange/chatgpt/protocol-main/`
+  - `exchange/chatgpt/inbox-main/`
   - `exchange/chatgpt/audit_basis/`
   - `exchange/chatgpt/inbox/`
   - `exchange/chatgpt/outbox/`
@@ -37,7 +39,7 @@ After activation:
 - codex execution handoff must route through governed demand artifacts
 
 ## End-to-end governed chain (mandatory)
-`chat -> governed mode on -> live session artifact on git -> ship to codex -> (internal chatok promotion) -> ready-for-codex -> in-execution -> ready-for-chatgpt-review -> (pre-ok OR owner-override) -> ready-for-owner -> closed`
+`chat -> governed mode on -> live session artifact -> ship to codex -> ready-for-codex demand + protocol-main update + inbox-main pickup snapshot -> codex pickup from main inbox -> in-execution -> ready-for-chatgpt-review -> (pre-ok OR owner-override) -> ready-for-owner -> closed`
 
 Rules:
 - Codex executes from demand artifacts stored in Git.
@@ -60,12 +62,13 @@ Minimum acceptable persistence if durable truth updates are not yet ready:
 
 ## Required exchange artifacts
 1. `sessions/<topic>__live_vN.md` (governed live session continuity artifact)
-2. `sessions/<topic>__protocol_v1.md` (materialized compact event protocol artifact)
-3. `audit_basis/current_audit_basis_v1.md` (active basis file)
-4. `inbox/<topic>__request_vN.md` (ChatGPT-origin input package)
-5. `outbox/<topic>__response_vN.md` (Codex response with implementation plan)
-6. `demands/<topic>__intake_vN.md` (ChatGPT demand intake contract)
-7. optional sidecar metadata: `<same_name>.json` with fields:
+2. `protocol-main/<topic>__protocol_v1.md` (materialized compact event protocol artifact)
+3. `inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md` (canonical append-only main pickup snapshot)
+4. `audit_basis/current_audit_basis_v1.md` (active basis file)
+5. `inbox/<topic>__request_vN.md` (ChatGPT-origin input package)
+6. `outbox/<topic>__response_vN.md` (Codex response with implementation plan)
+7. `demands/<topic>__intake_vN.md` (ChatGPT demand intake contract)
+8. optional sidecar metadata: `<same_name>.json` with fields:
    - `topic`
    - `source_chat_uri` (if available)
    - `owner_decision_needed`
@@ -155,7 +158,7 @@ Required companion fields:
 ## Standard exchange loop (minimal owner path)
 1. ChatGPT activates governed mode with `governed mode on`.
 2. ChatGPT writes/updates live session artifact in `exchange/chatgpt/sessions/` (`status: live`).
-3. Owner requests `ship to codex`; Codex internalizes `chatok`, promotes live context into `exchange/chatgpt/demands/<topic>__intake_v1.md`, and updates `exchange/chatgpt/sessions/<topic>__protocol_v1.md`.
+3. Owner requests `ship to codex`; Codex internalizes `chatok`, promotes live context into `exchange/chatgpt/demands/<topic>__intake_v1.md`, updates `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`, and publishes canonical main inbox snapshot `exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md`.
 4. Demand is moved to `status: ready-for-codex`.
 5. Codex marks `status: in-execution` while implementing governed repo changes.
 6. Codex marks `status: ready-for-chatgpt-review` after implementation artifacts + PR are prepared.
@@ -187,7 +190,7 @@ Required companion fields:
 
 ## Review/evaluation trigger detection
 - watcher script: `tools/governance/chatgpt_exchange_watch_v1.py`
-- rule: Codex evaluates when status marker `ready-for-codex` is present in watched demand/request/basis artifacts
+- rule: Codex evaluates canonical trigger snapshots under `exchange/chatgpt/inbox-main/` with marker `status: pickup-ready`; demand `ready-for-codex` remains lifecycle truth
 - the watcher must report live session `chatok` artifacts as promotion-required and report `ready-for-codex` artifacts as codex-actionable
 
 ## Promotion rule: internal `chatok` live session -> demand intake
@@ -198,7 +201,8 @@ Required companion fields:
 - promotion helper: `tools/governance/chatgpt_promote_live_to_demand_v1.py --topic <topic> --ship-to-codex`
 - demand promotion metadata must include:
   - `codex_trigger: ship-to-codex`
-  - `materialized_protocol: exchange/chatgpt/sessions/<topic>__protocol_v1.md`
+  - `materialized_protocol: exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`
+  - `main_inbox_snapshot: exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md`
 
 ## ChatGPT review/pre-ok gate
 - Codex implementation output must include documented branch/PR/rollback path.

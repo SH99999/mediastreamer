@@ -57,7 +57,7 @@ actor: chatgpt
 - why_not_now: delaying leaves a continuity and pickup ambiguity in the governed chat flow
 - promotion_trigger: owner explicitly requested implementation now
 - safe_to_attach_to_current_package: yes
-- related_files_outputs: exchange/chatgpt/PROTOCOL_v1.md; contracts/repo/chatgpt_git_exchange_operating_standard_v1.md; docs/agents/chatgpt_capture_to_demand_prompt_v1.md; possible TEMPLATE__protocol_v1.md
+- related_files_outputs: exchange/chatgpt/PROTOCOL_v1.md; contracts/repo/chatgpt_git_exchange_operating_standard_v1.md; docs/agents/chatgpt_capture_to_demand_prompt_v1.md; exchange/chatgpt/protocol-main/TEMPLATE__protocol_snapshot_v1.md; exchange/chatgpt/inbox-main/TEMPLATE__intake_snapshot_v1.md
 - impacted_portfolio_component: system-integration
 
 ## label index (query/routing)
@@ -70,10 +70,11 @@ actor: chatgpt
 
 ## lifecycle tracking
 - codex_trigger: ship-to-codex
-- materialized_protocol: exchange/chatgpt/sessions/codex-trigger-and-materialized-chat-protocol__protocol_v1.md
+- materialized_protocol: exchange/chatgpt/protocol-main/codex-trigger-and-materialized-chat-protocol__protocol_v1.md
+- main_inbox_snapshot:
 - source_pr_url: https://github.com/SH99999/mediastreamer/pull/142
 - source_branch: si/codex-trigger-and-materialized-chat-protocol-v1
-- review_target_artifacts: exchange/chatgpt/PROTOCOL_v1.md; contracts/repo/chatgpt_git_exchange_operating_standard_v1.md; docs/agents/chatgpt_git_exchange_playbook_v1.md; docs/agents/chatgpt_capture_to_demand_prompt_v1.md; exchange/chatgpt/sessions/TEMPLATE__protocol_v1.md; tools/governance/chatgpt_materialize_protocol_v1.py
+- review_target_artifacts: exchange/chatgpt/PROTOCOL_v1.md; contracts/repo/chatgpt_git_exchange_operating_standard_v1.md; docs/agents/chatgpt_git_exchange_playbook_v1.md; docs/agents/chatgpt_capture_to_demand_prompt_v1.md; exchange/chatgpt/protocol-main/TEMPLATE__protocol_snapshot_v1.md; exchange/chatgpt/inbox-main/TEMPLATE__intake_snapshot_v1.md; tools/governance/chatgpt_materialize_protocol_v1.py; tools/governance/chatgpt_publish_main_snapshot_v1.py
 - chatgpt_review_result: pending
 - owner_review_override: no
 - owner_override_note:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Append compact event entries to a materialized chat protocol artifact."""
+"""Append compact event entries to canonical protocol snapshots."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from pathlib import Path
 import re
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SESSIONS = REPO_ROOT / "exchange" / "chatgpt" / "sessions"
-TEMPLATE = SESSIONS / "TEMPLATE__protocol_v1.md"
+PROTOCOL_MAIN = REPO_ROOT / "exchange" / "chatgpt" / "protocol-main"
+TEMPLATE = PROTOCOL_MAIN / "TEMPLATE__protocol_snapshot_v1.md"
 EVENT_RE = re.compile(r"^### event (\d+)$", re.MULTILINE)
 
 
@@ -27,7 +27,8 @@ def next_event_id(text: str) -> int:
 
 
 def ensure_protocol(topic: str) -> Path:
-    path = SESSIONS / f"{topic}__protocol_v1.md"
+    PROTOCOL_MAIN.mkdir(parents=True, exist_ok=True)
+    path = PROTOCOL_MAIN / f"{topic}__protocol_v1.md"
     if path.exists():
         return path
     text = TEMPLATE.read_text(encoding="utf-8").replace("<topic>", topic)

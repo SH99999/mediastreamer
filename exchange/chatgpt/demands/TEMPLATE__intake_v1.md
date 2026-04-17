@@ -53,7 +53,8 @@ actor: chatgpt
 
 ## lifecycle tracking
 - codex_trigger: ship-to-codex
-- materialized_protocol: exchange/chatgpt/sessions/<topic>__protocol_v1.md
+- materialized_protocol: exchange/chatgpt/protocol-main/<topic>__protocol_v1.md
+- main_inbox_snapshot: exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md
 - source_pr_url:
 - source_branch:
 - review_target_artifacts:

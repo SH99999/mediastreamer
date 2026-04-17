@@ -12,6 +12,7 @@ from typing import Iterable
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 STATUS_RE = re.compile(r"^status:\s*(.+)$", re.IGNORECASE | re.MULTILINE)
+EXEC_BRANCH_RE = re.compile(r"^- execution_branch:\s*(.+)$", re.IGNORECASE | re.MULTILINE)
 
 
 def watched_files() -> Iterable[Path]:
@@ -22,6 +23,7 @@ def watched_files() -> Iterable[Path]:
     patterns = [
         REPO_ROOT / "exchange" / "chatgpt" / "sessions",
         REPO_ROOT / "exchange" / "chatgpt" / "inbox",
+        REPO_ROOT / "exchange" / "chatgpt" / "inbox-main",
         REPO_ROOT / "exchange" / "chatgpt" / "outbox",
         REPO_ROOT / "exchange" / "chatgpt" / "demands",
         REPO_ROOT / "exchange" / "chatgpt" / "ideas",
@@ -46,6 +48,12 @@ def has_codex_trigger(path: Path) -> bool:
     return "codex_trigger: ship-to-codex" in text
 
 
+def extract_execution_branch(path: Path) -> str:
+    text = path.read_text(encoding="utf-8")
+    m = EXEC_BRANCH_RE.search(text)
+    return m.group(1).strip() if m else ""
+
+
 def main() -> int:
     promote = []
     ready = []
@@ -58,7 +66,7 @@ def main() -> int:
                 pass
             else:
                 promote.append(path)
-        if status == "ready-for-codex":
+        if status in {"ready-for-codex", "pickup-ready"}:
             ready.append(path)
 
     if not ready and not promote:
@@ -74,6 +82,9 @@ def main() -> int:
         print("action-required: codex-execution")
         for path in ready:
             print(path.relative_to(REPO_ROOT))
+            branch = extract_execution_branch(path)
+            if branch:
+                print(f"execution-branch: {branch}")
             if "/demands/" in str(path) and not has_codex_trigger(path):
                 print(f"warning: missing codex_trigger marker in {path.relative_to(REPO_ROOT)}")
 

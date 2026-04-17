@@ -8,6 +8,8 @@ Protocol:
 
 ## Subdirectories
 - `sessions/` governed live-session continuity artifacts
+- `inbox-main/` canonical append-only intake snapshots for Codex pickup from `main`
+- `protocol-main/` compact materialized protocol artifacts (event-based, no raw transcript dump)
 - `audit_basis/` active audit baseline documents
 - `inbox/` ChatGPT-origin requests/findings
 - `outbox/` Codex responses + implementation proposals

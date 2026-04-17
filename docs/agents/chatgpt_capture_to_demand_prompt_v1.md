@@ -15,9 +15,10 @@ Use this when the chat contains any of the following:
 1. Activate governed mode in chat: `governed mode on`.
 2. Persist live continuity to:
    - `exchange/chatgpt/sessions/<topic>__live_v1.md`
-   - `exchange/chatgpt/sessions/<topic>__protocol_v1.md` (compact materialized event protocol)
+   - `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md` (compact materialized event protocol)
 3. Promote with `ship to codex` to demand intake:
    - `exchange/chatgpt/demands/<topic>__intake_v1.md`
+   - `exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md` (canonical pickup snapshot on `main`)
 
 ## Capture prompt
 Use this exact prompt in the ChatGPT chat you want to preserve:
@@ -37,7 +38,7 @@ Requirements:
 When execution-ready:
 - run ship-to-codex promotion into exchange/chatgpt/demands/<topic>__intake_v1.md
 - set demand status to ready-for-codex (internal `chatok` is handled by Codex)
-- ensure promotion metadata contains `codex_trigger: ship-to-codex` and materialized protocol link
+- ensure promotion metadata contains `codex_trigger: ship-to-codex`, materialized protocol link, and `main_inbox_snapshot` path
 
 Then follow lifecycle:
 in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed

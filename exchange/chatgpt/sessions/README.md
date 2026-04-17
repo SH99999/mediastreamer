@@ -2,7 +2,6 @@
 
 Governed-mode live continuity artifacts:
 - `<topic>__live_v1.md`
-- `<topic>__protocol_v1.md` (materialized event protocol)
 
 ## Activation and minimal command surface
 - `governed mode on`
@@ -29,3 +28,4 @@ After governed mode is active, no relevant chat delta may remain chat-only for m
   - live session artifact
   - demand intake artifact
   - execution branch hint
+- canonical protocol artifact path is `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`

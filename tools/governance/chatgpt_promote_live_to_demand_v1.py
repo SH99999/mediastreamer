@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -12,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SESSIONS = REPO_ROOT / "exchange" / "chatgpt" / "sessions"
 DEMANDS = REPO_ROOT / "exchange" / "chatgpt" / "demands"
 DEMAND_TEMPLATE = DEMANDS / "TEMPLATE__intake_v1.md"
-PROTOCOL_TEMPLATE = SESSIONS / "TEMPLATE__protocol_v1.md"
+PROTOCOL_MAIN = REPO_ROOT / "exchange" / "chatgpt" / "protocol-main"
 STATUS_RE = re.compile(r"^status:\s*(.+)$", re.IGNORECASE | re.MULTILINE)
 EVENT_RE = re.compile(r"^### event (\d+)$", re.MULTILINE)
 
@@ -59,10 +60,12 @@ def next_event_id(text: str) -> int:
 
 
 def ensure_protocol(topic: str) -> Path:
-    protocol_path = SESSIONS / f"{topic}__protocol_v1.md"
+    PROTOCOL_MAIN.mkdir(parents=True, exist_ok=True)
+    protocol_path = PROTOCOL_MAIN / f"{topic}__protocol_v1.md"
     if protocol_path.exists():
         return protocol_path
-    template = PROTOCOL_TEMPLATE.read_text(encoding="utf-8").replace("<topic>", topic)
+    template_source = PROTOCOL_MAIN / "TEMPLATE__protocol_snapshot_v1.md"
+    template = template_source.read_text(encoding="utf-8").replace("<topic>", topic)
     protocol_path.write_text(template + "\n", encoding="utf-8")
     return protocol_path
 
@@ -111,6 +114,11 @@ def main() -> int:
         "--ship-to-codex",
         action="store_true",
         help="owner-minimal handoff command; internalizes chatok and promotes to ready-for-codex",
+    )
+    parser.add_argument(
+        "--publish-main-snapshot",
+        action="store_true",
+        help="publish canonical pickup snapshot under exchange/chatgpt/inbox-main/",
     )
     args = parser.parse_args()
 
@@ -163,6 +171,24 @@ def main() -> int:
     out = replace_status(out, "ready-for-codex")
     now = datetime.now(timezone.utc).isoformat()
     protocol_path = append_protocol_event(topic, now, live_path, demand_path)
+    snapshot_path = ""
+    if args.ship_to_codex or args.publish_main_snapshot:
+        cmd = [
+            "python3",
+            str(REPO_ROOT / "tools" / "governance" / "chatgpt_publish_main_snapshot_v1.py"),
+            "--topic",
+            topic,
+            "--demand-path",
+            str(demand_path.relative_to(REPO_ROOT)),
+            "--protocol-path",
+            str(protocol_path.relative_to(REPO_ROOT)),
+        ]
+        if args.ship_to_codex:
+            cmd.extend(["--execution-branch", f"si/{topic}-v1"])
+        proc = subprocess.run(cmd, cwd=REPO_ROOT, text=True, capture_output=True, check=True)
+        for line in proc.stdout.splitlines():
+            if line.startswith("main_inbox_snapshot="):
+                snapshot_path = line.split("=", 1)[1].strip()
     out += (
         "\n## promotion metadata\n"
         f"- promoted_from_live: `{live_path.relative_to(REPO_ROOT)}`\n"
@@ -170,6 +196,7 @@ def main() -> int:
         "- codex_trigger: `ship-to-codex`\n"
         "- promotion_trigger: `chatok`\n"
         f"- materialized_protocol: `{protocol_path.relative_to(REPO_ROOT)}`\n"
+        f"- main_inbox_snapshot: `{snapshot_path}`\n"
     )
 
     demand_path.write_text(out, encoding="utf-8")
@@ -177,6 +204,8 @@ def main() -> int:
 
     print(f"promoted: {live_path.relative_to(REPO_ROOT)} -> {demand_path.relative_to(REPO_ROOT)}")
     print(f"materialized_protocol={protocol_path.relative_to(REPO_ROOT)}")
+    if snapshot_path:
+        print(f"main_inbox_snapshot={snapshot_path}")
     print("demand_status=ready-for-codex")
     if args.ship_to_codex:
         print("owner_command=ship-to-codex")

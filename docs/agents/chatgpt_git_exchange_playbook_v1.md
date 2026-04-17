@@ -10,9 +10,10 @@ Provide a standard path for two-lane collaboration (ChatGPT + Codex) using Git a
    - `governed mode on`
 3. Create/update live session continuity artifact first:
    - `exchange/chatgpt/sessions/<topic>__live_v1.md`
-   - optional (recommended): initialize/refresh materialized protocol artifact `exchange/chatgpt/sessions/<topic>__protocol_v1.md`
+   - optional (recommended): initialize/refresh materialized protocol artifact `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`
 4. Promote with `ship to codex` into demand intake:
    - `exchange/chatgpt/demands/<topic>__intake_v1.md` -> `ready-for-codex` (internal `chatok`)
+   - publish canonical main pickup snapshot `exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md` -> `pickup-ready`
    - helper: `python3 tools/governance/chatgpt_promote_live_to_demand_v1.py --topic \"<topic>\" --ship-to-codex`
    - materialized protocol helper: `python3 tools/governance/chatgpt_materialize_protocol_v1.py --topic \"<topic>\" --event-type ship-to-codex-promotion --summary \"owner requested ship to codex\"`
 5. Codex executes from demand + repo artifacts (not chat memory):
@@ -55,8 +56,8 @@ Use:
 python3 tools/governance/chatgpt_exchange_watch_v1.py
 ```
 
-Codex evaluates actionable artifacts when status is:
-- `status: ready-for-codex`
+Codex evaluates canonical trigger snapshots when status is:
+- `status: pickup-ready` under `exchange/chatgpt/inbox-main/`
 
 ## Internal channel vs owner handoff
 - Internal ChatGPT↔Codex exchange may use compact/machine-oriented notes.
@@ -85,7 +86,7 @@ Live session must include continuity fields and timestamp:
 
 ## Materialized protocol contract
 Materialized protocol must stay compact/event-based:
-- `exchange/chatgpt/sessions/TEMPLATE__protocol_v1.md`
+- `exchange/chatgpt/protocol-main/TEMPLATE__protocol_snapshot_v1.md`
 
 ## Operating rule
 Prefer short, structured artifacts over narrative text blocks.
