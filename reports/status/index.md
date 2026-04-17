@@ -16,6 +16,8 @@ Prompt aliases:
 - `owner capture-prompt` -> [ChatGPT Capture-to-Demand Prompt](../../docs/agents/chatgpt_capture_to_demand_prompt_v1.md)
 - `owner governed-intake` -> [ChatGPT Governed Intake Prompt](../../docs/agents/chatgpt_governed_intake_prompt_v1.md)
 - `owner quickstart` -> [ChatGPT Owner Quickstart](../../docs/agents/chatgpt_owner_quickstart_v1.md)
+- `owner agent-registry` -> [Agent Registry](../../docs/agents/agent_registry_v1.md)
+- `owner agent-starts` -> [Agent Start Index](../../docs/agents/agent_start_index_v1.md)
 
 Owner minimal command set:
 - `governed mode on`

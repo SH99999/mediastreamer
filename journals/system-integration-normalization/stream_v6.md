@@ -4,6 +4,13 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/agent-registry-and-role-availability-v1 / canonical registry + hardware role formalization
+- added canonical agent registry in markdown/json (`docs/agents/agent_registry_v1.md`, `tools/governance/agent_registry_v1.json`) with identity, availability, role, scope, startup prompt, bootstrap command, and SI delegation eligibility fields
+- added owner-facing startup index (`docs/agents/agent_start_index_v1.md`) and linked existing owner-visible surfaces to registry/index paths
+- formalized hardware as first-class role (`dev-hardware`) in role bootstrap profiles, start prompts, and bootstrap role-hint support
+- updated SI governance/status/decisions truth so delegation decisions explicitly depend on registry availability instead of implicit role memory
+- purpose: make agent availability/delegation/startup truth explicit and auditable without adding new dashboard/board/html surfaces
+
 ### 2026-04-17 / si/owner-override-and-label-first-decision-flow-v1 / label-first decision path + explicit owner override
 - degraded Project custom fields from critical path to optional convenience; canonical owner decision path is structured PR decision marker + synchronized labels/state
 - added explicit owner override path for proceeding without ChatGPT `pre-ok` (`review_override: yes` with demand override markers) while keeping auditability and non-pre-ok truth

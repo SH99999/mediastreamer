@@ -34,6 +34,8 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - owner command surface is now explicitly `governed mode on | ship to codex | review now | merge after pre-ok`
   - canonical owner decision progression now uses structured repo-visible decision markers; project custom fields are optional convenience only
   - explicit owner override path is available without ChatGPT `pre-ok` using `review_override: yes` + demand override markers, with auditable non-pre-ok semantics
+  - canonical agent registry now defines available/planned roles, startup prompt paths, bootstrap commands, and SI delegation eligibility
+  - hardware is now formalized as a first-class role (`dev-hardware`) with explicit startup profile and command guidance
   - governance/process expansion is frozen to exception-only fixes and direct delivery-support work
   - owner-minimal chat handoff now uses only `governed mode on` and `ship to codex` before merge-after-pre-ok; internal `chatok` and demand closure are automation-owned
   - governed chat mode can now persist live session continuity artifacts under `exchange/chatgpt/sessions/` and promote `chatok` sessions into `ready-for-codex` demand artifacts
@@ -161,3 +163,4 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 9. keep owner query answers link-first (direct Git object links + optional label-filter URLs) and avoid introducing new dashboard/HTML surfaces for queryability
 10. enforce governance freeze scope during SI package intake (allow only bugfix/regression/small-correction/direct-delivery exceptions)
 11. keep owner decision sync and demand lifecycle automation aligned for both `pre-ok` and explicit owner-override closeout paths
+12. keep agent registry + start index synchronized with role profiles/start prompts whenever role availability changes

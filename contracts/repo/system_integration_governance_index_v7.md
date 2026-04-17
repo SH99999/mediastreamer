@@ -47,6 +47,8 @@ Core Tier-1 references:
 8. `docs/agents/chatgpt_git_exchange_playbook_v1.md`
 9. `docs/agents/chatgpt_capture_to_demand_prompt_v1.md`
 10. `docs/agents/chatgpt_owner_quickstart_v1.md`
+11. `docs/agents/agent_registry_v1.md`
+12. `docs/agents/agent_start_index_v1.md`
 
 Tier-2 deep-history references are read-only and listed in:
 - `contracts/repo/superseded_documents_index_v1.md`
@@ -66,6 +68,7 @@ Tier-2 deep-history references are read-only and listed in:
 - owner review pickup command is `review now`, resolved from demand artifacts marked `ready-for-chatgpt-review`
 - structured repo-visible decision markers are canonical; Project custom fields are optional convenience only
 - owner override without ChatGPT pre-ok is allowed only via explicit auditable override markers and must not be represented as pre-ok
+- SI delegation must use canonical agent registry availability (`docs/agents/agent_registry_v1.md` / `tools/governance/agent_registry_v1.json`) before assigning work
 - Chat execution-gate classification is mandatory for demand/idea items: `now | quick_win | backlog` with promotion rationale and related outputs preserved in repo truth
 - execution-gate labels are standardized for owner query/indexing: `gate:now`, `gate:quick-win`, `gate:backlog`
 - owner repo-truth queries should be answerable from labels + canonical repo artifacts with direct Git links (no custom-field dependency required)

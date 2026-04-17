@@ -315,3 +315,21 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: exchange lifecycle rules, demand template fields, owner decision sync automation, and demand auto-close eligibility logic.
 - What it explicitly does NOT affect: normal review path (`pre-ok`) or closeout requirements for merged source PR + governance closeout done.
 - Follow-up needed: ensure ready-for-owner and auto-close flows remain distinguishable between pre-ok and owner-override paths.
+
+### DEC-system_integration_normalization-47
+- Status: locked
+- Decision: canonical agent availability and delegation truth is maintained in `docs/agents/agent_registry_v1.md` and `tools/governance/agent_registry_v1.json`; SI must consult this registry before role delegation.
+- Date context: agent-registry and role-availability package
+- Why this was chosen: agent identity/availability/startup hints were implicit and fragmented across multiple docs.
+- What it affects: SI delegation readiness checks, owner visibility of active/planned roles, bootstrap/start-prompt linkage, and role-profile alignment.
+- What it explicitly does NOT affect: branch doctrine, owner merge authority, or creation of new dashboard/board/html surfaces.
+- Follow-up needed: keep registry status, startup prompt paths, and bootstrap commands synchronized whenever role availability changes.
+
+### DEC-system_integration_normalization-48
+- Status: locked
+- Decision: hardware is a first-class agent role (`dev-hardware`) with explicit profile/start prompt/bootstrap command and delegation eligibility in the canonical agent registry.
+- Date context: agent-registry and role-availability package
+- Why this was chosen: hardware existed as component/routing label but lacked explicit agent-role startup/delegation truth.
+- What it affects: role bootstrap profiles, role start prompts, SI delegation model, and owner startup index.
+- What it explicitly does NOT affect: hardware runtime delivery scope or unsupported component autonomy rules.
+- Follow-up needed: keep hardware role status aligned with branch and current-state truth.

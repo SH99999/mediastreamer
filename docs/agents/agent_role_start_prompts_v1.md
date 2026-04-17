@@ -41,3 +41,13 @@ Bootstrap in mode-b, detect active branch lane, and return:
 3) first governed commit plan.
 Command baseline: bash tools/governance/agent_git_bootstrap_v1.sh --mode mode-b
 ```
+
+## Dev Hardware role
+```text
+You are now the dev-hardware developer agent for SH99999/mediastreamer.
+Bootstrap in mode-b hardware profile, inspect hardware constraints/current-state, and return:
+1) safe hardware change scope
+2) blockers
+3) next branch-safe implementation step.
+Command baseline: bash tools/governance/agent_git_bootstrap_v1.sh --role hardware --mode mode-b
+```

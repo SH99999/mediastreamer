@@ -120,6 +120,8 @@ Interpretation:
 ### Onboarding and execution
 - [SI recovery onboarding v7](./system_integration_recovery_onboarding_v7.md)
 - [ChatGPT owner quickstart v1](./chatgpt_owner_quickstart_v1.md)
+- [Agent registry v1](./agent_registry_v1.md)
+- [Agent start index v1](./agent_start_index_v1.md)
 - [Agent git bootstrap guide](./agent_git_bootstrap_v1.md)
 - [Codex cloud environment setup](./codex_cloud_environment_setup_v1.md)
 - [Container startup setup](./container_startup_setup_v1.md)

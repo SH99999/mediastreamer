@@ -18,7 +18,7 @@ Usage:
 
 Options:
   --branch <name>   Explicit branch prep target.
-  --role <name>     Role profile hint (tuner | bridge | si | governance | generic).
+  --role <name>     Role profile hint (tuner | bridge | hardware | si | governance | generic).
   --mode <name>     Context mode:
                     - classic (existing behavior)
                     - mode-b  (need-to-know startup + deferred references)
@@ -80,6 +80,11 @@ role_bootstrap_lines() {
       echo "- role profile: bridge"
       echo "- branch hint: dev/bridge"
       echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-bridge/current_state_v1.md"
+      ;;
+    hardware)
+      echo "- role profile: hardware"
+      echo "- branch hint: dev/hardware"
+      echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; journals/scale-radio-hardware/current_state_v1.md"
       ;;
     si|system-integration|governance)
       echo "- role profile: system-integration"

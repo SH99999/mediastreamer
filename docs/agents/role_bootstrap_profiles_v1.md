@@ -3,6 +3,7 @@
 ## Purpose
 Provide role-oriented startup packs for bootstrap mode-B so onboarding becomes faster without losing governance-critical information.
 Canonical pointer map: `docs/agents/role_bootstrap_reference_map_v1.md`.
+Canonical availability source: `docs/agents/agent_registry_v1.md` and `tools/governance/agent_registry_v1.json`.
 
 ## Mode model
 - `classic`: full standard read-order expectation
@@ -30,6 +31,14 @@ Mode-B is optimization only. It does not relax branch doctrine, protected-`main`
   - `journals/scale-radio-bridge/current_state_v1.md`
 - deferred packet:
   - `journals/scale-radio-bridge/stream_v1.md`
+  - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`
+
+### hardware
+- branch hint: `dev/hardware`
+- startup add-on:
+  - `journals/scale-radio-hardware/current_state_v1.md`
+- deferred packet:
+  - `journals/scale-radio-hardware/stream_v1.md`
   - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`
 
 ### system-integration / governance
