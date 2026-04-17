@@ -229,13 +229,14 @@ Required companion fields:
 ## Standard exchange loop (minimal owner path)
 1. ChatGPT activates governed mode with `governed mode on`.
 2. ChatGPT writes/updates live session artifact in `exchange/chatgpt/sessions/` (`status: live`).
-3. Owner requests `ship to codex`; Codex internalizes `chatok`, promotes live context into `exchange/chatgpt/demands/<topic>__intake_v1.md`, updates `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`, and publishes canonical main inbox snapshot `exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md`.
-4. Demand is moved to `status: ready-for-codex`.
-5. Codex marks `status: in-execution` while implementing governed repo changes.
-6. Codex marks `status: ready-for-chatgpt-review` after implementation artifacts + PR are prepared.
-7. ChatGPT review is optional advisory input; when performed, set `status: pre-ok` or `status: changes-requested`.
-8. Codex updates owner packet and sets `status: ready-for-owner` when PR + rollback + evidence + next_owner_click are ready in repo truth (with or without ChatGPT review).
-9. Owner decides/merges; demand closes automatically after merge + governance closeout completion.
+3. Owner may request `backup chat only` for persistence-only updates (session/protocol continuity) without creating execution triggers.
+4. Owner requests `ship to codex`; Codex internalizes `chatok`, promotes live context into `exchange/chatgpt/demands/<topic>__intake_v1.md`, updates `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`, and publishes canonical main inbox snapshot `exchange/chatgpt/inbox-main/<timestamp>__<topic>__intake_snapshot_v1.md`.
+5. Demand is moved to `status: ready-for-codex`.
+6. Codex marks `status: in-execution` while implementing governed repo changes.
+7. Codex marks `status: ready-for-chatgpt-review` after implementation artifacts + PR are prepared.
+8. ChatGPT review is optional advisory input; when performed, set `status: pre-ok` or `status: changes-requested`.
+9. Codex updates owner packet and sets `status: ready-for-owner` when PR + rollback + evidence + next_owner_click are ready in repo truth (with or without ChatGPT review).
+10. Owner decides/merges; demand closes automatically after merge + governance closeout completion.
 
 ## Living exchange stream (mandatory)
 - active stream file: `exchange/chatgpt/streams/stream_v1.md`

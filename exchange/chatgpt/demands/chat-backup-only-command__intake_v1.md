@@ -1,6 +1,6 @@
 # chat-backup-only-command intake v1
 
-status: ready-for-codex
+status: ready-for-owner
 actor: chatgpt
 
 ## source/context
@@ -64,11 +64,14 @@ actor: chatgpt
 - label_truth_rule: labels route/query only; repo sections in this file remain canonical detailed truth
 
 ## lifecycle tracking
-- source_pr_url:
-- source_branch:
-- review_target_artifacts:
-- chatgpt_review_result: pending
+- codex_trigger: ship-to-codex
+- materialized_protocol: exchange/chatgpt/protocol-main/chat-backup-only-command__protocol_v1.md
+- main_inbox_snapshot: exchange/chatgpt/inbox-main/20260417T202000Z__chat-backup-only-command__intake_snapshot_v1.md
+- source_pr_url: https://github.com/SH99999/mediastreamer/pull/167
+- source_branch: si/chat-backup-only-command-v1
+- review_target_artifacts: docs/agents/chatgpt_owner_quickstart_v1.md; docs/agents/owner_operational_reference_v1.md; docs/agents/chatgpt_capture_to_demand_prompt_v1.md; exchange/chatgpt/PROTOCOL_v1.md; contracts/repo/chatgpt_git_exchange_operating_standard_v1.md
+- chatgpt_review_result: optional-not-run
 - owner_review_override: no
 - owner_override_note:
-- governance_closeout_status: pending
-- next_owner_click: wait for Codex PR and ChatGPT review
+- governance_closeout_status: in-pr
+- next_owner_click: review PR #167 and decide `accept | changes-requested | reject`

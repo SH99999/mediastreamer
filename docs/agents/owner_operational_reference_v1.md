@@ -86,6 +86,7 @@ Packet contract:
 
 ## Owner minimal command surface (canonical)
 - `governed mode on`
+- `backup chat only` (optional persistence-only; no execution trigger)
 - `ship to codex`
 - `review now`
 - merge to `main` when PR is decision-ready on repo truth (`pre-ok` optional)

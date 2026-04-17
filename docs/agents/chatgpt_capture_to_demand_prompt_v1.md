@@ -45,7 +45,9 @@ in-execution -> ready-for-chatgpt-review -> pre-ok -> ready-for-owner -> closed
 
 Owner command surface must stay minimal:
 - governed mode on
+- backup chat only (persistence only; no execution trigger)
 - ship to codex
+- review now
 - merge when PR is decision-ready on repo truth (`pre-ok` optional advisory)
 ```
 

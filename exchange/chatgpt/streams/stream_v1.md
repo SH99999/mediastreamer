@@ -64,6 +64,14 @@
 - owner decision needed: `none`
 - status: `ready-for-codex`
 
+### 2026-04-17 / cycle chat-backup-only-command / codex-implementation
+- actor: `codex`
+- source file: `exchange/chatgpt/demands/chat-backup-only-command__intake_v1.md`
+- action: implemented canonical `backup chat only` semantics in owner/protocol/governance docs (persistence-only, no execution trigger)
+- branch plan: `si/chat-backup-only-command-v1`
+- owner decision needed: `accept | changes-requested | reject`
+- status: `ready-for-owner`
+
 ### 2026-04-17 / cycle appliance-control-overlay-and-install-stabilization / ship-to-codex
 - actor: `chatgpt`
 - source file: `exchange/chatgpt/demands/appliance-control-overlay-and-install-stabilization__intake_v1.md`

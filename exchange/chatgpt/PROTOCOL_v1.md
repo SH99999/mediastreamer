@@ -43,6 +43,17 @@ Detailed behavior:
 8. Codex prepares owner packet and sets `status: ready-for-owner` once PR + rollback + evidence + next_owner_click are ready in repo truth (independent of ChatGPT review presence).
 9. After owner decision/merge and governance closeout completion, demand status is auto-moved to `closed`.
 
+## Backup-only command rule
+- owner command: `backup chat only`
+- intent: persist current chat continuity without starting Codex execution
+- required outputs:
+  - update `exchange/chatgpt/sessions/<topic>__live_v1.md` material state/timestamp
+  - optional compact event append in `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`
+- must not create execution triggers:
+  - no demand status transition to `ready-for-codex`
+  - no new inbox-main snapshot with `status: pickup-ready`
+- `ship to codex` remains the only owner-visible execution trigger command.
+
 Override constraints:
 - if override markers are used, they remain explicit and auditable
 - override must not be represented as `pre-ok`
