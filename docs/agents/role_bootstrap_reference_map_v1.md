@@ -35,6 +35,7 @@ Reduce cross-reference maintenance by providing one canonical pointer map for mo
 
 ### ux
 - startup governance source: `contracts/repo/ui_gui_governance_standard_v1.md`
+- startup active dependency source: `journals/system-integration-normalization/ui_gui_active_dependency_note_v1.md`
 - stream source: `journals/system-integration-normalization/ui_gui_stream_v1.md`
 
 ### system-integration / governance

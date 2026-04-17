@@ -21,12 +21,23 @@ REQUIRED_FIELDS = [
     "escalates_to",
     "can_receive_work_from_si",
 ]
+REQUIRED_AGENT_IDS = {
+    "si",
+    "dev-tuner",
+    "dev-bridge",
+    "dev-generic",
+    "dev-hardware",
+    "dev-fun-line",
+    "dev-autoswitch",
+    "dev-ux",
+}
 ALLOWED_STATUS = {"available", "unavailable", "planned"}
 ALLOWED_DELEGATION = {"yes", "no"}
 ROLE_MARKERS = {
     "si": "### system-integration / governance",
     "dev-tuner": "### tuner",
     "dev-bridge": "### bridge",
+    "dev-generic": "### generic",
     "dev-hardware": "### hardware",
     "dev-fun-line": "### fun-line",
     "dev-autoswitch": "### autoswitch",
@@ -68,6 +79,11 @@ def validate(repo_root: Path) -> int:
     errors: list[str] = []
 
     prompt_anchors = {f"#{slugify_anchor(h[3:].strip())}" for h in prompt_doc.splitlines() if h.startswith("## ")}
+    seen_agent_ids = {str(agent.get("agent_id", "")).strip() for agent in agents}
+
+    missing_required_agents = sorted(REQUIRED_AGENT_IDS - seen_agent_ids)
+    if missing_required_agents:
+        errors.append(f"missing_required_agents={','.join(missing_required_agents)}")
 
     for agent in agents:
         missing = [field for field in REQUIRED_FIELDS if field not in agent]
@@ -81,6 +97,10 @@ def validate(repo_root: Path) -> int:
             errors.append(f"{agent['agent_id']}:invalid_delegation_value={agent['can_receive_work_from_si']}")
         if not str(agent["bootstrap_command"]).startswith("bash tools/governance/agent_git_bootstrap_v1.sh"):
             errors.append(f"{agent['agent_id']}:invalid_bootstrap_command")
+        if not str(agent["startup_prompt_path"]).strip():
+            errors.append(f"{agent['agent_id']}:empty_startup_prompt_path")
+        if not str(agent["bootstrap_command"]).strip():
+            errors.append(f"{agent['agent_id']}:empty_bootstrap_command")
 
         prompt_path, anchor = resolve_prompt_anchor(repo_root, str(agent["startup_prompt_path"]))
         if not prompt_path.exists():

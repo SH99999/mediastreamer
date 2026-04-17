@@ -61,6 +61,7 @@ Mode-B is optimization only. It does not relax branch doctrine, protected-`main`
 - branch hint: `si/<topic>` or `dev/<component>`
 - startup add-on:
   - `contracts/repo/ui_gui_governance_standard_v1.md`
+  - `journals/system-integration-normalization/ui_gui_active_dependency_note_v1.md`
 - deferred packet:
   - `journals/system-integration-normalization/ui_gui_stream_v1.md`
   - shared deferred refs from `docs/agents/role_bootstrap_reference_map_v1.md`

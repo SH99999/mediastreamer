@@ -27,3 +27,6 @@ It does not replace component-local runtime journals.
 - 2026-04-15: Project-view blueprint path added (`tools/governance/scale_radio_governance_delivery_views_v1.md`) for owner decision readiness in `Scale Radio Governance & Delivery`.
 - 2026-04-15: Table and kanban markdown renderings added for project-view blueprint to improve owner-facing review in Git (`..._views_table_v1.md`, `..._views_kanban_v1.md`).
 - 2026-04-15: Project-view triage definition was generalized to component-wide intake routing; UI/GUI remains in-scope via `agent:ux` and no longer assumes UI-only queue boundaries.
+- 2026-04-17: Active-path cleanout applied for UX startup; Stage-B/project-view blueprint and rendering links are now treated as optional deep-history references, not required startup inputs.
+- 2026-04-17: Added compact active dependency note (`journals/system-integration-normalization/ui_gui_active_dependency_note_v1.md`) to keep UX startup on two required anchors only.
+- 2026-04-17: Confirmed scope guard: no dashboard/board/html expansion was introduced by this cleanout package.

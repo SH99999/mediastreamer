@@ -47,3 +47,19 @@
 - branch plan: `si/codex-trigger-and-materialized-chat-protocol-v1`
 - owner decision needed: `none`
 - status: `ready-for-codex`
+
+### 2026-04-17 / cycle stale-pickup-reconciliation / close-merged-artifacts
+- actor: `codex`
+- source files: `exchange/chatgpt/demands/agent-registry-and-full-role-formalization__intake_v1.md`, `exchange/chatgpt/demands/codex-trigger-and-materialized-chat-protocol__intake_v1.md`, `exchange/chatgpt/inbox-main/20260417T100459Z__codex-trigger-and-materialized-chat-protocol__intake_snapshot_v1.md`
+- action: reconciled stale `ready-for-codex` / `pickup-ready` artifacts against merged-main state and closed merged work artifacts so watcher no longer routes them as active pickup
+- branch plan: `si/main-inbox-codex-trigger-and-protocol-snapshots-v1`
+- owner decision needed: `none`
+- status: `closed`
+
+### 2026-04-17 / cycle chat-backup-only-command / ship-to-codex
+- actor: `chatgpt`
+- source file: `exchange/chatgpt/demands/chat-backup-only-command__intake_v1.md`
+- action: formalized the current topic as a governed demand on the dedicated ChatGPT write branch for Codex pickup
+- branch plan: `si/chat-backup-only-command-v1`
+- owner decision needed: `none`
+- status: `ready-for-codex`

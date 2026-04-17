@@ -99,7 +99,7 @@ role_bootstrap_lines() {
     ux|ui-ux|uiux)
       echo "- role profile: ux"
       echo "- branch hint: si/<topic> or dev/<component>"
-      echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; contracts/repo/ui_gui_governance_standard_v1.md"
+      echo "- startup packet: AGENTS.md; tools/governance/agent_git_bootstrap_v1.sh; docs/agents/agent_git_bootstrap_v1.md; contracts/repo/ui_gui_governance_standard_v1.md; journals/system-integration-normalization/ui_gui_active_dependency_note_v1.md"
       ;;
     si|system-integration|governance)
       echo "- role profile: system-integration"
