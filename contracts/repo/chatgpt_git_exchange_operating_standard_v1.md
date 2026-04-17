@@ -120,6 +120,16 @@ Every relevant demand/idea item must be classified as:
 - `execution_gate: quick_win`
 - `execution_gate: backlog`
 
+Label index mapping (mandatory for queryability):
+- `execution_gate: now` -> `gate:now`
+- `execution_gate: quick_win` -> `gate:quick-win`
+- `execution_gate: backlog` -> `gate:backlog`
+
+Index-vs-truth rule:
+- labels are the query index
+- repo artifacts remain canonical truth for summary/decisions/risks/non-loss requirements/related outputs
+- if label index and repo artifact disagree, repo artifact wins and mismatch must be corrected
+
 Required companion fields:
 - `why_now`
 - `why_not_now`
@@ -201,6 +211,39 @@ Backlog items must preserve:
 - related files/outputs/links
 - why_not_now
 - promotion_trigger
+
+## Owner repo-truth query contract (canonical)
+ChatGPT owner-query classes (minimum required):
+- backlog
+- ideas
+- blockers
+- decisions awaiting owner
+- quick wins
+- component-filtered view for any class
+
+Query index labels:
+- backlog: `gate:backlog`
+- ideas: `type:idea` (or idea artifact under `exchange/chatgpt/ideas/`) + optional `gate:*`
+- blockers: `state:blocked`
+- decisions awaiting owner: `state:needs-decision` or `state:awaiting-owner`
+- quick wins: `gate:quick-win`
+- component filter: append `component:<x>` and/or artifact path filter
+
+Repo artifacts to inspect:
+- `exchange/chatgpt/demands/*.md`
+- `exchange/chatgpt/ideas/*.md`
+- `journals/**/current_state*.md` and `journals/**/stream*.md`
+- decision/status contracts and SI current status/decisions/stream
+
+ChatGPT response format for owner queries:
+1. short structured summary
+2. direct Git object links (tree/blob/commit paths)
+3. optional GitHub label-filter URL
+4. explicit owner todo or `no action needed`
+
+Link-first rule:
+- prefer native GitHub object links and label filter URLs
+- do not require HTML/dashboard aggregation for this query surface
 
 ## Durable truth update obligation
 Execution packages must update durable repo truth when impacted:

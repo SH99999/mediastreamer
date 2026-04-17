@@ -35,12 +35,21 @@ actor: chatgpt
 
 ## execution gate
 - execution_gate: now
+- execution_gate_label: gate:now
 - why_now:
 - why_not_now:
 - promotion_trigger:
 - safe_to_attach_to_current_package: yes
 - related_files_outputs:
 - impacted_portfolio_component:
+
+## label index (query/routing)
+- expected_labels:
+  - gate:now
+  - state:ready-for-agent
+  - component:<component>
+  - agent:<agent-lane>
+- label_truth_rule: labels route/query only; repo sections in this file remain canonical detailed truth
 
 ## lifecycle tracking
 - source_pr_url:

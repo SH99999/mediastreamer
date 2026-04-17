@@ -29,6 +29,7 @@ Status note: this v8 file remains the current SI/N status addendum and is update
   - bridge and tuner are both enabled in the autonomous delivery support matrix
 - what partially works:
   - execution-gate model (`now|quick_win|backlog`) is now standardized for demand/idea items with promotion rationale and related outputs fields
+  - owner repo-truth query model is now explicitly label-indexed (`gate:now|gate:quick-win|gate:backlog`, `state:blocked`, `state:needs-decision|state:awaiting-owner`, `component:<x>`) while canonical detail remains in demand/idea/journal/decision artifacts
   - owner-minimal chat handoff now uses only `governed mode on` and `ship to codex` before merge-after-pre-ok; internal `chatok` and demand closure are automation-owned
   - governed chat mode can now persist live session continuity artifacts under `exchange/chatgpt/sessions/` and promote `chatok` sessions into `ready-for-codex` demand artifacts
   - chat-to-demand exchange lane remains active under `exchange/chatgpt/` with watcher support for `ready-for-codex` artifacts
@@ -152,3 +153,4 @@ Status note: this v8 file remains the current SI/N status addendum and is update
 6. keep owner command surface constrained to `governed mode on | ship to codex | merge after pre-ok` for governed chat lanes
 7. keep owner-facing boards/index synchronized with demand `pre-ok` and `ready-for-owner` visibility
 8. keep owner-facing portfolio visibility synchronized for `now|quick_win|backlog` rows in existing owner boards
+9. keep owner query answers link-first (direct Git object links + optional label-filter URLs) and avoid introducing new dashboard/HTML surfaces for queryability

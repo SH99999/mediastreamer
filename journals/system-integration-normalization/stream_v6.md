@@ -4,6 +4,12 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/label-only-owner-query-surface-v1 / label-indexed owner repo-truth query surface
+- standardized execution-gate labels for owner query/indexing (`gate:now`, `gate:quick-win`, `gate:backlog`) and aligned issue-routing governance wording
+- updated exchange demand/idea templates + protocol so labels are index/routing metadata while repo artifacts remain canonical detail truth
+- added canonical owner query guidance for repo-truth prompts (backlog, ideas, blockers, decisions awaiting owner, quick wins, component-filtered variants) with required ChatGPT response shape (structured summary, direct Git links, optional label URL, explicit owner todo/no-action)
+- purpose: make owner queries reliably answerable from labels + repo truth without adding new dashboards/boards/html surfaces or custom-field dependency
+
 ### 2026-04-17 / si/execution-gate-and-backlog-portfolio-v1 / execution-gate + backlog portfolio visibility
 - standardized execution gate model (`now|quick_win|backlog`) with mandatory rationale/promotion fields for demand and idea artifacts
 - codified quick-win attachment rule for Codex and explicit downgrade-to-backlog behavior when safety/coherence checks fail

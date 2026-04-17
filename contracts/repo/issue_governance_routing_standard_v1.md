@@ -65,6 +65,21 @@ Reason:
 - `state:docs-update-required`
 - `state:done`
 
+### Execution-gate labels (owner-query index)
+- `gate:now`
+- `gate:quick-win`
+- `gate:backlog`
+
+Execution-gate meaning:
+- `gate:now` = currently authorized execution scope
+- `gate:quick-win` = low-blast-radius candidate that Codex may attach only when safety/coherence rules pass
+- `gate:backlog` = preserved future candidate; never silently executed only because it exists
+
+Execution-gate governance rule:
+- labels classify/route/query
+- detailed truth remains in repo artifacts (demand/idea/status/current-state/decision files)
+- if labels and repo truth disagree, repo truth wins and mismatch is a repo-truth defect
+
 ### Source labels
 - `source:weekly-report`
 - `source:decision-scan`
@@ -78,6 +93,7 @@ Reason:
 - `impact:cross-component` should also carry `agent:system-integration`
 - `component:<x>` with only component-local impact should carry `agent:<x>`
 - `type:decision` should carry `state:needs-decision`
+- owner-query execution inventory should include one of `gate:now|gate:quick-win|gate:backlog` where applicable
 - after owner decision, switch to `state:docs-update-required`
 - after governance updates are merged, switch to `state:done`
 

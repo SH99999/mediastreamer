@@ -270,3 +270,12 @@ Status note: this v9 file remains the current SI/N decision addendum and is upda
 - What it affects: demand/idea templates, exchange governance wording, owner board generation, and owner status/dashboard guidance.
 - What it explicitly does NOT affect: manual owner routing/decomposition work or unrelated governance/runtime packages.
 - Follow-up needed: ensure each active demand/idea artifact maintains gate fields and portfolio metadata so quick-win pull-in and backlog preservation remain auditable.
+
+### DEC-system_integration_normalization-42
+- Status: locked
+- Decision: owner repo-truth query surface is label-indexed and artifact-truth-backed; execution gates are standardized as labels `gate:now`, `gate:quick-win`, and `gate:backlog`, while demand/idea/journal/decision artifacts remain canonical detail.
+- Date context: label-only owner query surface hardening phase
+- Why this was chosen: owner needs stable, low-overhead queries (backlog/ideas/blockers/decisions/quick wins/component filters) that do not depend on fragile dashboards or project custom fields.
+- What it affects: issue routing labels, exchange templates/protocol, owner operational query guidance, and ChatGPT answer contract (structured summary + direct Git links + optional label-filter URL + explicit owner todo).
+- What it explicitly does NOT affect: creation of new dashboard/board/html surfaces or replacement of repo-truth artifact content with labels.
+- Follow-up needed: keep label index and artifact truth synchronized and treat any mismatch as a repo-truth defect.

@@ -140,6 +140,32 @@ Generated pages:
 - [Status bridge](../../reports/status/bridge.md)
 - [Status decisions](../../reports/status/decisions.md)
 - [Status blocker](../../reports/status/blocker.md)
+
+## Repo-truth owner query surface (label-index + Git-truth)
+Use this prompt style in ChatGPT:
+- `repo truth: what is in backlog`
+- `repo truth: open blockers`
+- `repo truth: decisions awaiting owner`
+- `repo truth: quick wins for tuner`
+- `repo truth: ideas already defined for fun-line`
+
+Query/index rule:
+- labels are the query index
+- repo artifacts are the truth
+- if labels disagree with repo artifacts, repo artifacts win and mismatch should be treated as a repo-truth defect
+
+Expected ChatGPT answer format:
+1. short structured summary
+2. direct Git links to the referenced files/commits
+3. optional GitHub label-filter URL
+4. explicit owner todo or `no action needed`
+
+Canonical query labels:
+- `gate:backlog` (backlog)
+- `gate:quick-win` (quick wins)
+- `state:blocked` (blockers)
+- `state:needs-decision` / `state:awaiting-owner` (decisions awaiting owner)
+- `component:<x>` (component filter)
 ## Current recurring setup topics to monitor
 - runtime token injection drift (`GH_TOKEN` / `GITHUB_TOKEN` not visible in active runtime session)
 - branch discipline drift (agent starts on `work` instead of `dev/*` or `si/*`)

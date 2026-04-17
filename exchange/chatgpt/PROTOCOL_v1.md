@@ -47,6 +47,7 @@ Minimum persistence layer before full durable truth updates:
 ## Execution gate rule
 Relevant demand/idea items must carry:
 - `execution_gate: now|quick_win|backlog`
+- `execution_gate_label: gate:now|gate:quick-win|gate:backlog`
 - `why_now`
 - `why_not_now`
 - `promotion_trigger`
@@ -57,6 +58,10 @@ Routing:
 - `now` -> active demand execution
 - `quick_win` -> Codex may attach if safe and coherent
 - `backlog` -> preserved/visible; not silently executed
+
+Index-vs-truth:
+- labels are index/routing/query
+- repo artifacts are canonical detailed truth
 
 ## Promotion rule (`chatok`)
 - promotion source: `exchange/chatgpt/sessions/<topic>__live_v1.md`
