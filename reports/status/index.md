@@ -13,6 +13,8 @@ Prompt aliases:
 - `status hardware` -> [Status Hardware](./hardware.md)
 - `status decisions` -> [Status Decisions](./decisions.md)
 - `status blocker` -> [Status Blocker](./blocker.md)
+- `owner capture-prompt` -> [ChatGPT Capture-to-Demand Prompt](../../docs/agents/chatgpt_capture_to_demand_prompt_v1.md)
+- `owner governed-intake` -> [ChatGPT Governed Intake Prompt](../../docs/agents/chatgpt_governed_intake_prompt_v1.md)
 
 Status packet JSON artifacts:
 - [tuner](./packets/tuner.json)
