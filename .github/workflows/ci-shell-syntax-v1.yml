@@ -1,0 +1,23 @@
+name: ci-shell-syntax-v1
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches:
+      - 'si/**'
+      - 'dev/**'
+  workflow_dispatch:
+
+jobs:
+  shell_syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run shell syntax checks
+        shell: bash
+        run: |
+          bash tools/ci/check_shell_syntax_v3.sh

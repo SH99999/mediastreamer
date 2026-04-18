@@ -1,0 +1,19 @@
+name: pr-merge-clean-v1
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  merge-clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run repo guard checks
+        shell: bash
+        run: |
+          bash tools/ci/check_repo_guard_v3.sh
