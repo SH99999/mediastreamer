@@ -1,0 +1,27 @@
+name: chatgpt-codex-execution-autostart-v1
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  autostart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Autostart ready demand execution issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/governance/chatgpt_execution_autostart_v1.py \
+            --repo "$GITHUB_REPOSITORY" \
+            --auto-issue

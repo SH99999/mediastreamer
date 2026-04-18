@@ -263,6 +263,13 @@ Required companion fields:
 - rule: Codex evaluates canonical trigger snapshots under `exchange/chatgpt/inbox-main/` with marker `status: pickup-ready`; demand `ready-for-codex` remains lifecycle truth
 - the watcher must report live session `chatok` artifacts as promotion-required and report `ready-for-codex` artifacts as codex-actionable
 
+## Execution autostart signal (mandatory automation)
+- scheduler workflow: `.github/workflows/chatgpt-codex-execution-autostart-v1.yml` (every 5 minutes)
+- autostart helper: `tools/governance/chatgpt_execution_autostart_v1.py`
+- rule: newest demand with `status: ready-for-codex` and `codex_trigger: ship-to-codex` must automatically create/update one execution issue
+- purpose: remove manual "did you start?" checks and emit immediate execution-start signal from repo truth
+- honesty boundary: workflow automation creates the execution signal and tracked queue item; implementation commits are still produced by Codex execution runs on governed branches
+
 ## Promotion rule: internal `chatok` live session -> demand intake
 - promotion source: `exchange/chatgpt/sessions/<topic>__live_v1.md` with `status: live|chatok`
 - promotion target: `exchange/chatgpt/demands/<topic>__intake_v1.md`

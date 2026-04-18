@@ -30,3 +30,4 @@ Required references in the same demand:
 ## Guardrails
 - no new dashboard/board/html surfaces are required for this flow
 - labels are index only; repo artifacts remain canonical truth
+- execution autostart signal runs every 5 minutes via workflow `chatgpt-codex-execution-autostart-v1` (owner does not click to trigger it)

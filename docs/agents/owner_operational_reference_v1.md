@@ -101,6 +101,12 @@ Review-ready pickup marker:
 - Workflows normalize labels and route/escalate automatically.
 - If a connector lane cannot create issues, use fallback: package issue fields in PR + one owner action.
 
+## Can execution start be automated?
+**Yes (signal + queue), with one explicit boundary.**
+- Workflow `chatgpt-codex-execution-autostart-v1` runs every 5 minutes and opens/updates execution issues for newest `ready-for-codex` demand.
+- Owner does not need to click workflow dispatch for this autostart signal.
+- Implementation commits are still produced by Codex branch execution (not by status-only automation).
+
 ## Minimal owner checks (copy/paste)
 ```bash
 bash tools/governance/agent_git_bootstrap_v1.sh
