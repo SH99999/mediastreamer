@@ -26,7 +26,7 @@ Each active exchange artifact must contain one status marker line:
 - `status: <allowed-status>`
 
 ## Handshake order
-`chat -> governed mode on -> live session artifact -> ship to codex -> demand ready-for-codex + protocol-main update + inbox-main snapshot(pickup-ready) -> codex pickup from main inbox -> in-execution -> ready-for-chatgpt-review -> (pre-ok OR owner-override) -> ready-for-owner -> closed`
+`chat -> governed mode on -> live session artifact -> ship to codex -> demand ready-for-codex + protocol-main update + inbox-main snapshot(pickup-ready) -> codex pickup from main inbox -> in-execution -> ready-for-chatgpt-review -> (optional pre-ok/changes-requested) -> ready-for-owner -> closed`
 
 Detailed behavior:
 1. ChatGPT activates the thread using `governed mode on`.
@@ -39,14 +39,23 @@ Detailed behavior:
      - `source_pr_url`
      - `source_branch`
      - `review_target_artifacts`
-7. ChatGPT reviews against demand + repo truth; set `status: pre-ok` or `status: changes-requested`.
-8. Codex prepares owner packet and sets `status: ready-for-owner` when either:
-   - `chatgpt_review_result: pre-ok`
-   - explicit owner override is recorded (`chatgpt_review_result: owner-override` and `owner_review_override: yes`)
+7. ChatGPT review is optional advisory input; if performed, set `status: pre-ok` or `status: changes-requested`.
+8. Codex prepares owner packet and sets `status: ready-for-owner` once PR + rollback + evidence + next_owner_click are ready in repo truth (independent of ChatGPT review presence).
 9. After owner decision/merge and governance closeout completion, demand status is auto-moved to `closed`.
 
+## Backup-only command rule
+- owner command: `backup chat only`
+- intent: persist current chat continuity without starting Codex execution
+- required outputs:
+  - update `exchange/chatgpt/sessions/<topic>__live_v1.md` material state/timestamp
+  - optional compact event append in `exchange/chatgpt/protocol-main/<topic>__protocol_v1.md`
+- must not create execution triggers:
+  - no demand status transition to `ready-for-codex`
+  - no new inbox-main snapshot with `status: pickup-ready`
+- `ship to codex` remains the only owner-visible execution trigger command.
+
 Override constraints:
-- override is explicit and auditable
+- if override markers are used, they remain explicit and auditable
 - override must not be represented as `pre-ok`
 
 ## Continuity rule
@@ -104,6 +113,15 @@ Index-vs-truth:
 - materialized protocol: durable compact history for new chat/agent continuity
 - demand: execution-oriented structured truth
 - main inbox snapshot: canonical pickup trigger on `main`
+- optional raw ZIP bundle: concrete payload input only (non-canonical mapping)
+- Codex-generated manifest: canonical branch/path execution plan
+- distribution result report: execution outcome truth
+
+## Raw ZIP + Codex manifest rule
+- ChatGPT may provide one raw ZIP bundle and optional mapping hints under `exchange/chatgpt/bundles/`.
+- ChatGPT ZIP/hints are input only and must not become canonical branch mapping truth.
+- Codex must generate one canonical manifest from ZIP + demand + protocol + repo truth before any multi-lane distribution.
+- Codex executes manifest targets sequentially in one working tree and publishes one result report.
 
 ## Owner review pickup command
 - owner command: `review now`

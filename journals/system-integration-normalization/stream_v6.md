@@ -4,6 +4,25 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 
 ## Entries
 
+### 2026-04-17 / si/chatgpt-zip-bundle-intake-and-codex-manifest-v1 / ZIP intake + Codex canonical manifest + sequential distribution contract
+- defined raw ZIP intake as optional ChatGPT handoff input under existing exchange root (`exchange/chatgpt/bundles/`) and explicitly marked ZIP/hints non-canonical for branch mapping truth
+- defined Codex-generated canonical distribution manifest contract with required identity/source/target/check/rollback/result-report fields
+- defined deterministic sequential branch distribution behavior (single working tree, per-target branch checkout/copy/check/commit/push/PR update) and required one distribution result report artifact
+- added bundle templates for raw ZIP intake, Codex distribution manifest, and distribution result report without creating dashboard/board/html surfaces
+- purpose: allow one ZIP handoff while keeping canonical mapping/execution truth Codex-owned and owner workflow minimal
+
+### 2026-04-17 / si/chatgpt-preok-optional-owner-repo-truth-v1 / owner decision path inversion
+- updated canonical exchange/owner docs so ChatGPT `pre-ok` is optional advisory input instead of a required merge gate
+- aligned protocol, exchange operating standard, owner quickstart/reference, SI governance index wording, and demand template next-owner-click guidance with repo-truth-first owner decisioning
+- preserved auditability rule: if override markers are used they must remain explicit and must never be represented as `pre-ok`
+- purpose: keep owner one-click decision flow repo-truth based while retaining optional ChatGPT review signal
+
+### 2026-04-17 / si/agent-registry-delegation-and-startup-v1 / registry guardrails + SI delegation checklist hardening
+- tightened canonical agent-registry contract by documenting required baseline agent ids (`si`, `dev-tuner`, `dev-bridge`, `dev-generic`, `dev-hardware`, `dev-fun-line`, `dev-autoswitch`, `dev-ux`)
+- extended `tools/governance/agent_registry_helper_v1.py --validate` to enforce required baseline ids and available-agent startup/role-profile alignment checks
+- added explicit SI repo-driven delegation checklist to onboarding v7 so delegation decisions always derive from registry truth + helper output
+- purpose: keep agent identity/availability/delegation/startup inspectable and deterministic from one registry chain without adding dashboard/board/html surfaces
+
 ### 2026-04-17 / si/agent-registry-and-role-availability-v1 / canonical registry + hardware role formalization
 - added canonical agent registry in markdown/json (`docs/agents/agent_registry_v1.md`, `tools/governance/agent_registry_v1.json`) with identity, availability, role, scope, startup prompt, bootstrap command, and SI delegation eligibility fields
 - added owner-facing startup index (`docs/agents/agent_start_index_v1.md`) and linked existing owner-visible surfaces to registry/index paths
@@ -545,3 +564,9 @@ Status note: this v6 file supersedes `stream_v5.md` as the current SI/N stream b
 - marked SI stream generations `stream_v1.md` through `stream_v5.md` as explicit historical/read-only and tightened superseded-doc handling for deep-history-only use
 - updated SI status and decisions with locked authority-compression rule (`DEC-system_integration_normalization-34`)
 - purpose: reduce startup read burden and ambiguity without introducing new dashboards/boards/html/prompt sprawl
+
+### 2026-04-17 / si/main-truth-tag-rollback-clarity-v1 / simplified main-truth and rollback-tag clarification
+- clarified naming/release contracts that `main` is the single accepted software truth and tags are the governed rollback anchor
+- documented that `dev/*` remains in-progress only and is not a second truth line
+- documented that mutable payload pointers (`current_dev`, `current`) are optional and only required when payload-folder switching is still operationally needed
+- purpose: reduce release-model ambiguity while keeping deterministic, auditable rollback

@@ -61,3 +61,15 @@ Do not add new dashboards/prompts/boards/summaries/exchange artifacts unless rep
 - branch name `work` is invalid for SI-governance truth mutation
 - if stream/doc claims conflict with repo state, treat as `repo-truth defect` and repair truth in the same package
 - if safe completion is blocked, escalate explicitly instead of fabricating completion
+
+## SI delegation checklist (repo-driven)
+Before delegating component/governance work, SI must use repo truth (not memory):
+1. run `python3 tools/governance/agent_registry_helper_v1.py --validate`
+2. run `python3 tools/governance/agent_registry_helper_v1.py --list`
+3. confirm target agent has:
+   - `status: available`
+   - `can_receive_work_from_si: yes`
+4. if target role is `unavailable` or `planned`:
+   - provide `startup_prompt_path`
+   - provide `bootstrap_command`
+   - keep execution ownership with SI until availability is updated in canonical registry truth

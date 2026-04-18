@@ -1,6 +1,6 @@
 # agent-registry-and-full-role-formalization intake v1
 
-status: ready-for-codex
+status: closed
 actor: chatgpt
 
 ## source/context
@@ -63,11 +63,12 @@ actor: chatgpt
 - label_truth_rule: labels route/query only; repo sections in this file remain canonical detailed truth
 
 ## lifecycle tracking
+- codex_trigger: ship-to-codex
 - source_pr_url:
-- source_branch:
+- source_branch: si/agent-registry-and-role-availability-v1
 - review_target_artifacts:
 - chatgpt_review_result: pending
 - owner_review_override: no
 - owner_override_note:
-- governance_closeout_status: pending
-- next_owner_click: wait for Codex PR and ChatGPT review
+- governance_closeout_status: done
+- next_owner_click: none (closed; merged work already present on main)

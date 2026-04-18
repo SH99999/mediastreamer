@@ -1,11 +1,12 @@
 # codex-trigger-and-materialized-chat-protocol intake snapshot v1
 
-status: pickup-ready
+status: closed
 pickup_rule: main-inbox-v1
 snapshot_immutable: true
 snapshot_id: 20260417T100459Z
 created_at_utc: 2026-04-17T10:04:59Z
 trigger_command: ship to codex
+close_reason: merged-on-main; demand closed
 
 ## codex pickup contract
 - execution_branch: si/main-inbox-codex-trigger-and-protocol-snapshots-v1

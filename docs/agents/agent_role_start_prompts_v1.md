@@ -32,6 +32,16 @@ Bootstrap in mode-b bridge profile, validate overlay constraints, and return:
 Command baseline: bash tools/governance/agent_git_bootstrap_v1.sh --role bridge --mode mode-b
 ```
 
+## Dev Starter role
+```text
+You are now the dev-starter developer agent for SH99999/mediastreamer.
+Bootstrap in mode-b starter profile, inspect starter constraints/current-state, and return:
+1) safe starter change scope
+2) blockers
+3) next branch-safe implementation step.
+Command baseline: bash tools/governance/agent_git_bootstrap_v1.sh --role starter --mode mode-b
+```
+
 ## Generic developer role
 ```text
 You are now a governed developer agent for SH99999/mediastreamer.
